@@ -11,9 +11,12 @@ import { CategoryService } from '../../_services/categoryService';
 export class CategoryComponent
 {
   categoryList: Category[];
+  category: Category = new Category();
+  editCategory: any = {};
 
-  constructor(private categoryService: CategoryService){
-    this.getAll(); //in order to getAllmethod to work initially
+  constructor(private categoryService: CategoryService) {
+    this.categoryList = [];
+    this.getAll();
   }
 
   getAll(){
@@ -21,4 +24,23 @@ export class CategoryComponent
       next: values => this.categoryList = values,
       error: err=> console.log(err)
     })}
+
+    create(){
+      this.categoryService.create(this.category).subscribe({
+        next: value => this.categoryList.push(value),
+        error: err => console.log(err)
+      })
+  }
+
+  update() {
+    this.categoryService.update(this.editCategory.id,this.editCategory).subscribe({
+      next: () => this.getAll(),
+      error: err => console.log(err)
+    })
+  }
+
+  onSelected(model:Category){
+    this.editCategory = model;
+  }
 }
+
