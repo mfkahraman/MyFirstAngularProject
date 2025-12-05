@@ -1,0 +1,8 @@
+/* SweetAlert buton boşlukları */
+:host ::ng-deep .swal2-actions {
+  gap: 1rem !important;
+}
+
+:host ::ng-deep .swal2-confirm {
+  margin-right: 1rem !important;
+}

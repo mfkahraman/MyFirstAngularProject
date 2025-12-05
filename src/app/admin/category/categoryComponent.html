@@ -11,65 +11,125 @@
 
   <tbody>
     <tr *ngFor="let item of categoryList; let i = index">
-      <td>{{i + 1}}</td>
-      <td>{{item.categoryName}}</td>
+      <td>{{ i + 1 }}</td>
+      <td>{{ item.categoryName }}</td>
       <td>
-        <button class="btn btn-outline-danger me-2"><i class="fa fa-trash">Sil</i></button>
-        <button class="btn btn-outline-info" (click)="onSelected(item)" data-bs-toggle="modal" data-bs-target="#editModal"><i class="fa fa-edit">Güncelle</i></button>
+        <button class="btn btn-outline-danger me-2" (click)="delete(item.id)">
+          <i class="fa fa-trash">Sil</i>
+        </button>
+        <button
+          class="btn btn-outline-info"
+          (click)="onSelected(item)"
+          data-bs-toggle="modal"
+          data-bs-target="#editModal"
+        >
+          <i class="fa fa-edit">Güncelle</i>
+        </button>
       </td>
     </tr>
   </tbody>
 </table>
 
-<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createModal"><i class="fa fa-plus"></i> Yeni Kategori Ekle</button>
-
+<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+  <i class="fa fa-plus"></i> Yeni Kategori Ekle
+</button>
 
 <!--Create Modal -->
-<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="createModal"
+  tabindex="-1"
+  aria-labelledby="createModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered">
-  <form #createForm="ngForm" (ngSubmit)="create();createForm.resetForm()">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="createModalLabel">Yeni Kategori Ekle</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
+    <form #createForm="ngForm" (ngSubmit)="create(); createForm.resetForm()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="createModalLabel">Yeni Kategori Ekle</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
           <div class="form-group">
             <label class="form-label" for="categoryName">Kategori Adı</label>
-            <input type="text" class="form-control" id="categoryName" [(ngModel)]="category.categoryName" name="categoryName" placeholder="Kategori Adı Giriniz">
+            <input
+              type="text"
+              class="form-control"
+              id="categoryName"
+              [(ngModel)]="category.categoryName"
+              name="categoryName"
+              placeholder="Kategori Adı Giriniz"
+              required=""
+            />
           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            [disabled]="createForm.invalid || !createForm.dirty"
+          >
+            Kaydet
+          </button>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="createForm.invalid || !createForm.dirty">Kaydet</button>
-      </div>
-    </div>
     </form>
   </div>
 </div>
 
-
-
 <!--Edit Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="editModal"
+  tabindex="-1"
+  aria-labelledby="editModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered">
-  <form #editForm="ngForm" (ngSubmit)="update()">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="editModalLabel">Kategori Güncelle</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
+    <form #editForm="ngForm" (ngSubmit)="update()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editModalLabel">Kategori Güncelle</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
           <div class="form-group">
             <label class="form-label" for="categoryName">Kategori Adı</label>
-            <input type="text" class="form-control" id="categoryName" [(ngModel)]="editCategory.categoryName" name="categoryName" placeholder="Kategori Adı Giriniz" required="">
+            <input
+              type="text"
+              class="form-control"
+              id="categoryName"
+              [(ngModel)]="editCategory.categoryName"
+              name="categoryName"
+              placeholder="Kategori Adı Giriniz"
+              required=""
+            />
           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            [disabled]="editForm.invalid || !isCategoryChanged()"
+          >
+            Güncelle
+          </button>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="editForm.invalid || !editForm.dirty">Güncelle</button>
-      </div>
-    </div>
     </form>
   </div>
 </div>
