@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Category } from './admin/category/category';
+import { CategoryComponent } from './admin/category/categoryComponent';
 import { App } from './app';
 import { MainLayout } from './layouts/main-layout/main-layout';
 import { AdminLayout } from './layouts/admin-layout/admin-layout';
-import { Product } from './admin/product/product';
+import { ProductComponent } from './admin/product/productComponent';
 
 const routes: Routes = [
 //Main Routes
@@ -14,8 +14,8 @@ const routes: Routes = [
 
 //Admin Routes
 {path:'admin',component:AdminLayout,children:[
-  {path:'category',component:Category},
-  {path:'product',component:Product}
+  {path:'category',component:CategoryComponent},
+  {path:'product',component:ProductComponent}
 ]}
 ];
 

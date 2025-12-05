@@ -3,25 +3,27 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { Category } from './admin/category/category';
+import { CategoryComponent } from './admin/category/categoryComponent';
 import { AdminLayout } from './layouts/admin-layout/admin-layout';
 import { MainLayout } from './layouts/main-layout/main-layout';
-import { Product } from './admin/product/product';
+import { ProductComponent } from './admin/product/productComponent';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     App,
-    Category,
+    CategoryComponent,
     AdminLayout,
     MainLayout,
-    Product
+    ProductComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule
   ],
   providers: [
-    provideBrowserGlobalErrorListeners()
+    provideBrowserGlobalErrorListeners(),
+    provideHttpClient()
   ],
   bootstrap: [App]
 })
