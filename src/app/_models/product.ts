@@ -4,7 +4,7 @@ export class Product
 {
   id;
   productName;
-  imageUrl;
+  imagePath;
   description;
   categoryId;
 
