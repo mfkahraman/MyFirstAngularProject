@@ -15,12 +15,11 @@
     <tr *ngFor="let product of productList; let i = index">
       <td>{{ i + 1 }}</td>
       <td>{{ product.productName }}</td>
-      <td>{{ product.category.categoryName }}</td>
+      <td>{{ product.category?.categoryName }}</td>
       <td>{{ product.description }}</td>
-      <td><img src="{{product.imagePath}}" alt="{{product.productName}}"
-        style="width: 75px;height: 75px;"/></td>
+      <td><img src="{{product.imagePath}}" alt="{{product.productName}}" style="width: 75px;height: 75px;" /></td>
       <td>
-        <button class="btn btn-primary btn-sm me-2" (click)="updateProduct()">Düzenle</button>
+        <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal" (click)="onSelected(product)">Düzenle</button>
         <button class="btn btn-danger btn-sm" (click)="deleteProduct(product.id)">Sil</button>
       </td>
     </tr>
@@ -28,3 +27,130 @@
 </table>
 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
   Yeni Ürün Ekle</button>
+
+
+<!--Create Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form #createForm="ngForm" (ngSubmit)="createProduct(createForm)">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="createModalLabel">Yeni Ürün Ekle</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="productName">Ürün Adı</label>
+            <input type="text" class="form-control" id="productName" [(ngModel)]="product.productName"
+              name="productName" placeholder="Ürün Adı Giriniz" required="" />
+            <div *ngIf="errors && (errors.ProductName || errors.productName || errors.productDto)">
+              <span class="text-danger d-block"
+                *ngFor="let error of (errors.ProductName || errors.productName || errors.productDto)">{{ error }}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="categoryId">Kategori</label>
+            <select class="form-control" id="categoryId" [(ngModel)]="product.categoryId" name="categoryId" required="">
+              <option [value]="''" disabled>Kategori Seçiniz</option>
+              <option *ngFor="let category of categoryList" [value]="category.id">
+                {{ category.categoryName }}
+              </option>
+            </select>
+            <div *ngIf="errors && (errors.CategoryId || errors.categoryId || errors['$.categoryId'])">
+              <span class="text-danger d-block"
+                *ngFor="let error of (errors.CategoryId || errors.categoryId || errors['$.categoryId'])">{{ error
+                }}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="description">Açıklama</label>
+            <textarea cols="30" rows="3" class="form-control" id="description" [(ngModel)]="product.description"
+              name="description" placeholder="Açıklama Giriniz" required=""></textarea>
+            <div *ngIf="errors && (errors.Description || errors.description)">
+              <span class="text-danger d-block" *ngFor="let error of (errors.Description || errors.description)">{{
+                error }}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="imagePath">Ürün Görseli URL</label>
+            <input type="text" class="form-control" id="imagePath" [(ngModel)]="product.imagePath" name="imagePath"
+              placeholder="Ürün Görseli URL'si Giriniz" required="" />
+            <div *ngIf="errors && (errors.ImagePath || errors.imagePath)">
+              <span class="text-danger d-block" *ngFor="let error of (errors.ImagePath || errors.imagePath)">{{ error
+                }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="submit" class="btn btn-primary">
+            Kaydet
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!--Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form #editForm="ngForm" (ngSubmit)="updateProduct()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editModalLabel">Ürün Güncelle</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="productName">Ürün Adı</label>
+            <input type="text" class="form-control" id="productName" [(ngModel)]="editProduct.productName"
+              name="productName" placeholder="Ürün Adı Giriniz" required="" />
+            <div *ngIf="errors && (errors.ProductName || errors.productName || errors.productDto)">
+              <span class="text-danger d-block"
+                *ngFor="let error of (errors.ProductName || errors.productName || errors.productDto)">{{ error }}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="categoryId">Kategori</label>
+            <select class="form-control" id="categoryId" [(ngModel)]="editProduct.categoryId" name="categoryId" required="">
+              <option [value]="''" disabled>Kategori Seçiniz</option>
+              <option *ngFor="let category of categoryList" [value]="category.id">
+                {{ category.categoryName }}
+              </option>
+            </select>
+            <div *ngIf="errors && (errors.CategoryId || errors.categoryId || errors['$.categoryId'])">
+              <span class="text-danger d-block"
+                *ngFor="let error of (errors.CategoryId || errors.categoryId || errors['$.categoryId'])">{{ error
+                }}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="description">Açıklama</label>
+            <textarea cols="30" rows="3" class="form-control" id="description" [(ngModel)]="editProduct.description"
+              name="description" placeholder="Açıklama Giriniz" required=""></textarea>
+            <div *ngIf="errors && (errors.Description || errors.description)">
+              <span class="text-danger d-block" *ngFor="let error of (errors.Description || errors.description)">{{
+                error
+                }}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="imagePath">Ürün Görseli URL</label>
+            <input type="text" class="form-control" id="imagePath" [(ngModel)]="editProduct.imagePath" name="imagePath"
+              placeholder="Ürün Görseli URL'si Giriniz" required="" />
+            <div *ngIf="errors && (errors.ImagePath || errors.imagePath)">
+              <span class="text-danger d-block" *ngFor="let error of (errors.ImagePath || errors.imagePath)">{{ error
+                }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"> Güncelle </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

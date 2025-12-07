@@ -2,6 +2,8 @@ import Swal from 'sweetalert2';
 import { Product } from '../../_models/product';
 import { ProductService } from './../../_services/product-service';
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { CategoryService } from '../../_services/categoryService';
+import { Category } from '../../_models/category';
 
 @Component({
   selector: 'app-productComponent',
@@ -12,16 +14,22 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 export class ProductComponent {
   product: Product = new Product();
   productList: Product[] = [];
-  editProduct: any = {};
+  categoryList: Category[] = [];
+  editProduct: any = {}; // Düzenlenen ürünü tutar
+  originalProduct: any = {}; // Orjinal değeri sakla
+  errors: any = {}; // Validation hatalarını tutar
 
   constructor(
-    private productService: ProductService
-    , private cdr: ChangeDetectorRef
+    private productService: ProductService,
+    private categoryService: CategoryService,
+    private cdr: ChangeDetectorRef
   ) { }
 
+  //In order to load products when component is initialized
   ngOnInit() {
     console.log('ProductComponent ngOnInit called');
     this.getAllProducts();
+    this.getAllCategories();
   }
 
   getAllProducts() {
@@ -29,32 +37,74 @@ export class ProductComponent {
     this.productService.getAll().subscribe({
       next: values => {
         console.log('Products received:', values);
-        this.productList = [...values]; // Yeni array referansı oluştur
-        this.cdr.detectChanges(); // Manuel değişiklik algılama
+        this.productList = [...values]; // Create a new array reference
+        this.cdr.detectChanges(); // Manual change detection
         console.log('productList updated:', this.productList);
       },
-      error: err => console.error('Error loading products:', err)    })
+      error: err => console.error('Error loading products:', err)
+    })
+  }
+
+  getAllCategories() {
+    this.categoryService.getAll().subscribe({
+      next: values => this.categoryList = values,
+      error: err => console.error('Error loading categories:', err)
+    })
   }
 
   getProductById(id: number) {
     this.productService.getById(id).subscribe({
       next: value => this.product = value,
-      error: err => console.log(err)
+      error: err => console.error('Error loading product by id:', err)
     })
   }
 
-  createProduct() {
+  createProduct(form?: any) {
+    // Önceki hataları temizle (yeni bir ekleme denemesi için temiz başla)
+    this.errors = {};
+
+    // Ürün ekleme isteğini backend'e gönder
     this.productService.create(this.product).subscribe({
+      // Başarılı olursa (201 Created response gelirse)
       next: value => {
+        // Yeni eklenen ürünü listeye ekle
+        this.productList.push(value);
+
+        // Eğer form parametresi geldiyse (HTML'den gönderiliyor), formu temizle
+        if (form) {
+          form.resetForm();
+        }
+
+        // Product objesini yeni bir instance ile değiştir
+        this.product = new Product();
+
+        // Angular'ın değişiklikleri algılaması için manuel tetikleme
+        this.cdr.detectChanges();
+
+        // Modal'ı programatik olarak kapat (Bootstrap API kullanarak)
+        const modalElement = document.getElementById('createModal');
+        const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+          modal.hide();
+        }
+
+        // Kullanıcıya başarı mesajı göster
         Swal.fire({
           title: "Eklendi!",
           text: "Ürün başarıyla eklendi.",
           icon: "success"
         });
-        this.getAllProducts();
-        this.product = new Product();
       },
-      error: err => console.log(err)
+      // Hata olursa (400 Bad Request gibi)
+      error: err => {
+        // Backend'den gelen validation hatalarını errors objesine ata
+        // Örnek: {ProductName: ["Ürün adı en az 3 karakter olmalıdır."]}
+        this.errors = err.error.errors;
+
+        // Angular'ın değişiklikleri algılaması için manuel tetikleme
+        // Böylece hata mesajları UI'da görünür
+        this.cdr.detectChanges();
+      }
     })
   }
 
@@ -70,6 +120,11 @@ export class ProductComponent {
       },
       error: err => console.log(err)
     })
+  }
+
+  onSelected(model: Product) {
+    // Object'in kopyasını oluştur (referans değil)
+    this.editProduct = { ...model };
   }
 
   deleteProduct(id: number) {

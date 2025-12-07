@@ -4,9 +4,9 @@ export class Product
 {
   id;
   productName;
-  imagePath;
+  categoryId = '';
   description;
-  categoryId;
+  imagePath;
 
   //In order to get the category details along with product
   category: Category;
