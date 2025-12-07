@@ -4,7 +4,7 @@ export class Product
 {
   id;
   productName;
-  categoryId = '';
+  categoryId = 0;
   description;
   imagePath;
 

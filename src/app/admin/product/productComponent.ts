@@ -118,7 +118,11 @@ export class ProductComponent {
           icon: "success"
         });
       },
-      error: err => console.log(err)
+      error: err => {
+        this.errors = err.error.errors;
+        console.log(this.errors);
+        this.cdr.detectChanges();
+      }
     })
   }
 

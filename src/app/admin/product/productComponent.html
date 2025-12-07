@@ -19,7 +19,8 @@
       <td>{{ product.description }}</td>
       <td><img src="{{product.imagePath}}" alt="{{product.productName}}" style="width: 75px;height: 75px;" /></td>
       <td>
-        <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal" (click)="onSelected(product)">Düzenle</button>
+        <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal"
+          (click)="onSelected(product)">Düzenle</button>
         <button class="btn btn-danger btn-sm" (click)="deleteProduct(product.id)">Sil</button>
       </td>
     </tr>
@@ -51,7 +52,7 @@
           <div class="form-group">
             <label class="form-label" for="categoryId">Kategori</label>
             <select class="form-control" id="categoryId" [(ngModel)]="product.categoryId" name="categoryId" required="">
-              <option [value]="''" disabled>Kategori Seçiniz</option>
+              <option selected [value]="0" disabled>Kategori Seçiniz</option>
               <option *ngFor="let category of categoryList" [value]="category.id">
                 {{ category.categoryName }}
               </option>
@@ -114,9 +115,9 @@
           </div>
           <div class="form-group">
             <label class="form-label" for="categoryId">Kategori</label>
-            <select class="form-control" id="categoryId" [(ngModel)]="editProduct.categoryId" name="categoryId" required="">
-              <option [value]="''" disabled>Kategori Seçiniz</option>
-              <option *ngFor="let category of categoryList" [value]="category.id">
+            <select class="form-control" id="categoryId" [(ngModel)]="editProduct.categoryId" name="categoryId"
+              required="">
+              <option selected="editProduct.categoryId" *ngFor="let category of categoryList" [value]="category.id">
                 {{ category.categoryName }}
               </option>
             </select>
@@ -148,7 +149,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"> Güncelle </button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
+          [disabled]="!editForm.dirty"> Güncelle </button>
         </div>
       </div>
     </form>
