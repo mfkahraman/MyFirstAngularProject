@@ -42,17 +42,19 @@
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "assets/vendor/bootstrap/css/bootstrap.min.css",
               "assets/vendor/bootstrap-icons/bootstrap-icons.css",
               "assets/vendor/aos/aos.css",
               "assets/vendor/glightbox/css/glightbox.min.css",
               "assets/vendor/swiper/swiper-bundle.min.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js",
-              "assets/js/popper.js",
-              "assets/js/main.js"
+              "assets/vendor/bootstrap/js/bootstrap.bundle.min.js",
+              "assets/vendor/aos/aos.js",
+              "assets/vendor/glightbox/js/glightbox.min.js",
+              "assets/vendor/imagesloaded/imagesloaded.pkgd.min.js",
+              "assets/vendor/isotope-layout/isotope.pkgd.min.js",
+              "assets/vendor/swiper/swiper-bundle.min.js"
             ]
           },
           "configurations": {
@@ -81,6 +83,11 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "buildTarget": "myFirstAngularProject:build:development",
+            "port": 4200,
+            "host": "localhost"
+          },
           "configurations": {
             "production": {
               "buildTarget": "myFirstAngularProject:build:production"

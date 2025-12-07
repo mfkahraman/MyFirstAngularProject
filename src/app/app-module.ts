@@ -9,6 +9,7 @@ import { MainLayout } from './layouts/main-layout/main-layout';
 import { ProductComponent } from './admin/product/productComponent';
 import { provideHttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { MainProductComponent } from './_main/main-product-component/main-product-component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { FormsModule } from '@angular/forms';
     CategoryComponent,
     AdminLayout,
     MainLayout,
-    ProductComponent
+    ProductComponent,
+    MainProductComponent
   ],
   imports: [
     BrowserModule,
