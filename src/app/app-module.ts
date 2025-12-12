@@ -3,13 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { CategoryComponent } from './admin/category/categoryComponent';
 import { AdminLayout } from './layouts/admin-layout/admin-layout';
 import { MainLayout } from './layouts/main-layout/main-layout';
-import { ProductComponent } from './admin/product/productComponent';
 import { provideHttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MainProductComponent } from './_main/main-product-component/main-product-component';
+import { BlogCategoryComponent } from './admin/blog-category-component/blog-category-component';
 
 @NgModule({
   declarations: [
@@ -18,7 +17,8 @@ import { MainProductComponent } from './_main/main-product-component/main-produc
     AdminLayout,
     MainLayout,
     ProductComponent,
-    MainProductComponent
+    MainProductComponent,
+    BlogCategoryComponent
   ],
   imports: [
     BrowserModule,

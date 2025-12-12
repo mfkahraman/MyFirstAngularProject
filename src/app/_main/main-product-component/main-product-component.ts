@@ -1,8 +1,8 @@
-import { CategoryService } from './../../_services/categoryService';
-import { Product } from '../../_models/product';
+import { CategoryService } from '../../_services/product-category-service';
+import { Product } from '../../_models/product-model';
 import { ProductService } from './../../_services/product-service';
 import { Component } from '@angular/core';
-import { Category } from '../../_models/category';
+import { Category } from '../../_models/product-category-model';
 
 @Component({
   selector: 'app-main-product-component',

@@ -1,22 +1,22 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Category } from '../../_models/category';
-import { CategoryService } from '../../_services/categoryService';
+import { ProductCategory } from '../../_models/product-category-model';
 import Swal from 'sweetalert2';
+import { ProductCategoryService } from '../../_services/product-category-service';
 
 @Component({
-  selector: 'app-categoryComponent',
+  selector: 'app-product-category-component',
   standalone: false,
-  templateUrl: './categoryComponent.html',
-  styleUrl: './categoryComponent.css',
+  templateUrl: './product-category-component.html',
+  styleUrl: './product-category-component.css',
 })
-export class CategoryComponent implements OnInit {
-  categoryList: Category[] = [];
-  category: Category = new Category();
+export class ProductCategoryComponent implements OnInit {
+  categoryList: ProductCategory[] = [];
+  category: ProductCategory = new ProductCategory();
   editCategory: any = {};
   originalCategory: any = {}; // Orjinal değeri sakla
 
   constructor(
-    private categoryService: CategoryService,
+    private productCategoryService: ProductCategoryService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -27,7 +27,7 @@ export class CategoryComponent implements OnInit {
 
   getAll() {
     console.log('getAll method called');
-    this.categoryService.getAll().subscribe({
+    this.productCategoryService.getAll().subscribe({
       next: values => {
         console.log('Categories received:', values);
         this.categoryList = [...values]; // Yeni array referansı oluştur
@@ -39,7 +39,7 @@ export class CategoryComponent implements OnInit {
   }
 
   create() {
-    this.categoryService.create(this.category).subscribe({
+    this.productCategoryService.create(this.category).subscribe({
       next: value => {
         Swal.fire({
           title: "Eklendi!",
@@ -47,14 +47,14 @@ export class CategoryComponent implements OnInit {
           icon: "success"
         });
         this.getAll();
-        this.category = new Category();
+        this.category = new ProductCategory();
       },
       error: err => console.log(err)
     })
   }
 
   update() {
-    this.categoryService.update(this.editCategory.id, this.editCategory).subscribe({
+    this.productCategoryService.update(this.editCategory.id, this.editCategory).subscribe({
       next: () => {
         this.getAll();
         Swal.fire({
@@ -67,7 +67,7 @@ export class CategoryComponent implements OnInit {
     })
   }
 
-  onSelected(model: Category) {
+  onSelected(model: ProductCategory) {
     // Object'in kopyasını oluştur (referans değil)
     this.editCategory = { ...model };
     this.originalCategory = { ...model }; // Orjinal değeri de sakla
@@ -96,7 +96,7 @@ export class CategoryComponent implements OnInit {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        this.categoryService.delete(id).subscribe({
+        this.productCategoryService.delete(id).subscribe({
           next: () => {
             this.getAll();
             Swal.fire({

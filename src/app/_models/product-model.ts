@@ -1,4 +1,4 @@
-import { Category } from "./category";
+import { Category } from "./product-category-model";
 
 export class Product
 {
