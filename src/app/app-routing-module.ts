@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CategoryComponent } from './admin/product-category-component/product-category-component';
 import { App } from './app';
 import { MainLayout } from './layouts/main-layout/main-layout';
 import { AdminLayout } from './layouts/admin-layout/admin-layout';
-import { ProductComponent } from './admin/product/productComponent';
+import { BlogCategoryComponent } from './admin/blog-category-component/blog-category-component';
+import { ProductComponent } from './admin/product-component/product-component';
+import { ProductCategoryComponent } from './admin/product-category-component/product-category-component';
 
 const routes: Routes = [
 //Main Routes
@@ -14,7 +15,7 @@ const routes: Routes = [
 
 //Admin Routes
 {path:'admin',component:AdminLayout,children:[
-  {path:'category',component:CategoryComponent},
+  {path:'productcategory',component:ProductCategoryComponent},
   {path:'product',component:ProductComponent}
 ]}
 ];

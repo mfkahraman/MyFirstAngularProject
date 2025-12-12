@@ -1,4 +1,4 @@
-import { Category } from "./product-category-model";
+import { ProductCategory } from "./product-category-model";
 
 export class Product
 {
@@ -9,5 +9,5 @@ export class Product
   imagePath;
 
   //In order to get the category details along with product
-  category: Category;
+  category: ProductCategory;
 }

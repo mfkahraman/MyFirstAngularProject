@@ -32,12 +32,12 @@ export class AdminLayout implements AfterViewInit {
 
   navigateToCategory() {
     this.router.navigateByUrl('/admin/product').then(() => {
-      this.router.navigate(['/admin/category']);
+      this.router.navigate(['/admin/productcategory']);
     });
   }
 
   navigateToProduct() {
-    this.router.navigateByUrl('/admin/category').then(() => {
+    this.router.navigateByUrl('/admin/productcategory').then(() => {
       this.router.navigate(['/admin/product']);
     });
   }

@@ -2,26 +2,26 @@ import Swal from 'sweetalert2';
 import { Product } from '../../_models/product-model';
 import { ProductService } from '../../_services/product-service';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { CategoryService } from '../../_services/product-category-service';
-import { Category } from '../../_models/product-category-model';
+import { ProductCategory } from '../../_models/product-category-model';
+import { ProductCategoryService } from '../../_services/product-category-service';
 
 @Component({
-  selector: 'app-productComponent',
+  selector: 'app-product-component',
   standalone: false,
-  templateUrl: './productComponent.html',
-  styleUrl: './productComponent.css',
+  templateUrl: './product-component.html',
+  styleUrl: './product-component.css',
 })
 export class ProductComponent {
   product: Product = new Product();
   productList: Product[] = [];
-  categoryList: Category[] = [];
+  categoryList: ProductCategory[] = [];
   editProduct: any = {}; // Düzenlenen ürünü tutar
   originalProduct: any = {}; // Orjinal değeri sakla
   errors: any = {}; // Validation hatalarını tutar
 
   constructor(
     private productService: ProductService,
-    private categoryService: CategoryService,
+    private categoryService: ProductCategoryService,
     private cdr: ChangeDetectorRef
   ) { }
 
