@@ -8,16 +8,21 @@ import { ProductComponent } from './admin/product-component/product-component';
 import { ProductCategoryComponent } from './admin/product-category-component/product-category-component';
 
 const routes: Routes = [
-//Main Routes
-{path:'',component:MainLayout,children:[
+  //Main Routes
+  {
+    path: '', component: MainLayout, children: [
 
-]},
+    ]
+  },
 
-//Admin Routes
-{path:'admin',component:AdminLayout,children:[
-  {path:'productcategory',component:ProductCategoryComponent},
-  {path:'product',component:ProductComponent}
-]}
+  //Admin Routes
+  {
+    path: 'admin', component: AdminLayout, children: [
+      { path: 'productcategory', component: ProductCategoryComponent },
+      { path: 'product', component: ProductComponent },
+      { path: 'blogcategory', component: BlogCategoryComponent }
+    ]
+  }
 ];
 
 @NgModule({

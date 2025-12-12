@@ -14,4 +14,20 @@ export class BlogCategoryService {
     return this.httpClient.get<BlogCategory[]>(this.apiUrl)
   }
 
+  getById(id: number) {
+    return this.httpClient.get<BlogCategory>(this.apiUrl + id)
+  }
+
+  create(blogCategory: BlogCategory) {
+    return this.httpClient.post<BlogCategory>(this.apiUrl, blogCategory)
+  }
+
+  update(id: number, blogCategory: BlogCategory) {
+    return this.httpClient.put<BlogCategory>(this.apiUrl + id, blogCategory)
+  }
+
+  delete(id: number) {
+    return this.httpClient.delete(this.apiUrl + id)
+  }
+
 }
