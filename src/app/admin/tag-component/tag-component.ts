@@ -1,22 +1,25 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { BlogCategory } from '../../_models/blog-category-model';
-import { BlogCategoryService } from '../../_services/blog-category-service';
 import Swal from 'sweetalert2';
+import { Tag } from '../../_models/tag-model';
+import { TagService } from '../../_services/tag-service';
 
 @Component({
-  selector: 'app-blog-category-component',
+  selector: 'app-tag-component',
   standalone: false,
-  templateUrl: './blog-category-component.html',
-  styleUrl: './blog-category-component.css',
+  templateUrl: './tag-component.html',
+  styleUrl: './tag-component.css',
 })
-export class BlogCategoryComponent implements OnInit {
-  blogCategoryList: BlogCategory[] = [];
-  blogCategory: BlogCategory = new BlogCategory();
-  editBlogCategory: BlogCategory = new BlogCategory();
+export class TagComponent implements OnInit {
+  tagList: Tag[] = [];
+  tag: Tag = new Tag();
+  editTag: Tag = new Tag();
   errors: any = {};
 
+  // Pagination
+  page: number = 1;
+
   constructor(
-    private blogCategoryService: BlogCategoryService,
+    private tagService: TagService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -25,19 +28,19 @@ export class BlogCategoryComponent implements OnInit {
   }
 
   getAll() {
-    this.blogCategoryService.getAll().subscribe({
+    this.tagService.getAll().subscribe({
       next: (values) => {
-        this.blogCategoryList = values;
+        this.tagList = values;
         this.cdr.detectChanges();
       },
-      error: err => console.error('Error loading blog categories:', err)
+      error: err => console.error('Error loading data:', err)
     })
   }
 
   create() {
     this.errors = {};
 
-    this.blogCategoryService.create(this.blogCategory).subscribe({
+    this.tagService.create(this.tag).subscribe({
       next: () => {
         Swal.fire({
           title: "Eklendi!",
@@ -45,7 +48,7 @@ export class BlogCategoryComponent implements OnInit {
           icon: "success"
         });
         this.getAll();
-        this.blogCategory = new BlogCategory();
+        this.tag = new Tag();
       },
       error: err => {
         this.errors = err.error.errors;
@@ -56,7 +59,7 @@ export class BlogCategoryComponent implements OnInit {
   }
 
   update() {
-    this.blogCategoryService.update(this.editBlogCategory.id, this.editBlogCategory).subscribe({
+    this.tagService.update(this.editTag.id, this.editTag).subscribe({
       next: () => {
         this.getAll();
 
@@ -74,7 +77,7 @@ export class BlogCategoryComponent implements OnInit {
     })
   }
 
-  delete(id: number) {
+  delete (id: number) {
     Swal.fire({
       title: "Emin misiniz?",
       text: "Bu işlemi geri alamayacaksınız!",
@@ -92,7 +95,7 @@ export class BlogCategoryComponent implements OnInit {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        this.blogCategoryService.delete(id).subscribe({
+        this.tagService.delete(id).subscribe({
           next: () => {
             // Listeyi yenile
             this.getAll();
@@ -117,7 +120,7 @@ export class BlogCategoryComponent implements OnInit {
     });
   }
 
-  onSelected(model: BlogCategory) {
-    this.editBlogCategory = { ...model };
+  onSelected(model: Tag) {
+    this.editTag = { ...model };
   }
 }

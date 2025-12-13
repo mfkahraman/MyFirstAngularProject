@@ -7,10 +7,12 @@ import { AdminLayout } from './layouts/admin-layout/admin-layout';
 import { MainLayout } from './layouts/main-layout/main-layout';
 import { provideHttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { MainProductComponent } from './_main/main-product-component/main-product-component';
 import { BlogCategoryComponent } from './admin/blog-category-component/blog-category-component';
 import { ProductCategoryComponent } from './admin/product-category-component/product-category-component';
 import { ProductComponent } from './admin/product-component/product-component';
+import { TagComponent } from './admin/tag-component/tag-component';
 
 @NgModule({
   declarations: [
@@ -20,12 +22,14 @@ import { ProductComponent } from './admin/product-component/product-component';
     MainProductComponent,
     BlogCategoryComponent,
     ProductCategoryComponent,
-    ProductComponent
+    ProductComponent,
+    TagComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    NgxPaginationModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

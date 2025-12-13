@@ -1,0 +1,94 @@
+<h3>Blog Etiketleri</h3>
+
+<table class="table table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Etiket Adı</th>
+      <th>İşlemler</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (item of tagList | paginate: { itemsPerPage: 10, currentPage: page }; track item.id; let i = $index) {
+    <tr>
+      <td>{{ (page - 1) * 10 + i + 1 }}</td>
+      <td>{{ item.name }}</td>
+      <td>
+        <button class="btn btn-primary btn-sm me-2" (click)="onSelected(item)" data-bs-toggle="modal"
+          data-bs-target="#editModal">Düzenle
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="delete(item.id)">Sil</button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+
+<!-- Pagination Kontrolleri -->
+<div class="d-flex justify-content-center mt-3">
+  <pagination-controls
+    (pageChange)="page = $event"
+    previousLabel="Önceki"
+    nextLabel="Sonraki">
+  </pagination-controls>
+</div>
+
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
+  Yeni Etiket Ekle</button>
+
+<!--Create Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form #createForm="ngForm" (ngSubmit)="create(); createForm.resetForm()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="createModalLabel">Yeni Etiket Ekle</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="tagName">Etiket Adı</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="tag.name"
+              name="name" placeholder="Etiket Adı Giriniz" required="" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
+            [disabled]="createForm.invalid || !createForm.dirty">
+            Kaydet
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!--Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form #editForm="ngForm" (ngSubmit)="update()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editModalLabel">Kategori Güncelle</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="name">Etiket Adı</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="editTag.name"
+              name="name" placeholder="Etiket Adı Giriniz" required="" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
+            [disabled]="editForm.invalid || !editForm.dirty">
+            Güncelle
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

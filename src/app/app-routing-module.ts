@@ -6,6 +6,7 @@ import { AdminLayout } from './layouts/admin-layout/admin-layout';
 import { BlogCategoryComponent } from './admin/blog-category-component/blog-category-component';
 import { ProductComponent } from './admin/product-component/product-component';
 import { ProductCategoryComponent } from './admin/product-category-component/product-category-component';
+import { TagComponent } from './admin/tag-component/tag-component';
 
 const routes: Routes = [
   //Main Routes
@@ -20,7 +21,8 @@ const routes: Routes = [
     path: 'admin', component: AdminLayout, children: [
       { path: 'productcategory', component: ProductCategoryComponent },
       { path: 'product', component: ProductComponent },
-      { path: 'blogcategory', component: BlogCategoryComponent }
+      { path: 'blogcategory', component: BlogCategoryComponent },
+      { path: 'tag', component: TagComponent }
     ]
   }
 ];
