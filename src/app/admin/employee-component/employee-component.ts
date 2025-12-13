@@ -15,6 +15,10 @@ export class EmployeeComponent implements OnInit {
   editEmployee: Employee = new Employee();
   errors: any = {};
 
+  // Image handling
+  imagePreview: string | null = null;
+  editImagePreview: string | null = null;
+
   // Pagination
   page: number = 1;
 
@@ -37,6 +41,76 @@ export class EmployeeComponent implements OnInit {
     })
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      // Dosya tipi kontrolü
+      if (!file.type.startsWith('image/')) {
+        Swal.fire({
+          title: "Hata!",
+          text: "Lütfen geçerli bir görsel dosyası seçin.",
+          icon: "error"
+        });
+        return;
+      }
+
+      // Dosya boyutu kontrolü (2MB - Base64 için önerilen)
+      if (file.size > 2 * 1024 * 1024) {
+        Swal.fire({
+          title: "Hata!",
+          text: "Görsel dosyası 2MB'dan küçük olmalıdır (Veritabanı için).",
+          icon: "error"
+        });
+        return;
+      }
+
+      // Base64'e çevir ve kaydet
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        this.imagePreview = base64String;
+        this.employee.imageUrl = base64String; // Base64 string veritabanına kaydedilecek
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onEditFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      // Dosya tipi kontrolü
+      if (!file.type.startsWith('image/')) {
+        Swal.fire({
+          title: "Hata!",
+          text: "Lütfen geçerli bir görsel dosyası seçin.",
+          icon: "error"
+        });
+        return;
+      }
+
+      // Dosya boyutu kontrolü (2MB - Base64 için önerilen)
+      if (file.size > 2 * 1024 * 1024) {
+        Swal.fire({
+          title: "Hata!",
+          text: "Görsel dosyası 2MB'dan küçük olmalıdır (Veritabanı için).",
+          icon: "error"
+        });
+        return;
+      }
+
+      // Base64'e çevir ve kaydet
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        this.editImagePreview = base64String;
+        this.editEmployee.imageUrl = base64String; // Base64 string veritabanına kaydedilecek
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   create() {
     this.errors = {};
 
@@ -44,11 +118,12 @@ export class EmployeeComponent implements OnInit {
       next: () => {
         Swal.fire({
           title: "Eklendi!",
-          text: "Kategori başarıyla eklendi.",
+          text: "Personel başarıyla eklendi.",
           icon: "success"
         });
         this.getAll();
         this.employee = new Employee();
+        this.imagePreview = null;
       },
       error: err => {
         this.errors = err.error.errors;
@@ -62,10 +137,11 @@ export class EmployeeComponent implements OnInit {
     this.service.update(this.editEmployee.id, this.editEmployee).subscribe({
       next: () => {
         this.getAll();
+        this.editImagePreview = null;
 
         Swal.fire({
           title: "Güncellendi!",
-          text: "Kategori başarıyla güncellendi.",
+          text: "Personel başarıyla güncellendi.",
           icon: "success"
         });
       },
@@ -122,6 +198,7 @@ export class EmployeeComponent implements OnInit {
 
   onSelected(model: Employee) {
     this.editEmployee = { ...model };
+    this.editImagePreview = null;
   }
 }
 
