@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Employee } from '../../_models/employee-model';
 import { EmployeeService } from '../../_services/employee-service';
+import { ImageService } from '../../_services/image-service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -24,6 +25,7 @@ export class EmployeeComponent implements OnInit {
 
   constructor(
     private service: EmployeeService,
+    private imageService: ImageService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -42,72 +44,36 @@ export class EmployeeComponent implements OnInit {
   }
 
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      // Dosya tipi kontrolü
-      if (!file.type.startsWith('image/')) {
-        Swal.fire({
-          title: "Hata!",
-          text: "Lütfen geçerli bir görsel dosyası seçin.",
-          icon: "error"
-        });
-        return;
-      }
+    const imageObservable = this.imageService.handleFileSelection(event, 2);
 
-      // Dosya boyutu kontrolü (2MB - Base64 için önerilen)
-      if (file.size > 2 * 1024 * 1024) {
-        Swal.fire({
-          title: "Hata!",
-          text: "Görsel dosyası 2MB'dan küçük olmalıdır (Veritabanı için).",
-          icon: "error"
-        });
-        return;
-      }
-
-      // Base64'e çevir ve kaydet
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64String = reader.result as string;
-        this.imagePreview = base64String;
-        this.employee.imageUrl = base64String; // Base64 string veritabanına kaydedilecek
-        this.cdr.detectChanges();
-      };
-      reader.readAsDataURL(file);
+    if (imageObservable) {
+      imageObservable.subscribe({
+        next: (result) => {
+          this.imagePreview = result.preview;
+          this.employee.imageUrl = result.base64;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Görsel yükleme hatası:', err);
+        }
+      });
     }
   }
 
   onEditFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      // Dosya tipi kontrolü
-      if (!file.type.startsWith('image/')) {
-        Swal.fire({
-          title: "Hata!",
-          text: "Lütfen geçerli bir görsel dosyası seçin.",
-          icon: "error"
-        });
-        return;
-      }
+    const imageObservable = this.imageService.handleFileSelection(event, 2);
 
-      // Dosya boyutu kontrolü (2MB - Base64 için önerilen)
-      if (file.size > 2 * 1024 * 1024) {
-        Swal.fire({
-          title: "Hata!",
-          text: "Görsel dosyası 2MB'dan küçük olmalıdır (Veritabanı için).",
-          icon: "error"
-        });
-        return;
-      }
-
-      // Base64'e çevir ve kaydet
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64String = reader.result as string;
-        this.editImagePreview = base64String;
-        this.editEmployee.imageUrl = base64String; // Base64 string veritabanına kaydedilecek
-        this.cdr.detectChanges();
-      };
-      reader.readAsDataURL(file);
+    if (imageObservable) {
+      imageObservable.subscribe({
+        next: (result) => {
+          this.editImagePreview = result.preview;
+          this.editEmployee.imageUrl = result.base64;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Görsel yükleme hatası:', err);
+        }
+      });
     }
   }
 

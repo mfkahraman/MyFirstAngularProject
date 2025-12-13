@@ -4,6 +4,7 @@ import { ProductService } from '../../_services/product-service';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ProductCategory } from '../../_models/product-category-model';
 import { ProductCategoryService } from '../../_services/product-category-service';
+import { ImageService } from '../../_services/image-service';
 
 @Component({
   selector: 'app-product-component',
@@ -18,15 +19,57 @@ export class ProductComponent {
   editProduct: Product = new Product(); // Düzenlenen ürünü tutar
   errors: any = {}; // Validation hatalarını tutar
 
+  // Image handling
+  imagePreview: string | null = null;
+  editImagePreview: string | null = null;
+
+  // Pagination
+  page: number = 1;
+
   constructor(
     private productService: ProductService,
     private categoryService: ProductCategoryService,
+    private imageService: ImageService,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.getAllProducts();
     this.getAllCategories();
+  }
+
+  onFileSelected(event: any) {
+    const imageObservable = this.imageService.handleFileSelection(event, 2);
+
+    if (imageObservable) {
+      imageObservable.subscribe({
+        next: (result) => {
+          this.imagePreview = result.preview;
+          this.product.imagePath = result.base64;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Görsel yükleme hatası:', err);
+        }
+      });
+    }
+  }
+
+  onEditFileSelected(event: any) {
+    const imageObservable = this.imageService.handleFileSelection(event, 2);
+
+    if (imageObservable) {
+      imageObservable.subscribe({
+        next: (result) => {
+          this.editImagePreview = result.preview;
+          this.editProduct.imagePath = result.base64;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Görsel yükleme hatası:', err);
+        }
+      });
+    }
   }
 
   getAllProducts() {
@@ -54,27 +97,23 @@ export class ProductComponent {
   }
 
   createProduct() {
-    // Önceki hataları temizle (yeni bir ekleme denemesi için temiz başla)
+    console.log('Form submitted, product:', this.product);
     this.errors = {};
 
     this.productService.create(this.product).subscribe({
       next: () => {
-        this.product = new Product();
-        this.getAllProducts();
-
         Swal.fire({
           title: "Eklendi!",
           text: "Ürün başarıyla eklendi.",
           icon: "success"
         });
+        this.getAllProducts();
+        this.product = new Product();
+        this.imagePreview = null;
       },
       error: err => {
-        // Backend'den gelen validation hatalarını errors objesine ata
-        // Örnek: {ProductName: ["Ürün adı en az 3 karakter olmalıdır."]}
         this.errors = err.error.errors;
-
-        // Angular'ın değişiklikleri algılaması için manuel tetikleme
-        // Böylece hata mesajları UI'da görünür
+        console.log(this.errors);
         this.cdr.detectChanges();
       }
     })
@@ -84,6 +123,7 @@ export class ProductComponent {
     this.productService.update(this.editProduct.id, this.editProduct).subscribe({
       next: () => {
         this.getAllProducts();
+        this.editImagePreview = null;
 
         Swal.fire({
           title: "Güncellendi!",
@@ -102,9 +142,10 @@ export class ProductComponent {
   onSelected(model: Product) {
     // Object'in kopyasını oluştur (referans değil)
     this.editProduct = { ...model };
+    this.editImagePreview = null;
   }
 
-deleteProduct(id: number) {
+  deleteProduct(id: number) {
     Swal.fire({
       title: "Emin misiniz?",
       text: "Bu işlemi geri alamayacaksınız!",
