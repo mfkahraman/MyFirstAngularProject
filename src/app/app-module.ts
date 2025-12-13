@@ -13,6 +13,7 @@ import { BlogCategoryComponent } from './admin/blog-category-component/blog-cate
 import { ProductCategoryComponent } from './admin/product-category-component/product-category-component';
 import { ProductComponent } from './admin/product-component/product-component';
 import { TagComponent } from './admin/tag-component/tag-component';
+import { EmployeeComponent } from './admin/employee-component/employee-component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { TagComponent } from './admin/tag-component/tag-component';
     BlogCategoryComponent,
     ProductCategoryComponent,
     ProductComponent,
-    TagComponent
+    TagComponent,
+    EmployeeComponent
   ],
   imports: [
     BrowserModule,
