@@ -12,7 +12,7 @@ import { ProductCategoryService } from '../../_services/product-category-service
 export class ProductCategoryComponent implements OnInit {
   categoryList: ProductCategory[] = [];
   category: ProductCategory = new ProductCategory();
-  editCategory: any = {};
+  editCategory: ProductCategory = new ProductCategory();
   errors: any = {}; // Validation hatalarını tutar
 
   constructor(

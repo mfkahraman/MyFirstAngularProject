@@ -11,16 +11,16 @@
 
   <tbody>
     @for (item of blogCategoryList; track item.id; let i = $index) {
-      <tr>
-        <td>{{ i + 1 }}</td>
-        <td>{{ item.name }}</td>
-        <td>
-          <button class="btn btn-primary btn-sm me-2" (click)="onSelected(item)" data-bs-toggle="modal"
-            data-bs-target="#editModal">Düzenle
-          </button>
-          <button class="btn btn-danger btn-sm" (click)="delete(item.id)">Sil</button>
-        </td>
-      </tr>
+    <tr>
+      <td>{{ i + 1 }}</td>
+      <td>{{ item.name }}</td>
+      <td>
+        <button class="btn btn-primary btn-sm me-2" (click)="onSelected(item)" data-bs-toggle="modal"
+          data-bs-target="#editModal">Düzenle
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="delete(item.id)">Sil</button>
+      </td>
+    </tr>
     }
   </tbody>
 </table>

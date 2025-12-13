@@ -30,7 +30,7 @@ export class ProductComponent {
   }
 
   getAllProducts() {
-    this.productService.getAll().subscribe({
+    this.productService.getWithDetails().subscribe({
       next: values => {
         this.productList = values;
         this.cdr.detectChanges();

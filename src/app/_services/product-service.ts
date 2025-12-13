@@ -14,6 +14,9 @@ export class ProductService {
     return this.http.get<Product[]>(this.apiUrl);
   }
 
+  getWithDetails() {
+    return this.http.get<Product[]>('https://localhost:7000/api/Products/get-products-with-details');
+  }
   getById(id: number) {
     return this.http.get<Product>(this.apiUrl + id);
   }

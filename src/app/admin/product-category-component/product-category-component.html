@@ -10,25 +10,24 @@
   </thead>
 
   <tbody>
-    <tr *ngFor="let item of categoryList; let i = index">
+    @for (item of categoryList; track item.id; let i = $index) {
+    <tr>
       <td>{{ i + 1 }}</td>
       <td>{{ item.categoryName }}</td>
       <td>
-        <button class="btn btn-outline-danger me-2" (click)="delete(item.id)">
-          <i class="fa fa-trash">Sil</i>
+        <button class="btn btn-primary btn-sm me-2" (click)="onSelected(item)" data-bs-toggle="modal"
+          data-bs-target="#editModal">Düzenle
         </button>
-        <button class="btn btn-outline-info" (click)="onSelected(item)" data-bs-toggle="modal"
-          data-bs-target="#editModal">
-          <i class="fa fa-edit">Güncelle</i>
-        </button>
+        <button class="btn btn-danger btn-sm" (click)="delete(item.id)">Sil</button>
       </td>
     </tr>
+    }
   </tbody>
 </table>
 
-<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createModal">
-  <i class="fa fa-plus"></i> Yeni Kategori Ekle
-</button>
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
+  Yeni Kategori Ekle</button>
+
 
 <!--Create Modal -->
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
