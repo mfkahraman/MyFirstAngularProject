@@ -13,34 +13,32 @@ export class ProductCategoryComponent implements OnInit {
   categoryList: ProductCategory[] = [];
   category: ProductCategory = new ProductCategory();
   editCategory: any = {};
-  originalCategory: any = {}; // Orjinal değeri sakla
+  errors: any = {}; // Validation hatalarını tutar
 
   constructor(
     private productCategoryService: ProductCategoryService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
-    console.log('CategoryComponent ngOnInit called');
     this.getAll();
   }
 
   getAll() {
-    console.log('getAll method called');
     this.productCategoryService.getAll().subscribe({
       next: values => {
-        console.log('Categories received:', values);
-        this.categoryList = [...values]; // Yeni array referansı oluştur
-        this.cdr.detectChanges(); // Manuel değişiklik algılama
-        console.log('categoryList updated:', this.categoryList);
+        this.categoryList = values;
+        this.cdr.detectChanges(); // Manuel değişiklik algılamayı tetikle
       },
       error: err => console.error('Error loading categories:', err)
     })
   }
 
   create() {
+    this.errors = {};
+
     this.productCategoryService.create(this.category).subscribe({
-      next: value => {
+      next: () => {
         Swal.fire({
           title: "Eklendi!",
           text: "Kategori başarıyla eklendi.",
@@ -49,7 +47,11 @@ export class ProductCategoryComponent implements OnInit {
         this.getAll();
         this.category = new ProductCategory();
       },
-      error: err => console.log(err)
+      error: err => {
+        this.errors = err.error.errors;
+        console.log(this.errors);
+        this.cdr.detectChanges();
+      }
     })
   }
 
@@ -57,25 +59,24 @@ export class ProductCategoryComponent implements OnInit {
     this.productCategoryService.update(this.editCategory.id, this.editCategory).subscribe({
       next: () => {
         this.getAll();
+
         Swal.fire({
           title: "Güncellendi!",
           text: "Kategori başarıyla güncellendi.",
           icon: "success"
         });
       },
-      error: err => console.log(err)
+      error: err => {
+        this.errors = err.error.errors;
+        console.log(this.errors);
+        this.cdr.detectChanges();
+      }
     })
   }
 
   onSelected(model: ProductCategory) {
     // Object'in kopyasını oluştur (referans değil)
     this.editCategory = { ...model };
-    this.originalCategory = { ...model }; // Orjinal değeri de sakla
-  }
-
-  // Kategori değişti mi kontrol et
-  isCategoryChanged(): boolean {
-    return this.editCategory.categoryName !== this.originalCategory.categoryName;
   }
 
   delete(id: number) {

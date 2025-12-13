@@ -12,7 +12,8 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let product of productList; let i = index">
+    @for (product of productList; track product.id; let i = $index) {
+    <tr>
       <td>{{ i + 1 }}</td>
       <td>{{ product.productName }}</td>
       <td>{{ product.category?.categoryName }}</td>
@@ -24,6 +25,7 @@
         <button class="btn btn-danger btn-sm" (click)="deleteProduct(product.id)">Sil</button>
       </td>
     </tr>
+    }
   </tbody>
 </table>
 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
@@ -33,7 +35,7 @@
 <!--Create Modal -->
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <form #createForm="ngForm" (ngSubmit)="createProduct(createForm)">
+    <form #createForm="ngForm" (ngSubmit)="createProduct()">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="createModalLabel">Yeni Ürün Ekle</h1>
@@ -149,8 +151,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
-          [disabled]="!editForm.dirty"> Güncelle </button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="!editForm.dirty"> Güncelle
+          </button>
         </div>
       </div>
     </form>

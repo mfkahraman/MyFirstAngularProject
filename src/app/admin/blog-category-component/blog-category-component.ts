@@ -11,9 +11,9 @@ import Swal from 'sweetalert2';
 })
 export class BlogCategoryComponent implements OnInit {
   blogCategoryList: BlogCategory[] = [];
-  blogCategory: BlogCategory = new BlogCategory()
-  editBlogCategory: any = {};
-  originalBlogCategory: any = {};
+  blogCategory: BlogCategory = new BlogCategory();
+  editBlogCategory: BlogCategory = new BlogCategory();
+  errors: any = {}; // Validation hatalarını tutar
 
   constructor(
     private blogCategoryService: BlogCategoryService,
@@ -26,7 +26,7 @@ export class BlogCategoryComponent implements OnInit {
 
   getAll() {
     this.blogCategoryService.getAll().subscribe({
-      next: values => {
+      next: (values) => {
         this.blogCategoryList = values;
         this.cdr.detectChanges();
       },
@@ -35,8 +35,10 @@ export class BlogCategoryComponent implements OnInit {
   }
 
   create() {
+    this.errors = {};
+
     this.blogCategoryService.create(this.blogCategory).subscribe({
-      next: value => {
+      next: () => {
         Swal.fire({
           title: "Eklendi!",
           text: "Kategori başarıyla eklendi.",
@@ -45,7 +47,11 @@ export class BlogCategoryComponent implements OnInit {
         this.getAll();
         this.blogCategory = new BlogCategory();
       },
-      error: err => console.log(err)
+      error: err => {
+        this.errors = err.error.errors;
+        console.log(this.errors);
+        this.cdr.detectChanges();
+      }
     })
   }
 
@@ -53,17 +59,22 @@ export class BlogCategoryComponent implements OnInit {
     this.blogCategoryService.update(this.editBlogCategory.id, this.editBlogCategory).subscribe({
       next: () => {
         this.getAll();
+
         Swal.fire({
           title: "Güncellendi!",
           text: "Kategori başarıyla güncellendi.",
           icon: "success"
         });
       },
-      error: err => console.log(err)
+      error: err => {
+        this.errors = err.error.errors;
+        console.log(this.errors);
+        this.cdr.detectChanges();
+      }
     })
   }
 
-delete(id: number) {
+  delete(id: number) {
     Swal.fire({
       title: "Emin misiniz?",
       text: "Bu işlemi geri alamayacaksınız!",
@@ -83,7 +94,9 @@ delete(id: number) {
       if (result.isConfirmed) {
         this.blogCategoryService.delete(id).subscribe({
           next: () => {
+            // Listeyi yenile
             this.getAll();
+
             Swal.fire({
               title: "Silindi!",
               text: "Dosyanız silindi.",
@@ -91,16 +104,14 @@ delete(id: number) {
               confirmButtonColor: "#28a745"
             });
           },
-          error: err => console.log(err)
-        });
-      }
-
-      else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: "İptal Edildi",
-          text: "Silme işlemi iptal edildi.",
-          icon: "error",
-          confirmButtonColor: "#dc3545"
+          error: err => {
+            console.error('Silme hatası:', err);
+            Swal.fire({
+              title: "Hata!",
+              text: "Silme sırasında bir hata oluştu.",
+              icon: "error"
+            });
+          }
         });
       }
     });
@@ -108,13 +119,5 @@ delete(id: number) {
 
   onSelected(model: BlogCategory) {
     this.editBlogCategory = { ...model };
-    this.originalBlogCategory = { ...model };
   }
-
-
-  isCategoryChanged(): boolean {
-    return this.editBlogCategory.categoryName !== this.originalBlogCategory.categoryName;
-  }
-
-
 }

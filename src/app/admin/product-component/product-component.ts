@@ -15,8 +15,7 @@ export class ProductComponent {
   product: Product = new Product();
   productList: Product[] = [];
   categoryList: ProductCategory[] = [];
-  editProduct: any = {}; // Düzenlenen ürünü tutar
-  originalProduct: any = {}; // Orjinal değeri sakla
+  editProduct: Product = new Product(); // Düzenlenen ürünü tutar
   errors: any = {}; // Validation hatalarını tutar
 
   constructor(
@@ -25,21 +24,16 @@ export class ProductComponent {
     private cdr: ChangeDetectorRef
   ) { }
 
-  //In order to load products when component is initialized
   ngOnInit() {
-    console.log('ProductComponent ngOnInit called');
     this.getAllProducts();
     this.getAllCategories();
   }
 
   getAllProducts() {
-    console.log('getAllProducts method called');
     this.productService.getAll().subscribe({
       next: values => {
-        console.log('Products received:', values);
-        this.productList = [...values]; // Create a new array reference
-        this.cdr.detectChanges(); // Manual change detection
-        console.log('productList updated:', this.productList);
+        this.productList = values;
+        this.cdr.detectChanges();
       },
       error: err => console.error('Error loading products:', err)
     })
@@ -59,43 +53,21 @@ export class ProductComponent {
     })
   }
 
-  createProduct(form?: any) {
+  createProduct() {
     // Önceki hataları temizle (yeni bir ekleme denemesi için temiz başla)
     this.errors = {};
 
-    // Ürün ekleme isteğini backend'e gönder
     this.productService.create(this.product).subscribe({
-      // Başarılı olursa (201 Created response gelirse)
-      next: value => {
-        // Yeni eklenen ürünü listeye ekle
-        this.productList.push(value);
-
-        // Eğer form parametresi geldiyse (HTML'den gönderiliyor), formu temizle
-        if (form) {
-          form.resetForm();
-        }
-
-        // Product objesini yeni bir instance ile değiştir
+      next: () => {
         this.product = new Product();
+        this.getAllProducts();
 
-        // Angular'ın değişiklikleri algılaması için manuel tetikleme
-        this.cdr.detectChanges();
-
-        // Modal'ı programatik olarak kapat (Bootstrap API kullanarak)
-        const modalElement = document.getElementById('createModal');
-        const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
-        if (modal) {
-          modal.hide();
-        }
-
-        // Kullanıcıya başarı mesajı göster
         Swal.fire({
           title: "Eklendi!",
           text: "Ürün başarıyla eklendi.",
           icon: "success"
         });
       },
-      // Hata olursa (400 Bad Request gibi)
       error: err => {
         // Backend'den gelen validation hatalarını errors objesine ata
         // Örnek: {ProductName: ["Ürün adı en az 3 karakter olmalıdır."]}
@@ -112,6 +84,7 @@ export class ProductComponent {
     this.productService.update(this.editProduct.id, this.editProduct).subscribe({
       next: () => {
         this.getAllProducts();
+
         Swal.fire({
           title: "Güncellendi!",
           text: "Ürün başarıyla güncellendi.",
@@ -131,7 +104,7 @@ export class ProductComponent {
     this.editProduct = { ...model };
   }
 
-  deleteProduct(id: number) {
+deleteProduct(id: number) {
     Swal.fire({
       title: "Emin misiniz?",
       text: "Bu işlemi geri alamayacaksınız!",
@@ -151,24 +124,24 @@ export class ProductComponent {
       if (result.isConfirmed) {
         this.productService.delete(id).subscribe({
           next: () => {
+            // Listeyi yenile
             this.getAllProducts();
+
             Swal.fire({
               title: "Silindi!",
-              text: "Ürün başarıyla silindi.",
+              text: "Dosyanız silindi.",
               icon: "success",
               confirmButtonColor: "#28a745"
             });
           },
-          error: err => console.log(err)
-        });
-      }
-
-      else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: "İptal Edildi",
-          text: "Silme işlemi iptal edildi.",
-          icon: "error",
-          confirmButtonColor: "#dc3545"
+          error: err => {
+            console.error('Silme hatası:', err);
+            Swal.fire({
+              title: "Hata!",
+              text: "Silme sırasında bir hata oluştu.",
+              icon: "error"
+            });
+          }
         });
       }
     });

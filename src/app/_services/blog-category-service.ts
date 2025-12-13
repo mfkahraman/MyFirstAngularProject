@@ -23,11 +23,11 @@ export class BlogCategoryService {
   }
 
   update(id: number, blogCategory: BlogCategory) {
-    return this.httpClient.put<BlogCategory>(this.apiUrl + id, blogCategory)
+    return this.httpClient.put(this.apiUrl + id, blogCategory, { responseType: 'text' })
   }
 
   delete(id: number) {
-    return this.httpClient.delete(this.apiUrl + id)
+    return this.httpClient.delete(this.apiUrl + id, { responseType: 'text' })
   }
 
 }

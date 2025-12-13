@@ -23,11 +23,11 @@ export class ProductService {
   }
 
   update(id: number, model: Product) {
-    return this.http.put(this.apiUrl + id, model);
+    return this.http.put(this.apiUrl + id, model, { responseType: 'text' });
   }
 
   delete(id: number) {
-    return this.http.delete(this.apiUrl + id);
+    return this.http.delete(this.apiUrl + id, { responseType: 'text' });
   }
 
 }

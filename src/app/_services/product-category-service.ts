@@ -22,10 +22,10 @@ export class ProductCategoryService {
   }
 
   update(id: number, model: ProductCategory) {
-    return this.http.put(this.apiUrl + id, model);
+    return this.http.put(this.apiUrl + id, model, { responseType: 'text' });
   }
 
   delete(id: number) {
-    return this.http.delete(this.apiUrl + id);
+    return this.http.delete(this.apiUrl + id, { responseType: 'text' });
   }
 }
