@@ -8,6 +8,7 @@ import { ProductComponent } from './admin/product-component/product-component';
 import { ProductCategoryComponent } from './admin/product-category-component/product-category-component';
 import { TagComponent } from './admin/tag-component/tag-component';
 import { EmployeeComponent } from './admin/employee-component/employee-component';
+import { WriterComponent } from './admin/writer-component/writer-component';
 
 const routes: Routes = [
   //Main Routes
@@ -24,7 +25,8 @@ const routes: Routes = [
       { path: 'product', component: ProductComponent },
       { path: 'blogcategory', component: BlogCategoryComponent },
       { path: 'tag', component: TagComponent },
-      { path: 'employee', component: EmployeeComponent }
+      { path: 'employee', component: EmployeeComponent },
+      { path: 'writer', component: WriterComponent }
     ]
   }
 ];

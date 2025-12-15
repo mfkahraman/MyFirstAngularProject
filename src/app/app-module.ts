@@ -14,6 +14,7 @@ import { ProductCategoryComponent } from './admin/product-category-component/pro
 import { ProductComponent } from './admin/product-component/product-component';
 import { TagComponent } from './admin/tag-component/tag-component';
 import { EmployeeComponent } from './admin/employee-component/employee-component';
+import { WriterComponent } from './admin/writer-component/writer-component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { EmployeeComponent } from './admin/employee-component/employee-component
     ProductCategoryComponent,
     ProductComponent,
     TagComponent,
-    EmployeeComponent
+    EmployeeComponent,
+    WriterComponent
   ],
   imports: [
     BrowserModule,
