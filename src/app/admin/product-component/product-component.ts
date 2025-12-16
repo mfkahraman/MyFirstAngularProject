@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 import { Product } from '../../_models/product-model';
 import { ProductService } from '../../_services/product-service';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProductCategory } from '../../_models/product-category-model';
 import { ProductCategoryService } from '../../_services/product-category-service';
 import { ImageService } from '../../_services/image-service';
@@ -12,7 +12,7 @@ import { ImageService } from '../../_services/image-service';
   templateUrl: './product-component.html',
   styleUrl: './product-component.css',
 })
-export class ProductComponent {
+export class ProductComponent implements OnInit {
   product: Product = new Product();
   productList: Product[] = [];
   categoryList: ProductCategory[] = [];
