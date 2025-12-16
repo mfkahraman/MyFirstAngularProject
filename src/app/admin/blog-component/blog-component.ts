@@ -9,7 +9,6 @@ import { BlogCategoryService } from '../../_services/blog-category-service';
 import { TagService } from '../../_services/tag-service';
 import { ImageService } from '../../_services/image-service';
 import Swal from 'sweetalert2';
-import { BlogTagService } from '../../_services/blog-tag-service';
 import { BlogTag } from '../../_models/blog-tag-model';
 
 @Component({
@@ -37,13 +36,13 @@ export class BlogComponent implements OnInit {
 
   // Pagination
   page: number = 1;
+  isLoading: boolean = false;
 
   constructor(
     private blogService: BlogService,
     private categoryService: BlogCategoryService,
     private writerService: WriterService,
     private tagService: TagService,
-    private blogTagService: BlogTagService,
     private imageService: ImageService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -124,12 +123,17 @@ export class BlogComponent implements OnInit {
   }
 
   getAllBlogs() {
+    this.isLoading = true;
     this.blogService.getWithDetails().subscribe({
       next: values => {
         this.blogList = values;
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
-      error: err => console.error('Error loading blogs:', err)
+      error: err => {
+        console.error('Error loading blogs:', err);
+        this.isLoading = false;
+      }
     })
   }
 
@@ -151,13 +155,6 @@ export class BlogComponent implements OnInit {
     this.tagService.getAll().subscribe({
       next: values => this.tagList = values,
       error: err => console.error('Error loading tags:', err)
-    })
-  }
-
-  getBlogById(id: number) {
-    this.blogService.getById(id).subscribe({
-      next: value => this.blog = value,
-      error: err => console.error('Error loading blog by id:', err)
     })
   }
 
@@ -188,12 +185,15 @@ export class BlogComponent implements OnInit {
   }
 
   createBlog() {
-    console.log('Form submitted, blog:', this.blog);
-    console.log('Selected tags:', this.selectedTags);
     this.errors = {};
 
-    // Blog objesine tagIds'i ekle
-    this.blog.tagIds = this.selectedTags;
+    // Convert selectedTags to blogTags format
+    this.blog.blogTags = this.selectedTags.map(tagId => ({
+      id: 0,
+      blogId: 0,
+      tagId: tagId,
+      isDeleted: false
+    }));
 
     this.blogService.create(this.blog).subscribe({
       next: () => {
@@ -210,18 +210,19 @@ export class BlogComponent implements OnInit {
       },
       error: err => {
         this.errors = err.error.errors;
-        console.log(this.errors);
         this.cdr.detectChanges();
       }
     })
   }
 
   updateBlog() {
-    console.log('Update blog:', this.editBlog);
-    console.log('Selected tags for edit:', this.editSelectedTags);
-
-    // Blog objesine tagIds'i ekle
-    this.editBlog.tagIds = this.editSelectedTags;
+    // Convert editSelectedTags to blogTags format
+    this.editBlog.blogTags = this.editSelectedTags.map(tagId => ({
+      id: 0,
+      blogId: this.editBlog.id,
+      tagId: tagId,
+      isDeleted: false
+    }));
 
     this.blogService.update(this.editBlog.id, this.editBlog).subscribe({
       next: () => {
@@ -238,19 +239,18 @@ export class BlogComponent implements OnInit {
       },
       error: err => {
         this.errors = err.error.errors;
-        console.log(this.errors);
         this.cdr.detectChanges();
       }
     })
   }
 
   onSelected(model: Blog) {
-    // Object'in kopyasını oluştur (referans değil)
+    // Create a copy of the object (not a reference)
     this.editBlog = { ...model };
     this.editCoverImagePreview = null;
     this.editContentImagePreview = null;
 
-    // Blog'un mevcut taglarını yükle (sadece isDeleted = false olanlar)
+    // Load blog's current tags (only non-deleted ones)
     this.editSelectedTags = model.blogTags
       ? model.blogTags
           .filter(bt => !bt.isDeleted)
@@ -258,14 +258,19 @@ export class BlogComponent implements OnInit {
       : [];
   }
 
+  getTagName(tagId: number): string {
+    const tag = this.tagList.find(t => t.id === tagId);
+    return tag ? tag.name : '';
+  }
+
   deleteBlog(id: number) {
     Swal.fire({
-      title: "Emin misiniz?",
-      text: "Bu işlemi geri alamayacaksınız!",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Evet, sil!",
-      cancelButtonText: "Hayır, iptal et!",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
       confirmButtonColor: "#28a745",
       cancelButtonColor: "#dc3545",
       reverseButtons: true,
@@ -278,21 +283,20 @@ export class BlogComponent implements OnInit {
       if (result.isConfirmed) {
         this.blogService.delete(id).subscribe({
           next: () => {
-            // Listeyi yenile
             this.getAllBlogs();
 
             Swal.fire({
-              title: "Silindi!",
-              text: "Dosyanız silindi.",
+              title: "Deleted!",
+              text: "Your blog has been deleted.",
               icon: "success",
               confirmButtonColor: "#28a745"
             });
           },
           error: err => {
-            console.error('Silme hatası:', err);
+            console.error('Delete error:', err);
             Swal.fire({
-              title: "Hata!",
-              text: "Silme sırasında bir hata oluştu.",
+              title: "Error!",
+              text: "An error occurred while deleting.",
               icon: "error"
             });
           }

@@ -1,12 +1,21 @@
 <h2>Blogs</h2>
 
+@if (isLoading) {
+  <div class="loading-spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+} @else {
+<div class="table-responsive">
 <table class="table table-bordered table-hover">
-  <thead>>
+  <thead>
     <tr>
       <th>#</th>
       <th>Blog Title</th>
       <th>Writer</th>
       <th>Category</th>
+      <th>Tags</th>
       <th>Content</th>
       <th>Created At</th>
       <th>Blog Cover</th>
@@ -20,9 +29,20 @@
       <td>{{ item.title }}</td>
       <td>{{ item.writer?.fullName }}</td>
       <td>{{ item.category?.name }}</td>
+      <td>
+        @if (item.blogTags && item.blogTags.length > 0) {
+          @for (blogTag of item.blogTags; track blogTag.id) {
+            @if (!blogTag.isDeleted) {
+              <span class="badge bg-secondary me-1">{{ getTagName(blogTag.tagId) }}</span>
+            }
+          }
+        } @else {
+          <span class="text-muted">No tags</span>
+        }
+      </td>
       <td>{{ item.content.length > 100 ? (item.content.substring(0, 100) + '...') : item.content }}</td>
       <td>{{ item.createdAt | date:'short' }}</td>
-      <td><img src="{{item.coverImageUrl}}" alt="{{item.title}}" style="width: 75px;height: 75px; object-fit: cover;" />
+      <td><img [src]="item.coverImageUrl" [alt]="'Cover image for ' + item.title" class="blog-cover-thumbnail" />
       </td>
       <td>
         <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal"
@@ -33,6 +53,7 @@
     }
   </tbody>
 </table>
+</div>
 
 <!-- Pagination Controls -->
 <div class="d-flex justify-content-center mt-3">
@@ -40,13 +61,14 @@
   </pagination-controls>
 </div>
 
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
+<button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#createModal">
   Add New Blog</button>
+}
 
 
 <!--Create Modal -->
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <form #createForm="ngForm" (ngSubmit)="createBlog(); createForm.resetForm()">
       <div class="modal-content">
         <div class="modal-header">
@@ -106,9 +128,9 @@
             <small class="form-text text-muted">Select one or more tags</small>
           </div>
           <div class="form-group">
-            <label class="form-label" for="content">Content</label>
+            <label class="form-label" for="content">Content <span class="text-danger">*</span></label>
             <textarea class="form-control" id="content" [(ngModel)]="blog.content" name="content"
-              placeholder="Enter the blog content" required=""></textarea>
+              placeholder="Enter the blog content" rows="5" required></textarea>
           </div>
           <div class="form-group">
             <label class="form-label" for="coverImageUrl">Cover Image</label>
@@ -117,8 +139,7 @@
             <small class="form-text text-muted">Supported formats: JPG, PNG, GIF</small>
             @if (coverImagePreview) {
             <div class="mt-3 text-center">
-              <img [src]="coverImagePreview" alt="Preview"
-                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+              <img [src]="coverImagePreview" alt="Cover image preview" class="image-preview">
             </div>
             }
           </div>
@@ -129,8 +150,7 @@
             <small class="form-text text-muted">Supported formats: JPG, PNG, GIF</small>
             @if (contentImagePreview) {
             <div class="mt-3 text-center">
-              <img [src]="contentImagePreview" alt="Preview"
-                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+              <img [src]="contentImagePreview" alt="Content image preview" class="image-preview">
             </div>
             }
           </div>
@@ -149,7 +169,7 @@
 
 <!--Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <form #editForm="ngForm" (ngSubmit)="updateBlog()">
       <div class="modal-content">
         <div class="modal-header">
@@ -209,9 +229,9 @@
             <small class="form-text text-muted">Select one or more tags</small>
           </div>
           <div class="form-group">
-            <label class="form-label" for="editContent">Content</label>
+            <label class="form-label" for="editContent">Content <span class="text-danger">*</span></label>
             <textarea class="form-control" id="editContent" [(ngModel)]="editBlog.content" name="editContent"
-              placeholder="Enter the blog content" required=""></textarea>
+              placeholder="Enter the blog content" rows="5" required></textarea>
           </div>
           <div class="form-group">
             <label class="form-label" for="editCoverImageUrl">Cover Image</label>
@@ -220,13 +240,11 @@
             <small class="form-text text-muted">Leave empty to keep current image</small>
             @if (editCoverImagePreview) {
             <div class="mt-3 text-center">
-              <img [src]="editCoverImagePreview" alt="Preview"
-                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+              <img [src]="editCoverImagePreview" alt="Cover image preview" class="image-preview">
             </div>
             } @else if (editBlog.coverImageUrl) {
             <div class="mt-3 text-center">
-              <img [src]="editBlog.coverImageUrl" alt="Current Image"
-                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+              <img [src]="editBlog.coverImageUrl" alt="Current cover image" class="image-preview">
             </div>
             }
           </div>
@@ -237,13 +255,11 @@
             <small class="form-text text-muted">Leave empty to keep current image</small>
             @if (editContentImagePreview) {
             <div class="mt-3 text-center">
-              <img [src]="editContentImagePreview" alt="Preview"
-                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+              <img [src]="editContentImagePreview" alt="Content image preview" class="image-preview">
             </div>
             } @else if (editBlog.contentImageUrl) {
             <div class="mt-3 text-center">
-              <img [src]="editBlog.contentImageUrl" alt="Current Image"
-                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+              <img [src]="editBlog.contentImageUrl" alt="Current content image" class="image-preview">
             </div>
             }
           </div>

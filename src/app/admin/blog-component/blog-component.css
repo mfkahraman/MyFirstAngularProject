@@ -1,0 +1,57 @@
+/* Table thumbnail styling */
+.blog-cover-thumbnail {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Image preview styling */
+.image-preview {
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+/* Form spacing */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+/* Tags container styling */
+.border.rounded.p-3 {
+  background-color: #f8f9fa;
+}
+
+/* Badge spacing */
+.badge {
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+/* Modal body max height with scroll */
+.modal-body {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* Table responsive */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Loading state */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+/* Required field indicator */
+.text-danger {
+  font-weight: bold;
+}
