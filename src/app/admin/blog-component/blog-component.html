@@ -1,1 +1,261 @@
-<p>blog-component works!</p>
+<h2>Blogs</h2>
+
+<table class="table table-bordered table-hover">
+  <thead>>
+    <tr>
+      <th>#</th>
+      <th>Blog Title</th>
+      <th>Writer</th>
+      <th>Category</th>
+      <th>Content</th>
+      <th>Created At</th>
+      <th>Blog Cover</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of blogList | paginate: { itemsPerPage: 5, currentPage: page }; track item.id; let i = $index) {
+    <tr>
+      <td>{{ i + 1 }}</td>
+      <td>{{ item.title }}</td>
+      <td>{{ item.writer?.fullName }}</td>
+      <td>{{ item.category?.name }}</td>
+      <td>{{ item.content.length > 100 ? (item.content.substring(0, 100) + '...') : item.content }}</td>
+      <td>{{ item.createdAt | date:'short' }}</td>
+      <td><img src="{{item.coverImageUrl}}" alt="{{item.title}}" style="width: 75px;height: 75px; object-fit: cover;" />
+      </td>
+      <td>
+        <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal"
+          (click)="onSelected(item)">Edit</button>
+        <button class="btn btn-danger btn-sm" (click)="deleteBlog(item.id)">Delete</button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+
+<!-- Pagination Controls -->
+<div class="d-flex justify-content-center mt-3">
+  <pagination-controls (pageChange)="page = $event" previousLabel="Previous" nextLabel="Next">
+  </pagination-controls>
+</div>
+
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
+  Add New Blog</button>
+
+
+<!--Create Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form #createForm="ngForm" (ngSubmit)="createBlog(); createForm.resetForm()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="createModalLabel">Add New Blog</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="title">Blog Title</label>
+            <input type="text" class="form-control" id="title" [(ngModel)]="blog.title" name="title"
+              placeholder="Enter the blog title" required="" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="writerId">Writer</label>
+            <select class="form-control" id="writerId" [(ngModel)]="blog.writerId" name="writerId" required="">
+              <option [value]="undefined" disabled>Select Writer</option>
+              @for (writer of writerList; track writer.id) {
+                <option [value]="writer.id">
+                  {{ writer.fullName }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="categoryId">Category</label>
+            <select class="form-control" id="categoryId" [(ngModel)]="blog.categoryId" name="categoryId" required="">
+              <option [value]="undefined" disabled>Select Category</option>
+              @for (category of categoryList; track category.id) {
+                <option [value]="category.id">
+                  {{ category.name }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="tags">Tags</label>
+            <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+              @if (tagList.length === 0) {
+                <p class="text-muted">No tags available</p>
+              } @else {
+                @for (tag of tagList; track tag.id) {
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      [id]="'tag-' + tag.id"
+                      [checked]="isTagSelected(tag.id)"
+                      (change)="toggleTag(tag.id)"
+                    />
+                    <label class="form-check-label" [for]="'tag-' + tag.id">
+                      {{ tag.name }}
+                    </label>
+                  </div>
+                }
+              }
+            </div>
+            <small class="form-text text-muted">Select one or more tags</small>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="content">Content</label>
+            <textarea class="form-control" id="content" [(ngModel)]="blog.content" name="content"
+              placeholder="Enter the blog content" required=""></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="coverImageUrl">Cover Image</label>
+            <input type="file" class="form-control" id="coverImageUrl" (change)="onFileSelected($event)"
+              accept="image/*" name="coverImageUrl" required="" />
+            <small class="form-text text-muted">Supported formats: JPG, PNG, GIF</small>
+            @if (imagePreview) {
+            <div class="mt-3 text-center">
+              <img [src]="imagePreview" alt="Preview"
+                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+            </div>
+            }
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="contentImageUrl">Content Image</label>
+            <input type="file" class="form-control" id="contentImageUrl" (change)="onFileSelected($event)"
+              accept="image/*" name="contentImageUrl" required="" />
+            <small class="form-text text-muted">Supported formats: JPG, PNG, GIF</small>
+            @if (imagePreview) {
+            <div class="mt-3 text-center">
+              <img [src]="imagePreview" alt="Preview"
+                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+            </div>
+            }
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
+            [disabled]="createForm.invalid || !createForm.dirty">
+            Save
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!--Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form #editForm="ngForm" (ngSubmit)="updateBlog()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editModalLabel">Edit Blog</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="editTitle">Blog Title</label>
+            <input type="text" class="form-control" id="editTitle" [(ngModel)]="editBlog.title" name="editTitle"
+              placeholder="Enter the blog title" required="" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editWriterId">Writer</label>
+            <select class="form-control" id="editWriterId" [(ngModel)]="editBlog.writerId" name="editWriterId" required="">
+              <option [value]="undefined" disabled>Select Writer</option>
+              @for (writer of writerList; track writer.id) {
+                <option [value]="writer.id">
+                  {{ writer.fullName }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editCategoryId">Category</label>
+            <select class="form-control" id="editCategoryId" [(ngModel)]="editBlog.categoryId" name="editCategoryId" required="">
+              <option [value]="undefined" disabled>Select Category</option>
+              @for (category of categoryList; track category.id) {
+                <option [value]="category.id">
+                  {{ category.name }}
+                </option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editTags">Tags</label>
+            <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+              @if (tagList.length === 0) {
+                <p class="text-muted">No tags available</p>
+              } @else {
+                @for (tag of tagList; track tag.id) {
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      [id]="'edit-tag-' + tag.id"
+                      [checked]="isEditTagSelected(tag.id)"
+                      (change)="toggleEditTag(tag.id)"
+                    />
+                    <label class="form-check-label" [for]="'edit-tag-' + tag.id">
+                      {{ tag.name }}
+                    </label>
+                  </div>
+                }
+              }
+            </div>
+            <small class="form-text text-muted">Select one or more tags</small>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editContent">Content</label>
+            <textarea class="form-control" id="editContent" [(ngModel)]="editBlog.content" name="editContent"
+              placeholder="Enter the blog content" required=""></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editCoverImageUrl">Cover Image</label>
+            <input type="file" class="form-control" id="editCoverImageUrl" (change)="onEditCoverFileSelected($event)"
+              accept="image/*" name="editCoverImageUrl" />
+            <small class="form-text text-muted">Leave empty to keep current image</small>
+            @if (editCoverImagePreview) {
+            <div class="mt-3 text-center">
+              <img [src]="editCoverImagePreview" alt="Preview"
+                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+            </div>
+            } @else if (editBlog.coverImageUrl) {
+            <div class="mt-3 text-center">
+              <img [src]="editBlog.coverImageUrl" alt="Current Image"
+                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+            </div>
+            }
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editContentImageUrl">Content Image</label>
+            <input type="file" class="form-control" id="editContentImageUrl" (change)="onEditContentFileSelected($event)"
+              accept="image/*" name="editContentImageUrl" />
+            <small class="form-text text-muted">Leave empty to keep current image</small>
+            @if (editContentImagePreview) {
+            <div class="mt-3 text-center">
+              <img [src]="editContentImagePreview" alt="Preview"
+                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+            </div>
+            } @else if (editBlog.contentImageUrl) {
+            <div class="mt-3 text-center">
+              <img [src]="editBlog.contentImageUrl" alt="Current Image"
+                style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+            </div>
+            }
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
+            [disabled]="editForm.invalid || !editForm.dirty">
+            Update
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

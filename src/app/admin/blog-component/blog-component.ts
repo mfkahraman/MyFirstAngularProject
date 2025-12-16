@@ -23,11 +23,15 @@ export class BlogComponent implements OnInit {
   categoryList: BlogCategory[] = [];
   writerList: Writer[] = [];
   tagList: Tag[] = [];
+  selectedTags: number[] = [];
+  editSelectedTags: number[] = [];
   errors: any = {};
 
   // Image handling
   imagePreview: string | null = null;
   editImagePreview: string | null = null;
+  editCoverImagePreview: string | null = null;
+  editContentImagePreview: string | null = null;
 
   // Pagination
   page: number = 1;
@@ -82,6 +86,40 @@ export class BlogComponent implements OnInit {
     }
   }
 
+  onEditCoverFileSelected(event: any) {
+    const imageObservable = this.imageService.handleFileSelection(event, 2);
+
+    if (imageObservable) {
+      imageObservable.subscribe({
+        next: (result) => {
+          this.editCoverImagePreview = result.preview;
+          this.editBlog.coverImageUrl = result.base64;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Cover image upload error:', err);
+        }
+      });
+    }
+  }
+
+  onEditContentFileSelected(event: any) {
+    const imageObservable = this.imageService.handleFileSelection(event, 2);
+
+    if (imageObservable) {
+      imageObservable.subscribe({
+        next: (result) => {
+          this.editContentImagePreview = result.preview;
+          this.editBlog.contentImageUrl = result.base64;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Content image upload error:', err);
+        }
+      });
+    }
+  }
+
   getAllBlogs() {
     this.blogService.getWithDetails().subscribe({
       next: values => {
@@ -120,8 +158,35 @@ export class BlogComponent implements OnInit {
     })
   }
 
+  toggleTag(tagId: number) {
+    const index = this.selectedTags.indexOf(tagId);
+    if (index > -1) {
+      this.selectedTags.splice(index, 1);
+    } else {
+      this.selectedTags.push(tagId);
+    }
+  }
+
+  isTagSelected(tagId: number): boolean {
+    return this.selectedTags.includes(tagId);
+  }
+
+  toggleEditTag(tagId: number) {
+    const index = this.editSelectedTags.indexOf(tagId);
+    if (index > -1) {
+      this.editSelectedTags.splice(index, 1);
+    } else {
+      this.editSelectedTags.push(tagId);
+    }
+  }
+
+  isEditTagSelected(tagId: number): boolean {
+    return this.editSelectedTags.includes(tagId);
+  }
+
   createBlog() {
     console.log('Form submitted, blog:', this.blog);
+    console.log('Selected tags:', this.selectedTags);
     this.errors = {};
 
     this.blogService.create(this.blog).subscribe({
@@ -133,6 +198,7 @@ export class BlogComponent implements OnInit {
         });
         this.getAllBlogs();
         this.blog = new Blog();
+        this.selectedTags = [];
         this.imagePreview = null;
       },
       error: err => {
@@ -144,14 +210,20 @@ export class BlogComponent implements OnInit {
   }
 
   updateBlog() {
+    console.log('Update blog:', this.editBlog);
+    console.log('Selected tags for edit:', this.editSelectedTags);
+
     this.blogService.update(this.editBlog.id, this.editBlog).subscribe({
       next: () => {
         this.getAllBlogs();
         this.editImagePreview = null;
+        this.editCoverImagePreview = null;
+        this.editContentImagePreview = null;
+        this.editSelectedTags = [];
 
         Swal.fire({
-          title: "Güncellendi!",
-          text: "Ürün başarıyla güncellendi.",
+          title: "Updated!",
+          text: "Blog successfully updated.",
           icon: "success"
         });
       },
@@ -167,6 +239,11 @@ export class BlogComponent implements OnInit {
     // Object'in kopyasını oluştur (referans değil)
     this.editBlog = { ...model };
     this.editImagePreview = null;
+    this.editCoverImagePreview = null;
+    this.editContentImagePreview = null;
+
+    // Blog'un mevcut taglarını yükle
+    this.editSelectedTags = model.blogTags ? model.blogTags.map(bt => bt.id) : [];
   }
 
   deleteBlog(id: number) {
