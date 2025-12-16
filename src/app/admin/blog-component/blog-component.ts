@@ -9,6 +9,8 @@ import { BlogCategoryService } from '../../_services/blog-category-service';
 import { TagService } from '../../_services/tag-service';
 import { ImageService } from '../../_services/image-service';
 import Swal from 'sweetalert2';
+import { BlogTagService } from '../../_services/blog-tag-service';
+import { BlogTag } from '../../_models/blog-tag-model';
 
 @Component({
   selector: 'app-blog-component',
@@ -28,8 +30,8 @@ export class BlogComponent implements OnInit {
   errors: any = {};
 
   // Image handling
-  imagePreview: string | null = null;
-  editImagePreview: string | null = null;
+  coverImagePreview: string | null = null;
+  contentImagePreview: string | null = null;
   editCoverImagePreview: string | null = null;
   editContentImagePreview: string | null = null;
 
@@ -41,6 +43,7 @@ export class BlogComponent implements OnInit {
     private categoryService: BlogCategoryService,
     private writerService: WriterService,
     private tagService: TagService,
+    private blogTagService: BlogTagService,
     private imageService: ImageService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -52,35 +55,35 @@ export class BlogComponent implements OnInit {
     this.getAllTags();
   }
 
-  onFileSelected(event: any) {
+  onCoverFileSelected(event: any) {
     const imageObservable = this.imageService.handleFileSelection(event, 2);
 
     if (imageObservable) {
       imageObservable.subscribe({
         next: (result) => {
-          this.imagePreview = result.preview;
-          this.blog.contentImageUrl = result.base64;
+          this.coverImagePreview = result.preview;
+          this.blog.coverImageUrl = result.base64;
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Görsel yükleme hatası:', err);
+          console.error('Cover image upload error:', err);
         }
       });
     }
   }
 
-  onEditFileSelected(event: any) {
+  onContentFileSelected(event: any) {
     const imageObservable = this.imageService.handleFileSelection(event, 2);
 
     if (imageObservable) {
       imageObservable.subscribe({
         next: (result) => {
-          this.editImagePreview = result.preview;
-          this.editBlog.contentImageUrl = result.base64;
+          this.contentImagePreview = result.preview;
+          this.blog.contentImageUrl = result.base64;
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Görsel yükleme hatası:', err);
+          console.error('Content image upload error:', err);
         }
       });
     }
@@ -189,17 +192,21 @@ export class BlogComponent implements OnInit {
     console.log('Selected tags:', this.selectedTags);
     this.errors = {};
 
+    // Blog objesine tagIds'i ekle
+    this.blog.tagIds = this.selectedTags;
+
     this.blogService.create(this.blog).subscribe({
       next: () => {
         Swal.fire({
-          title: "Eklendi!",
-          text: "Ürün başarıyla eklendi.",
+          title: "Success!",
+          text: "Blog successfully created!",
           icon: "success"
         });
         this.getAllBlogs();
         this.blog = new Blog();
         this.selectedTags = [];
-        this.imagePreview = null;
+        this.coverImagePreview = null;
+        this.contentImagePreview = null;
       },
       error: err => {
         this.errors = err.error.errors;
@@ -213,10 +220,12 @@ export class BlogComponent implements OnInit {
     console.log('Update blog:', this.editBlog);
     console.log('Selected tags for edit:', this.editSelectedTags);
 
+    // Blog objesine tagIds'i ekle
+    this.editBlog.tagIds = this.editSelectedTags;
+
     this.blogService.update(this.editBlog.id, this.editBlog).subscribe({
       next: () => {
         this.getAllBlogs();
-        this.editImagePreview = null;
         this.editCoverImagePreview = null;
         this.editContentImagePreview = null;
         this.editSelectedTags = [];
@@ -238,12 +247,15 @@ export class BlogComponent implements OnInit {
   onSelected(model: Blog) {
     // Object'in kopyasını oluştur (referans değil)
     this.editBlog = { ...model };
-    this.editImagePreview = null;
     this.editCoverImagePreview = null;
     this.editContentImagePreview = null;
 
-    // Blog'un mevcut taglarını yükle
-    this.editSelectedTags = model.blogTags ? model.blogTags.map(bt => bt.id) : [];
+    // Blog'un mevcut taglarını yükle (sadece isDeleted = false olanlar)
+    this.editSelectedTags = model.blogTags
+      ? model.blogTags
+          .filter(bt => !bt.isDeleted)
+          .map(bt => bt.tagId)
+      : [];
   }
 
   deleteBlog(id: number) {

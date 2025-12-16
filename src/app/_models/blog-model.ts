@@ -15,5 +15,6 @@ export class Blog {
   categoryId: number;
   category: BlogCategory;
   blogTags: BlogTag[];
+  tagIds: number[];  // Back-end'e göndermek için
   comments: Comment[];
 }

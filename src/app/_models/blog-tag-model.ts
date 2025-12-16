@@ -1,4 +1,6 @@
 export class BlogTag {
   id: number;
-  name: string;
+  blogId: number;
+  tagId: number;
+  isDeleted: boolean;
 }
