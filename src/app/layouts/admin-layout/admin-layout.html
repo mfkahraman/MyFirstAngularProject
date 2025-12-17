@@ -1,74 +1,146 @@
 <!doctype html>
-<html lang="en">
+<html lang="tr">
 
 <head>
   <title>Admin Paneli</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 
 <body>
-  <div class="wrapper d-flex align-items-stretch">
-    <nav id="sidebar">
-      <div class="custom-menu">
-        <button type="button" id="sidebarCollapse" class="btn btn-primary">
-          <i class="fa fa-bars"></i>
-          <span class="sr-only">Toggle Menu</span>
+  <div class="admin-wrapper">
+    <!-- Modern Sidebar -->
+    <aside id="sidebar" class="modern-sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <i class="bi bi-lightning-charge-fill brand-icon"></i>
+          <h1 class="brand-name">Flash Admin</h1>
+        </div>
+        <button type="button" id="sidebarCollapse" class="toggle-btn">
+          <i class="bi bi-list"></i>
         </button>
       </div>
-      <div class="p-4">
-        <h1><a href="#" class="logo">Flash</a></h1>
-        <ul class="list-unstyled components mb-5">
-          <li class="active">
-            <a href="#"><span class="fa fa-home mr-3"></span> Homepage</a>
-          </li>
-          <li>
-            <a href="/admin/productcategory"><span class="fa fa-user mr-3"></span>
-              Product Categories</a>
-          </li>
-          <li>
-            <a href="/admin/product"><span class="fa fa-briefcase mr-3"></span>
-              Products</a>
-          </li>
-          <li>
-            <a href="/admin/blog"><span class="fa fa-sticky-note mr-3"></span> Blogs Management</a>
-          </li>
-          <li>
-            <a href="/admin/blogcategory"><span class="fa fa-sticky-note mr-3"></span> Blog Categories</a>
-          </li>
-          <li>
-            <a href="/admin/tag"><span class="fa fa-sticky-note mr-3"></span> Blog Tags</a>
-          </li>
-          <li>
-            <a href="/admin/employee"><span class="fa fa-sticky-note mr-3"></span> Employees</a>
-          </li>
-          <li>
-            <a href="/admin/writer"><span class="fa fa-sticky-note mr-3"></span> Writers</a>
-          </li>
-          <li>
-            <a href="#"><span class="fa fa-paper-plane mr-3"></span> Contact</a>
-          </li>
-        </ul>
 
-        <div class="mb-5">
-          <h3 class="h6 mb-3">Subscribe for newsletter</h3>
-          <form action="#" class="subscribe-form">
-            <div class="form-group d-flex">
-              <div class="icon"><span class="icon-paper-plane"></span></div>
-              <input type="text" class="form-control" placeholder="Enter Email Address">
-            </div>
-          </form>
+      <div class="sidebar-content">
+        <div class="admin-panel-title">
+          <h2>Admin Panel</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+          <ul class="nav-list">
+            <li class="nav-item">
+              <a href="/admin" class="nav-link active">
+                <i class="bi bi-house-door"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/productcategory" class="nav-link">
+                <i class="bi bi-tag"></i>
+                <span>Ürün Kategorileri</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/product" class="nav-link">
+                <i class="bi bi-box-seam"></i>
+                <span>Ürünler</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/blog" class="nav-link">
+                <i class="bi bi-file-text"></i>
+                <span>Blog Yazıları</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/blogcategory" class="nav-link">
+                <i class="bi bi-folder"></i>
+                <span>Blog Kategorileri</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/tag" class="nav-link">
+                <i class="bi bi-tags"></i>
+                <span>Etiketler</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/employee" class="nav-link">
+                <i class="bi bi-people"></i>
+                <span>Çalışanlar</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/writer" class="nav-link">
+                <i class="bi bi-pen"></i>
+                <span>Yazarlar</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="bi bi-envelope"></i>
+                <span>İletişim</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="bi bi-gear"></i>
+                <span>Ayarlar</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button class="logout-btn">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Çıkış Yap</span>
+          </button>
         </div>
       </div>
-    </nav>
+    </aside>
 
-    <!-- Page Content  -->
-    <div id="content" class="p-4 p-md-5 pt-5">
-      <router-outlet></router-outlet>
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- Top Header -->
+      <header class="admin-header">
+        <div class="header-left">
+          <button type="button" id="sidebarToggleMobile" class="mobile-toggle">
+            <i class="bi bi-list"></i>
+          </button>
+          <div class="search-bar">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Ara...">
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="header-icon-btn">
+            <i class="bi bi-bell"></i>
+            <span class="notification-badge">3</span>
+          </button>
+          <button class="header-icon-btn">
+            <i class="bi bi-envelope"></i>
+            <span class="notification-badge">5</span>
+          </button>
+          <button class="header-icon-btn">
+            <i class="bi bi-gear"></i>
+          </button>
+          <div class="header-user">
+            <i class="bi bi-person-circle"></i>
+            <span class="user-name-text">Admin</span>
+            <i class="bi bi-chevron-down"></i>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
 </body>
