@@ -56,8 +56,6 @@
     </div>
   </div>
 
-  <!-- Debug: isLoading = {{ isLoading }}, messageList.length = {{ messageList.length }} -->
-
   <div *ngIf="isLoading" class="loading-spinner">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
@@ -91,29 +89,25 @@
       </select>
     </div>
     <div class="col-md-5 text-end">
-      @if (selectedMessages.size > 0) {
+      <ng-container *ngIf="selectedMessages.size > 0">
       <button class="btn btn-outline-primary me-2" (click)="bulkMarkAsRead()">
         <i class="bi bi-check2-all"></i> Mark as Read ({{ selectedMessages.size }})
       </button>
       <button class="btn btn-outline-danger" (click)="bulkDelete()">
         <i class="bi bi-trash"></i> Delete ({{ selectedMessages.size }})
       </button>
-      }
+      </ng-container>
     </div>
   </div>
 
   <!-- Messages Table -->
-  @if (filteredMessages.length === 0) {
-  <div class="alert alert-info">
+  <div *ngIf="filteredMessages.length === 0" class="alert alert-info">
     <i class="bi bi-info-circle me-2"></i>
-    @if (searchTerm) {
-      No messages found matching "{{ searchTerm }}"
-    } @else {
-      No messages to display
-    }
+    <span *ngIf="searchTerm">No messages found matching "{{ searchTerm }}"</span>
+    <span *ngIf="!searchTerm">No messages to display</span>
   </div>
-  } @else {
-  <div class="table-responsive">
+
+  <div *ngIf="filteredMessages.length > 0" class="table-responsive">
     <table class="table table-hover message-table">
       <thead>
         <tr>
@@ -133,8 +127,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (message of filteredMessages | paginate: { itemsPerPage: 10, currentPage: page }; track message.id) {
-        <tr [class.unread-row]="!message.isRead">
+        <tr *ngFor="let message of filteredMessages | paginate: { itemsPerPage: 10, currentPage: page }; trackBy: trackById" [class.unread-row]="!message.isRead">
           <td>
             <input
               type="checkbox"
@@ -144,15 +137,12 @@
             />
           </td>
           <td>
-            @if (!message.isRead) {
-            <span class="badge bg-warning">
+            <span *ngIf="!message.isRead" class="badge bg-warning">
               <i class="bi bi-envelope-fill"></i> New
             </span>
-            } @else {
-            <span class="badge bg-secondary">
+            <span *ngIf="message.isRead" class="badge bg-secondary">
               <i class="bi bi-envelope-open"></i> Read
             </span>
-            }
           </td>
           <td>
             <div class="sender-info">
@@ -185,23 +175,22 @@
             >
               <i class="bi bi-eye"></i>
             </button>
-            @if (!message.isRead) {
             <button
+              *ngIf="!message.isRead"
               class="btn btn-sm btn-outline-success me-1"
               (click)="markAsRead(message.id)"
               title="Mark as Read"
             >
               <i class="bi bi-check"></i>
             </button>
-            } @else {
             <button
+              *ngIf="message.isRead"
               class="btn btn-sm btn-outline-warning me-1"
               (click)="markAsUnread(message.id)"
               title="Mark as Unread"
             >
               <i class="bi bi-envelope"></i>
             </button>
-            }
             <button
               class="btn btn-sm btn-outline-danger"
               (click)="deleteMessage(message.id)"
@@ -211,7 +200,6 @@
             </button>
           </td>
         </tr>
-        }
       </tbody>
     </table>
   </div>
@@ -225,9 +213,8 @@
     >
     </pagination-controls>
   </div>
-  }
-
   </div>
+
 </div>
 
 <!-- View Message Modal -->

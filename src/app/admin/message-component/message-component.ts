@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MessageService } from '../../_services/message-service';
 import { Message } from '../../_models/message-model';
 import { timeout, catchError } from 'rxjs/operators';
@@ -25,7 +25,10 @@ export class MessageComponent implements OnInit {
   unreadCount = 0;
   readCount = 0;
 
-  constructor(private messageService: MessageService) { }
+  constructor(
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.loadMessages();
@@ -34,6 +37,8 @@ export class MessageComponent implements OnInit {
   loadMessages() {
     console.log('Starting to load messages...');
     this.isLoading = true;
+    this.cdr.detectChanges();
+
     this.messageService.getAll().pipe(
       timeout(10000), // 10 second timeout
       catchError(error => {
@@ -51,20 +56,49 @@ export class MessageComponent implements OnInit {
       })
     ).subscribe({
       next: (data) => {
-        console.log('Messages received:', data?.length || 0);
-        this.messageList = data ? data.sort((a, b) =>
-          new Date(b.sendAt).getTime() - new Date(a.sendAt).getTime()
-        ) : [];
-        this.calculateStats();
-        this.applyFilters();
-        this.isLoading = false;
-        console.log('Loading complete. isLoading:', this.isLoading);
+        try {
+          console.log('Messages received:', data?.length || 0);
+          if (data && data.length > 0) {
+            console.log('Sample date from API:', data[0].sendAt, 'Type:', typeof data[0].sendAt);
+          }
+
+          // Convert date strings to Date objects
+          this.messageList = data ? data.map(msg => ({
+            ...msg,
+            sendAt: new Date(msg.sendAt)
+          })).sort((a, b) =>
+            b.sendAt.getTime() - a.sendAt.getTime()
+          ) : [];
+
+          console.log('messageList after sort:', this.messageList.length);
+          if (this.messageList.length > 0) {
+            console.log('Sample converted date:', this.messageList[0].sendAt);
+          }
+          this.calculateStats();
+          console.log('Stats calculated');
+          this.applyFilters();
+          console.log('Filters applied, filteredMessages:', this.filteredMessages.length);
+          this.isLoading = false;
+          console.log('Setting isLoading to false');
+          this.cdr.detectChanges();
+          console.log('Change detection triggered');
+        } catch (err) {
+          console.error('Error in next callback:', err);
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
       },
       error: (error) => {
         console.error('Unhandled error:', error);
         this.isLoading = false;
         this.messageList = [];
         this.filteredMessages = [];
+        this.cdr.detectChanges();
+      },
+      complete: () => {
+        console.log('Observable complete');
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -110,6 +144,13 @@ export class MessageComponent implements OnInit {
 
   viewMessage(message: Message) {
     this.selectedMessage = message;
+
+    // Open the modal
+    const modalElement = document.getElementById('viewModal');
+    if (modalElement) {
+      const modal = new (window as any).bootstrap.Modal(modalElement);
+      modal.show();
+    }
 
     // Mark as read if not already
     if (!message.isRead) {
@@ -280,9 +321,24 @@ export class MessageComponent implements OnInit {
     });
   }
 
-  getTimeAgo(date: Date): string {
+  getTimeAgo(date: any): string {
+    if (!date) return 'Unknown date';
+
     const now = new Date();
-    const messageDate = new Date(date);
+    // Handle SQL Server datetime format: 2025-12-01 09:15:23.0000000
+    let dateStr = date.toString();
+    // Replace space with T for ISO format if needed
+    if (dateStr.includes(' ') && !dateStr.includes('T')) {
+      dateStr = dateStr.replace(' ', 'T');
+    }
+
+    const messageDate = new Date(dateStr);
+
+    if (isNaN(messageDate.getTime())) {
+      console.error('Invalid date:', date);
+      return 'Invalid date';
+    }
+
     const diffMs = now.getTime() - messageDate.getTime();
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
@@ -305,5 +361,9 @@ export class MessageComponent implements OnInit {
       }
     }
     this.selectedMessage = null;
+  }
+
+  trackById(index: number, item: Message): number {
+    return item.id;
   }
 }
