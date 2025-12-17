@@ -11,9 +11,11 @@ import Swal from 'sweetalert2';
 })
 export class BlogCategoryComponent implements OnInit {
   blogCategoryList: BlogCategory[] = [];
+  filteredBlogCategoryList: BlogCategory[] = [];
   blogCategory: BlogCategory = new BlogCategory();
   editBlogCategory: BlogCategory = new BlogCategory();
-  errors: any = {};
+  searchText: string = '';
+  errors: any = {}; // Holds validation errors
 
   constructor(
     private blogCategoryService: BlogCategoryService,
@@ -28,10 +30,21 @@ export class BlogCategoryComponent implements OnInit {
     this.blogCategoryService.getAll().subscribe({
       next: (values) => {
         this.blogCategoryList = values;
-        this.cdr.detectChanges();
+        this.filteredBlogCategoryList = values;
+        this.cdr.detectChanges(); // Manually trigger change detection
       },
       error: err => console.error('Error loading blog categories:', err)
     })
+  }
+
+  filterCategories() {
+    if (!this.searchText.trim()) {
+      this.filteredBlogCategoryList = this.blogCategoryList;
+    } else {
+      this.filteredBlogCategoryList = this.blogCategoryList.filter(category =>
+        category.name.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    }
   }
 
   create() {
@@ -40,9 +53,10 @@ export class BlogCategoryComponent implements OnInit {
     this.blogCategoryService.create(this.blogCategory).subscribe({
       next: () => {
         Swal.fire({
-          title: "Eklendi!",
-          text: "Kategori başarıyla eklendi.",
-          icon: "success"
+          title: "Success!",
+          text: "Category has been added successfully.",
+          icon: "success",
+          confirmButtonColor: "#0d6efd"
         });
         this.getAll();
         this.blogCategory = new BlogCategory();
@@ -61,9 +75,10 @@ export class BlogCategoryComponent implements OnInit {
         this.getAll();
 
         Swal.fire({
-          title: "Güncellendi!",
-          text: "Kategori başarıyla güncellendi.",
-          icon: "success"
+          title: "Updated!",
+          text: "Category has been updated successfully.",
+          icon: "success",
+          confirmButtonColor: "#0d6efd"
         });
       },
       error: err => {
@@ -76,14 +91,14 @@ export class BlogCategoryComponent implements OnInit {
 
   delete(id: number) {
     Swal.fire({
-      title: "Emin misiniz?",
-      text: "Bu işlemi geri alamayacaksınız!",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Evet, sil!",
-      cancelButtonText: "Hayır, iptal et!",
-      confirmButtonColor: "#28a745",
-      cancelButtonColor: "#dc3545",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      confirmButtonColor: "#dc3545",
+      cancelButtonColor: "#6c757d",
       reverseButtons: true,
       buttonsStyling: true,
       customClass: {
@@ -94,30 +109,39 @@ export class BlogCategoryComponent implements OnInit {
       if (result.isConfirmed) {
         this.blogCategoryService.delete(id).subscribe({
           next: () => {
-            // Listeyi yenile
+            // Refresh the list
             this.getAll();
 
             Swal.fire({
-              title: "Silindi!",
-              text: "Dosyanız silindi.",
+              title: "Deleted!",
+              text: "Category has been deleted.",
               icon: "success",
-              confirmButtonColor: "#28a745"
+              confirmButtonColor: "#0d6efd"
             });
           },
           error: err => {
-            console.error('Silme hatası:', err);
+            console.error('Delete error:', err);
             Swal.fire({
-              title: "Hata!",
-              text: "Silme sırasında bir hata oluştu.",
-              icon: "error"
+              title: "Error!",
+              text: "An error occurred during deletion.",
+              icon: "error",
+              confirmButtonColor: "#dc3545"
             });
           }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: "Cancelled",
+          text: "Delete operation has been cancelled.",
+          icon: "info",
+          confirmButtonColor: "#6c757d"
         });
       }
     });
   }
 
   onSelected(model: BlogCategory) {
+    // Create a copy of the object (not a reference)
     this.editBlogCategory = { ...model };
   }
 }
