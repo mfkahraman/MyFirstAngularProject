@@ -1,0 +1,276 @@
+/* Message Page Styles */
+.message-page {
+  padding: 20px;
+}
+
+/* Statistics Cards */
+.stats-card {
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  margin-bottom: 20px;
+}
+
+.stats-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.stats-card .card-body {
+  padding: 1.5rem;
+}
+
+.icon-wrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+}
+
+.icon-wrapper.bg-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.icon-wrapper.bg-warning {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.icon-wrapper.bg-success {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/* Message Table */
+.message-table {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.message-table thead {
+  background-color: #f8f9fa;
+}
+
+.message-table thead th {
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+  color: #495057;
+  padding: 15px;
+}
+
+.message-table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.message-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.message-table tbody td {
+  padding: 15px;
+  vertical-align: middle;
+}
+
+/* Unread Message Row */
+.unread-row {
+  background-color: #f0f8ff;
+  font-weight: 500;
+}
+
+.unread-row:hover {
+  background-color: #e6f2ff !important;
+}
+
+/* Sender Info */
+.sender-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sender-name {
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 3px;
+}
+
+.sender-email {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+/* Message Subject */
+.message-subject {
+  max-width: 400px;
+}
+
+.message-subject strong {
+  color: #212529;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.message-preview {
+  font-size: 0.875rem;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+/* Message Date */
+.message-date {
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+/* Buttons */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Modal Styles */
+.message-details {
+  padding: 10px;
+}
+
+.detail-section {
+  padding: 10px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.detail-value {
+  color: #212529;
+  line-height: 1.6;
+}
+
+.message-content {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Badges */
+.badge {
+  padding: 6px 12px;
+  font-weight: 500;
+}
+
+/* Search and Filter Section */
+.input-group-text {
+  background-color: white;
+  border-right: none;
+}
+
+.input-group .form-control {
+  border-left: none;
+}
+
+.input-group .form-control:focus {
+  border-color: #ced4da;
+  box-shadow: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stats-card {
+    margin-bottom: 15px;
+  }
+
+  .message-table {
+    font-size: 0.875rem;
+  }
+
+  .message-subject {
+    max-width: 250px;
+  }
+
+  .btn-sm {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-table tbody tr {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Checkbox Styles */
+.form-check-input {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Alert Styles */
+.alert {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Pagination */
+::ng-deep .pagination {
+  gap: 5px;
+}
+
+::ng-deep .pagination .page-link {
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  color: #495057;
+  padding: 8px 12px;
+  transition: all 0.2s;
+}
+
+::ng-deep .pagination .page-link:hover {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+}
+
+::ng-deep .pagination .active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}

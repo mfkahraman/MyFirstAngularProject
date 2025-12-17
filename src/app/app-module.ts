@@ -16,6 +16,7 @@ import { TagComponent } from './admin/tag-component/tag-component';
 import { EmployeeComponent } from './admin/employee-component/employee-component';
 import { WriterComponent } from './admin/writer-component/writer-component';
 import { BlogComponent } from './admin/blog-component/blog-component';
+import { MessageComponent } from './admin/message-component/message-component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { BlogComponent } from './admin/blog-component/blog-component';
     TagComponent,
     EmployeeComponent,
     WriterComponent,
-    BlogComponent
+    BlogComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule,

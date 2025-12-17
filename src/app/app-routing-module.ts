@@ -10,6 +10,7 @@ import { TagComponent } from './admin/tag-component/tag-component';
 import { EmployeeComponent } from './admin/employee-component/employee-component';
 import { WriterComponent } from './admin/writer-component/writer-component';
 import { BlogComponent } from './admin/blog-component/blog-component';
+import { MessageComponent } from './admin/message-component/message-component';
 
 const routes: Routes = [
   //Main Routes
@@ -28,7 +29,8 @@ const routes: Routes = [
       { path: 'tag', component: TagComponent },
       { path: 'employee', component: EmployeeComponent },
       { path: 'writer', component: WriterComponent },
-      { path: 'blog', component: BlogComponent }
+      { path: 'blog', component: BlogComponent },
+      { path: 'message', component: MessageComponent }
     ]
   }
 ];
