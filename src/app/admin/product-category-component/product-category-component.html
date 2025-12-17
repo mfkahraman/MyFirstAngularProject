@@ -1,55 +1,87 @@
-<h3>Kategoriler</h3>
+<div class="category-header">
+  <div class="header-content">
+    <h2 class="page-title">
+      <i class="bi bi-folder-fill"></i>
+      Product Categories
+    </h2>
+    <p class="page-subtitle">Manage your product categories</p>
+  </div>
+  <button class="btn btn-primary add-btn" data-bs-toggle="modal" data-bs-target="#createModal">
+    <i class="bi bi-plus-circle"></i>
+    Add New Category
+  </button>
+</div>
 
-<table class="table table-bordered table-hover">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Kategori Adı</th>
-      <th>İşlemler</th>
-    </tr>
-  </thead>
+<div class="search-box mb-4">
+  <i class="bi bi-search search-icon"></i>
+  <input type="text" class="form-control" placeholder="Search categories..." [(ngModel)]="searchText" (input)="filterCategories()">
+</div>
 
-  <tbody>
-    @for (item of categoryList; track item.id; let i = $index) {
-    <tr>
-      <td>{{ i + 1 }}</td>
-      <td>{{ item.categoryName }}</td>
-      <td>
-        <button class="btn btn-primary btn-sm me-2" (click)="onSelected(item)" data-bs-toggle="modal"
-          data-bs-target="#editModal">Düzenle
-        </button>
-        <button class="btn btn-danger btn-sm" (click)="delete(item.id)">Sil</button>
-      </td>
-    </tr>
-    }
-  </tbody>
-</table>
+<div class="categories-grid">
+  @for (item of filteredCategoryList; track item.id; let i = $index) {
+  <div class="category-card">
+    <div class="card-header-custom">
+      <div class="category-icon">
+        <i class="bi bi-tag-fill"></i>
+      </div>
+      <span class="category-number">#{{ i + 1 }}</span>
+    </div>
+    <div class="card-body-custom">
+      <h5 class="category-name">{{ item.categoryName }}</h5>
+    </div>
+    <div class="card-footer-custom">
+      <button class="btn btn-outline-primary btn-sm" (click)="onSelected(item)" data-bs-toggle="modal"
+        data-bs-target="#editModal" title="Edit">
+        <i class="bi bi-pencil-square"></i>
+        Edit
+      </button>
+      <button class="btn btn-outline-danger btn-sm" (click)="delete(item.id)" title="Delete">
+        <i class="bi bi-trash3"></i>
+        Delete
+      </button>
+    </div>
+  </div>
+  }
+  @empty {
+  <div class="no-data">
+    <i class="bi bi-inbox"></i>
+    <p>No categories found</p>
+  </div>
+  }
+</div>
 
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
-  Yeni Kategori Ekle</button>
 
-
-<!--Create Modal -->
+<!-- Create Modal -->
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <form #createForm="ngForm" (ngSubmit)="create(); createForm.resetForm()">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="createModalLabel">Yeni Kategori Ekle</h1>
+          <h1 class="modal-title fs-5" id="createModalLabel">
+            <i class="bi bi-plus-circle"></i>
+            Add New Category
+          </h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label" for="categoryName">Kategori Adı</label>
+            <label class="form-label" for="categoryName">
+              <i class="bi bi-tag"></i>
+              Category Name
+            </label>
             <input type="text" class="form-control" id="categoryName" [(ngModel)]="category.categoryName"
-              name="categoryName" placeholder="Kategori Adı Giriniz" required="" />
+              name="categoryName" placeholder="Enter category name" required="" />
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle"></i>
+            Cancel
+          </button>
           <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
             [disabled]="createForm.invalid || !createForm.dirty">
-            Kaydet
+            <i class="bi bi-check-circle"></i>
+            Save
           </button>
         </div>
       </div>
@@ -57,27 +89,37 @@
   </div>
 </div>
 
-<!--Edit Modal -->
+<!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <form #editForm="ngForm" (ngSubmit)="update()">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="editModalLabel">Kategori Güncelle</h1>
+          <h1 class="modal-title fs-5" id="editModalLabel">
+            <i class="bi bi-pencil-square"></i>
+            Update Category
+          </h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label" for="categoryName">Kategori Adı</label>
-            <input type="text" class="form-control" id="categoryName" [(ngModel)]="editCategory.categoryName"
-              name="categoryName" placeholder="Kategori Adı Giriniz" required="" />
+            <label class="form-label" for="editCategoryName">
+              <i class="bi bi-tag"></i>
+              Category Name
+            </label>
+            <input type="text" class="form-control" id="editCategoryName" [(ngModel)]="editCategory.categoryName"
+              name="categoryName" placeholder="Enter category name" required="" />
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle"></i>
+            Cancel
+          </button>
           <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
             [disabled]="editForm.invalid || !editForm.dirty">
-            Güncelle
+            <i class="bi bi-check-circle"></i>
+            Update
           </button>
         </div>
       </div>

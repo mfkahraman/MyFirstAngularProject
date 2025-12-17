@@ -11,9 +11,11 @@ import { ProductCategoryService } from '../../_services/product-category-service
 })
 export class ProductCategoryComponent implements OnInit {
   categoryList: ProductCategory[] = [];
+  filteredCategoryList: ProductCategory[] = [];
   category: ProductCategory = new ProductCategory();
   editCategory: ProductCategory = new ProductCategory();
-  errors: any = {}; // Validation hatalarını tutar
+  searchText: string = '';
+  errors: any = {}; // Holds validation errors
 
   constructor(
     private productCategoryService: ProductCategoryService,
@@ -28,10 +30,21 @@ export class ProductCategoryComponent implements OnInit {
     this.productCategoryService.getAll().subscribe({
       next: values => {
         this.categoryList = values;
-        this.cdr.detectChanges(); // Manuel değişiklik algılamayı tetikle
+        this.filteredCategoryList = values;
+        this.cdr.detectChanges(); // Manually trigger change detection
       },
       error: err => console.error('Error loading categories:', err)
     })
+  }
+
+  filterCategories() {
+    if (!this.searchText.trim()) {
+      this.filteredCategoryList = this.categoryList;
+    } else {
+      this.filteredCategoryList = this.categoryList.filter(category =>
+        category.categoryName.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    }
   }
 
   create() {
@@ -40,9 +53,10 @@ export class ProductCategoryComponent implements OnInit {
     this.productCategoryService.create(this.category).subscribe({
       next: () => {
         Swal.fire({
-          title: "Eklendi!",
-          text: "Kategori başarıyla eklendi.",
-          icon: "success"
+          title: "Success!",
+          text: "Category has been added successfully.",
+          icon: "success",
+          confirmButtonColor: "#0d6efd"
         });
         this.getAll();
         this.category = new ProductCategory();
@@ -61,9 +75,10 @@ export class ProductCategoryComponent implements OnInit {
         this.getAll();
 
         Swal.fire({
-          title: "Güncellendi!",
-          text: "Kategori başarıyla güncellendi.",
-          icon: "success"
+          title: "Updated!",
+          text: "Category has been updated successfully.",
+          icon: "success",
+          confirmButtonColor: "#0d6efd"
         });
       },
       error: err => {
@@ -75,20 +90,20 @@ export class ProductCategoryComponent implements OnInit {
   }
 
   onSelected(model: ProductCategory) {
-    // Object'in kopyasını oluştur (referans değil)
+    // Create a copy of the object (not a reference)
     this.editCategory = { ...model };
   }
 
   delete(id: number) {
     Swal.fire({
-      title: "Emin misiniz?",
-      text: "Bu işlemi geri alamayacaksınız!",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Evet, sil!",
-      cancelButtonText: "Hayır, iptal et!",
-      confirmButtonColor: "#28a745",
-      cancelButtonColor: "#dc3545",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      confirmButtonColor: "#dc3545",
+      cancelButtonColor: "#6c757d",
       reverseButtons: true,
       buttonsStyling: true,
       customClass: {
@@ -101,10 +116,10 @@ export class ProductCategoryComponent implements OnInit {
           next: () => {
             this.getAll();
             Swal.fire({
-              title: "Silindi!",
-              text: "Dosyanız silindi.",
+              title: "Deleted!",
+              text: "Category has been deleted.",
               icon: "success",
-              confirmButtonColor: "#28a745"
+              confirmButtonColor: "#0d6efd"
             });
           },
           error: err => console.log(err)
@@ -113,10 +128,10 @@ export class ProductCategoryComponent implements OnInit {
 
       else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
-          title: "İptal Edildi",
-          text: "Silme işlemi iptal edildi.",
-          icon: "error",
-          confirmButtonColor: "#dc3545"
+          title: "Cancelled",
+          text: "Delete operation has been cancelled.",
+          icon: "info",
+          confirmButtonColor: "#6c757d"
         });
       }
     });
