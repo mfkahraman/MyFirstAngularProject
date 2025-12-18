@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 
 <head>
-  <title>Admin Paneli</title>
+  <title>Admin Dashboard</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -19,7 +19,7 @@
           <i class="bi bi-lightning-charge-fill brand-icon"></i>
           <h1 class="brand-name">Flash Admin</h1>
         </div>
-        <button type="button" id="sidebarCollapse" class="toggle-btn">
+        <button type="button" id="sidebarCollapse" class="toggle-btn" aria-label="Toggle Sidebar">
           <i class="bi bi-list"></i>
         </button>
       </div>
@@ -40,55 +40,55 @@
             <li class="nav-item">
               <a href="/admin/productcategory" class="nav-link">
                 <i class="bi bi-tag"></i>
-                <span>Ürün Kategorileri</span>
+                <span>Product Categories</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="/admin/product" class="nav-link">
                 <i class="bi bi-box-seam"></i>
-                <span>Ürünler</span>
+                <span>Products</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="/admin/blog" class="nav-link">
                 <i class="bi bi-file-text"></i>
-                <span>Blog Yazıları</span>
+                <span>Blog Posts</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="/admin/blogcategory" class="nav-link">
                 <i class="bi bi-folder"></i>
-                <span>Blog Kategorileri</span>
+                <span>Blog Categories</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="/admin/tag" class="nav-link">
                 <i class="bi bi-tags"></i>
-                <span>Etiketler</span>
+                <span>Tags</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="/admin/employee" class="nav-link">
                 <i class="bi bi-people"></i>
-                <span>Çalışanlar</span>
+                <span>Employees</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="/admin/writer" class="nav-link">
                 <i class="bi bi-pen"></i>
-                <span>Yazarlar</span>
+                <span>Writers</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="/admin/message" class="nav-link">
                 <i class="bi bi-envelope"></i>
-                <span>Mesajlar</span>
+                <span>Messages</span>
               </a>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="bi bi-gear"></i>
-                <span>Ayarlar</span>
+                <span>Settings</span>
               </a>
             </li>
           </ul>
@@ -97,7 +97,7 @@
         <div class="sidebar-footer">
           <button class="logout-btn">
             <i class="bi bi-box-arrow-right"></i>
-            <span>Çıkış Yap</span>
+            <span>Logout</span>
           </button>
         </div>
       </div>
@@ -108,25 +108,25 @@
       <!-- Top Header -->
       <header class="admin-header">
         <div class="header-left">
-          <button type="button" id="sidebarToggleMobile" class="mobile-toggle">
+          <button type="button" id="sidebarToggleMobile" class="mobile-toggle" aria-label="Toggle Mobile Menu">
             <i class="bi bi-list"></i>
           </button>
           <div class="search-bar">
             <i class="bi bi-search"></i>
-            <input type="text" placeholder="Ara...">
+            <input type="text" placeholder="Search..." aria-label="Search">
           </div>
         </div>
 
         <div class="header-right">
-          <button class="header-icon-btn">
+          <button class="header-icon-btn" aria-label="Notifications">
             <i class="bi bi-bell"></i>
             <span class="notification-badge">3</span>
           </button>
-          <button class="header-icon-btn">
+          <button class="header-icon-btn" aria-label="Messages">
             <i class="bi bi-envelope"></i>
             <span class="notification-badge">5</span>
           </button>
-          <button class="header-icon-btn">
+          <button class="header-icon-btn" aria-label="Settings">
             <i class="bi bi-gear"></i>
           </button>
           <div class="header-user">
