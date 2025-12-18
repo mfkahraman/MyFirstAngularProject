@@ -1,13 +1,13 @@
-<h3>Personel Listesi</h3>
+<h3>Writers List</h3>
 
 <table class="table table-bordered table-hover">
   <thead>
     <tr>
       <th>#</th>
-      <th>Yazar Adı</th>
-      <th>Biyografi</th>
-      <th>Görsel</th>
-      <th>İşlemler</th>
+      <th>Writer Name</th>
+      <th>Biography</th>
+      <th>Image</th>
+      <th>Actions</th>
     </tr>
   </thead>
 
@@ -21,23 +21,23 @@
       </td>
       <td>
         <button class="btn btn-primary btn-sm me-2" (click)="onSelected(item)" data-bs-toggle="modal"
-          data-bs-target="#editModal">Düzenle
+          data-bs-target="#editModal">Edit
         </button>
-        <button class="btn btn-danger btn-sm" (click)="delete(item.id)">Sil</button>
+        <button class="btn btn-danger btn-sm" (click)="delete(item.id)">Delete</button>
       </td>
     </tr>
     }
   </tbody>
 </table>
 
-<!-- Pagination Kontrolleri -->
+<!-- Pagination Controls -->
 <div class="d-flex justify-content-center mt-3">
-  <pagination-controls (pageChange)="page = $event" previousLabel="Önceki" nextLabel="Sonraki">
+  <pagination-controls (pageChange)="page = $event" previousLabel="Previous" nextLabel="Next">
   </pagination-controls>
 </div>
 
 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
-  Yeni Yazar Ekle</button>
+  Add New Writer</button>
 
 <!--Create Modal -->
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
@@ -45,38 +45,38 @@
     <form #createForm="ngForm" (ngSubmit)="create(); createForm.resetForm()">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="createModalLabel">Yeni Yazar Ekle</h1>
+          <h1 class="modal-title fs-5" id="createModalLabel">Add New Writer</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label" for="fullName">Yazar Adı Soyadı</label>
+            <label class="form-label" for="fullName">Writer Full Name</label>
             <input type="text" class="form-control" id="fullName" [(ngModel)]="writer.fullName" name="fullName"
-              placeholder="Yazarın Adını ve Soyadını Giriniz" required="" />
+              placeholder="Enter writer's full name" required="" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="bio">Yazar Biyografisi</label>
+            <label class="form-label" for="bio">Writer Biography</label>
             <input type="text" class="form-control" id="bio" [(ngModel)]="writer.bio" name="bio"
-              placeholder="Yazar Biyografisini Giriniz" required="" />
+              placeholder="Enter writer's biography" required="" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="imageFile">Yazarın Görseli</label>
+            <label class="form-label" for="imageFile">Writer Image</label>
             <input type="file" class="form-control" id="imageFile" (change)="onFileSelected($event)" accept="image/*"
               name="imageFile" required="" />
-            <small class="form-text text-muted">Desteklenen formatlar: JPG, PNG, GIF</small>
+            <small class="form-text text-muted">Supported formats: JPG, PNG, GIF</small>
             @if (imagePreview) {
             <div class="mt-3 text-center">
-              <img [src]="imagePreview" alt="Önizleme"
+              <img [src]="imagePreview" alt="Preview"
                 style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
             </div>
             }
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
             [disabled]="createForm.invalid || !createForm.dirty">
-            Kaydet
+            Save
           </button>
         </div>
       </div>
@@ -90,43 +90,43 @@
     <form #editForm="ngForm" (ngSubmit)="update()">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="editModalLabel">Yazar Güncelle</h1>
+          <h1 class="modal-title fs-5" id="editModalLabel">Update Writer</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label" for="fullName">Yazarın Adı Soyadı</label>
+            <label class="form-label" for="fullName">Writer Full Name</label>
             <input type="text" class="form-control" id="fullName" [(ngModel)]="editWriter.fullName" name="fullName"
-              placeholder="Yazarın Adını ve Soyadını Giriniz" required="" />
+              placeholder="Enter writer's full name" required="" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="bio">Yazarın Biyografisi</label>
+            <label class="form-label" for="bio">Writer Biography</label>
             <input type="text" class="form-control" id="bio" [(ngModel)]="editWriter.bio" name="bio"
-              placeholder="Yazar Biyografisini Giriniz" required="" />
+              placeholder="Enter writer's biography" required="" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="editImageFile">Yazarın Görseli</label>
+            <label class="form-label" for="editImageFile">Writer Image</label>
             <input type="file" class="form-control" id="editImageFile" (change)="onEditFileSelected($event)"
               accept="image/*" name="editImageFile" />
-            <small class="form-text text-muted">Yeni görsel seçmezseniz mevcut görsel korunur</small>
+            <small class="form-text text-muted">Leave empty to keep current image</small>
             @if (editImagePreview) {
             <div class="mt-3 text-center">
-              <img [src]="editImagePreview" alt="Önizleme"
+              <img [src]="editImagePreview" alt="Preview"
                 style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
             </div>
             } @else if (editWriter.imageUrl) {
             <div class="mt-3 text-center">
-              <img [src]="editWriter.imageUrl" alt="Mevcut Görsel"
+              <img [src]="editWriter.imageUrl" alt="Current Image"
                 style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
             </div>
             }
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
             [disabled]="editForm.invalid || !editForm.dirty">
-            Güncelle
+            Update
           </button>
         </div>
       </div>
