@@ -35,7 +35,6 @@ export class MessageComponent implements OnInit {
   }
 
   loadMessages() {
-    console.log('Starting to load messages...');
     this.isLoading = true;
     this.cdr.detectChanges();
 
@@ -43,8 +42,6 @@ export class MessageComponent implements OnInit {
       timeout(10000), // 10 second timeout
       catchError(error => {
         console.error('Error loading messages:', error);
-        console.error('Error status:', error.status);
-        console.error('Error message:', error.message);
         if (error.name === 'TimeoutError') {
           alert('Request timed out. Please check if the API server is running at https://localhost:7000');
         } else if (error.status === 0) {
@@ -57,12 +54,6 @@ export class MessageComponent implements OnInit {
     ).subscribe({
       next: (data) => {
         try {
-          console.log('Messages received:', data?.length || 0);
-          if (data && data.length > 0) {
-            console.log('First message object:', data[0]);
-            console.log('All properties:', Object.keys(data[0]));
-          }
-
           // Convert date strings to Date objects
           this.messageList = data ? data.map(msg => {
             try {
@@ -87,20 +78,10 @@ export class MessageComponent implements OnInit {
             b.sentAt.getTime() - a.sentAt.getTime()
           ) : [];
 
-          console.log('Converted messageList:', this.messageList);
-
-          console.log('messageList after sort:', this.messageList.length);
-          if (this.messageList.length > 0) {
-            console.log('Sample converted date:', this.messageList[0].sentAt);
-          }
           this.calculateStats();
-          console.log('Stats calculated');
           this.applyFilters();
-          console.log('Filters applied, filteredMessages:', this.filteredMessages.length);
           this.isLoading = false;
-          console.log('Setting isLoading to false');
           this.cdr.detectChanges();
-          console.log('Change detection triggered');
         } catch (err) {
           console.error('Error in next callback:', err);
           this.isLoading = false;
@@ -115,7 +96,6 @@ export class MessageComponent implements OnInit {
         this.cdr.detectChanges();
       },
       complete: () => {
-        console.log('Observable complete');
         this.isLoading = false;
         this.cdr.detectChanges();
       }
@@ -184,7 +164,6 @@ export class MessageComponent implements OnInit {
     message.isRead = true;
     this.messageService.update(id, message).subscribe({
       next: () => {
-        console.log('Message marked as read successfully');
         this.calculateStats();
         this.applyFilters();
         this.cdr.detectChanges();
@@ -194,8 +173,6 @@ export class MessageComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error marking message as read:', error);
-        console.error('Error status:', error.status);
-        console.error('Error details:', error.error);
         message.isRead = false; // Revert on error
         alert('Error updating message: ' + (error.message || error.status || 'Please try again.'));
       }
