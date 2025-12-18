@@ -59,20 +59,39 @@ export class MessageComponent implements OnInit {
         try {
           console.log('Messages received:', data?.length || 0);
           if (data && data.length > 0) {
-            console.log('Sample date from API:', data[0].sendAt, 'Type:', typeof data[0].sendAt);
+            console.log('First message object:', data[0]);
+            console.log('All properties:', Object.keys(data[0]));
           }
 
           // Convert date strings to Date objects
-          this.messageList = data ? data.map(msg => ({
-            ...msg,
-            sendAt: new Date(msg.sendAt)
-          })).sort((a, b) =>
-            b.sendAt.getTime() - a.sendAt.getTime()
+          this.messageList = data ? data.map(msg => {
+            try {
+              // Handle SQL Server datetime format
+              let dateStr = msg.sentAt ? msg.sentAt.toString() : '';
+              if (dateStr.includes(' ') && !dateStr.includes('T')) {
+                dateStr = dateStr.replace(' ', 'T');
+              }
+              const parsedDate = new Date(dateStr);
+              return {
+                ...msg,
+                sentAt: parsedDate
+              };
+            } catch (error) {
+              console.error('Error parsing date for message:', msg.id, error);
+              return {
+                ...msg,
+                sentAt: new Date()
+              };
+            }
+          }).sort((a, b) =>
+            b.sentAt.getTime() - a.sentAt.getTime()
           ) : [];
+
+          console.log('Converted messageList:', this.messageList);
 
           console.log('messageList after sort:', this.messageList.length);
           if (this.messageList.length > 0) {
-            console.log('Sample converted date:', this.messageList[0].sendAt);
+            console.log('Sample converted date:', this.messageList[0].sentAt);
           }
           this.calculateStats();
           console.log('Stats calculated');
@@ -168,6 +187,7 @@ export class MessageComponent implements OnInit {
         console.log('Message marked as read successfully');
         this.calculateStats();
         this.applyFilters();
+        this.cdr.detectChanges();
         if (closeModal && this.selectedMessage?.id === id) {
           this.closeModal('viewModal');
         }
@@ -191,6 +211,7 @@ export class MessageComponent implements OnInit {
       next: () => {
         this.calculateStats();
         this.applyFilters();
+        this.cdr.detectChanges();
         this.closeModal('viewModal');
       },
       error: (error) => {
@@ -274,6 +295,7 @@ export class MessageComponent implements OnInit {
           if (completed === updates.length) {
             this.calculateStats();
             this.applyFilters();
+            this.cdr.detectChanges();
             this.selectedMessages.clear();
             alert(`${completed} message(s) marked as read.`);
           }
@@ -310,6 +332,7 @@ export class MessageComponent implements OnInit {
             this.messageList = this.messageList.filter(m => !toDelete.includes(m.id));
             this.calculateStats();
             this.applyFilters();
+            this.cdr.detectChanges();
             this.selectedMessages.clear();
             alert(`${completed} message(s) deleted successfully.`);
           }
@@ -325,17 +348,9 @@ export class MessageComponent implements OnInit {
     if (!date) return 'Unknown date';
 
     const now = new Date();
-    // Handle SQL Server datetime format: 2025-12-01 09:15:23.0000000
-    let dateStr = date.toString();
-    // Replace space with T for ISO format if needed
-    if (dateStr.includes(' ') && !dateStr.includes('T')) {
-      dateStr = dateStr.replace(' ', 'T');
-    }
-
-    const messageDate = new Date(dateStr);
+    const messageDate = date instanceof Date ? date : new Date(date);
 
     if (isNaN(messageDate.getTime())) {
-      console.error('Invalid date:', date);
       return 'Invalid date';
     }
 

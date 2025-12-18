@@ -160,9 +160,9 @@
           </td>
           <td>
             <div class="message-date">
-              <small>{{ getTimeAgo(message.sendAt) }}</small>
+              <small>{{ getTimeAgo(message.sentAt) }}</small>
               <br>
-              <small class="text-muted">{{ message.sendAt | date:'short' }}</small>
+              <small class="text-muted">{{ message.sentAt | date:'short' }}</small>
             </div>
           </td>
           <td>
@@ -267,8 +267,8 @@
           <div class="detail-section mb-3">
             <label class="detail-label">Received:</label>
             <div class="detail-value">
-              {{ selectedMessage.sendAt | date:'full' }}
-              <small class="text-muted ms-2">({{ getTimeAgo(selectedMessage.sendAt) }})</small>
+              {{ selectedMessage.sentAt | date:'full' }}
+              <small class="text-muted ms-2">({{ getTimeAgo(selectedMessage.sentAt) }})</small>
             </div>
           </div>
 

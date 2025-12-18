@@ -4,6 +4,6 @@ export class Message {
   senderEmail: string;
   subject: string;
   content: string;
-  sendAt: Date;
+  sentAt!: Date;
   isRead: boolean;
 }
