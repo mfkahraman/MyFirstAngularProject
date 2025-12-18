@@ -1,5 +1,6 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
@@ -17,6 +18,7 @@ import { EmployeeComponent } from './admin/employee-component/employee-component
 import { WriterComponent } from './admin/writer-component/writer-component';
 import { BlogComponent } from './admin/blog-component/blog-component';
 import { MessageComponent } from './admin/message-component/message-component';
+import { DashboardComponent } from './admin/dashboard-component/dashboard-component';
 
 @NgModule({
   declarations: [
@@ -31,10 +33,12 @@ import { MessageComponent } from './admin/message-component/message-component';
     EmployeeComponent,
     WriterComponent,
     BlogComponent,
-    MessageComponent
+    MessageComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
     FormsModule,
     NgxPaginationModule

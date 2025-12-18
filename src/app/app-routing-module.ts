@@ -11,6 +11,7 @@ import { EmployeeComponent } from './admin/employee-component/employee-component
 import { WriterComponent } from './admin/writer-component/writer-component';
 import { BlogComponent } from './admin/blog-component/blog-component';
 import { MessageComponent } from './admin/message-component/message-component';
+import { DashboardComponent } from './admin/dashboard-component/dashboard-component';
 
 const routes: Routes = [
   //Main Routes
@@ -23,6 +24,8 @@ const routes: Routes = [
   //Admin Routes
   {
     path: 'admin', component: AdminLayout, children: [
+      { path: '', component: DashboardComponent },
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'productcategory', component: ProductCategoryComponent },
       { path: 'product', component: ProductComponent },
       { path: 'blogcategory', component: BlogCategoryComponent },
