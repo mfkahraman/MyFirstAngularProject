@@ -131,10 +131,10 @@
                   <div class="flex-grow-1 ms-3">
                     <h6 class="mb-1">{{ blog.title }}</h6>
                     <p class="text-muted small mb-0">
-                      By {{ blog.writerName || 'Unknown' }} • {{ blog.createdDate | date: 'short' }}
+                      By {{ blog.writer?.fullName || 'Unknown' }} • {{ blog.createdAt | date: 'short' }}
                     </p>
                   </div>
-                  <span class="badge bg-primary">{{ blog.categoryName || 'Uncategorized' }}</span>
+                  <span class="badge bg-primary">{{ blog.category?.name || 'Uncategorized' }}</span>
                 </div>
               </div>
             </div>
