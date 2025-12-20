@@ -17,6 +17,7 @@ import { BlogComponent } from './admin/blog-component/blog-component';
 import { MessageComponent } from './admin/message-component/message-component';
 import { DashboardComponent } from './admin/dashboard-component/dashboard-component';
 import { TestimonialComponent } from './_main/testimonial-component/testimonial-component';
+import { PortfolioComponent } from './_main/portfolio-component/portfolio-component';
 
 const routes: Routes = [
   //Main Routes
@@ -26,7 +27,8 @@ const routes: Routes = [
       { path: 'blog', component: BlogListComponent },
       { path: 'blog/:id', component: BlogDetailComponent },
       { path: 'contact', component: ContactComponent },
-      { path: 'testimonial', component: TestimonialComponent }
+      { path: 'testimonial', component: TestimonialComponent },
+      { path: 'portfolio', component: PortfolioComponent }
     ]
   },
 
