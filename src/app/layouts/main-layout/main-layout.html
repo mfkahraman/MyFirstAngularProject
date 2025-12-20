@@ -1,7 +1,7 @@
 <header id="header" class="header d-flex align-items-center sticky-top">
   <div class="container position-relative d-flex align-items-center">
 
-    <a href="#" class="logo d-flex align-items-center me-auto">
+    <a routerLink="/" class="logo d-flex align-items-center me-auto">
       <!-- Uncomment the line below if you also wish to use an image logo -->
       <!-- <img src="img/logo.png" alt=""> -->
       <h1 class="sitename">Company</h1><span>.</span>
@@ -9,29 +9,18 @@
 
     <nav id="navmenu" class="navmenu">
       <ul>
-        <li><a href="#hero" class="active">Ana Sayfa</a></li>
+        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Ana Sayfa</a></li>
         <li class="dropdown"><a href="#"><span>Hakkımızda</span> <i
               class="bi bi-chevron-down toggle-dropdown"></i></a>
           <ul>
-            <li><a href="#">Ekibimiz</a></li>
-            <li><a href="#">Referanslar</a></li>
-            <li class="dropdown"><a href="#"><span>Alt Menü</span> <i
-                  class="bi bi-chevron-down toggle-dropdown"></i></a>
-              <ul>
-                <li><a href="#">Alt Menü 1</a></li>
-                <li><a href="#">Alt Menü 2</a></li>
-                <li><a href="#">Alt Menü 3</a></li>
-                <li><a href="#">Alt Menü 4</a></li>
-                <li><a href="#">Alt Menü 5</a></li>
-              </ul>
-            </li>
+            <li><a href="#team">Ekibimiz</a></li>
+            <li><a href="#clients">Referanslar</a></li>
           </ul>
         </li>
-        <li><a href="#">Hizmetler</a></li>
-        <li><a href="#">Projeler</a></li>
-        <li><a href="#">Fiyatlandırma</a></li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">İletişim</a></li>
+        <li><a href="#services">Hizmetler</a></li>
+        <li><a href="#portfolio">Projeler</a></li>
+        <li><a routerLink="/blog" routerLinkActive="active">Blog</a></li>
+        <li><a routerLink="/contact" routerLinkActive="active">İletişim</a></li>
       </ul>
       <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
     </nav>
@@ -48,26 +37,8 @@
 
 <main class="main">
 
-  <!-- Hero Section -->
-  <app-hero></app-hero>
-
-  <!-- About Section -->
-  <app-about></app-about>
-
-  <!-- Services Section -->
-  <app-services></app-services>
-
-  <!-- Portfolio Section -->
-  <app-main-product-component></app-main-product-component>
-
-  <!-- Team Section -->
-  <app-team></app-team>
-
-  <!-- Blog Preview Section -->
-  <app-blog-preview></app-blog-preview>
-
-  <!-- Clients Section -->
-  <app-clients></app-clients>
+  <!-- Router Outlet for child routes -->
+  <router-outlet></router-outlet>
 
 </main>
 

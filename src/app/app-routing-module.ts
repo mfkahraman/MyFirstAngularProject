@@ -3,6 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { App } from './app';
 import { MainLayout } from './layouts/main-layout/main-layout';
 import { AdminLayout } from './layouts/admin-layout/admin-layout';
+import { HomeComponent } from './_main/home-component/home-component';
+import { BlogListComponent } from './_main/blog-list-component/blog-list-component';
+import { BlogDetailComponent } from './_main/blog-detail-component/blog-detail-component';
+import { ContactComponent } from './_main/contact-component/contact-component';
 import { BlogCategoryComponent } from './admin/blog-category-component/blog-category-component';
 import { ProductComponent } from './admin/product-component/product-component';
 import { ProductCategoryComponent } from './admin/product-category-component/product-category-component';
@@ -17,7 +21,10 @@ const routes: Routes = [
   //Main Routes
   {
     path: '', component: MainLayout, children: [
-
+      { path: '', component: HomeComponent },
+      { path: 'blog', component: BlogListComponent },
+      { path: 'blog/:id', component: BlogDetailComponent },
+      { path: 'contact', component: ContactComponent }
     ]
   },
 

@@ -16,6 +16,10 @@ import { AboutComponent } from './_main/about-component/about-component';
 import { TeamComponent } from './_main/team-component/team-component';
 import { ClientsComponent } from './_main/clients-component/clients-component';
 import { BlogPreviewComponent } from './_main/blog-preview-component/blog-preview-component';
+import { BlogListComponent } from './_main/blog-list-component/blog-list-component';
+import { BlogDetailComponent } from './_main/blog-detail-component/blog-detail-component';
+import { ContactComponent } from './_main/contact-component/contact-component';
+import { HomeComponent } from './_main/home-component/home-component';
 import { BlogCategoryComponent } from './admin/blog-category-component/blog-category-component';
 import { ProductCategoryComponent } from './admin/product-category-component/product-category-component';
 import { ProductComponent } from './admin/product-component/product-component';
@@ -38,6 +42,10 @@ import { DashboardComponent } from './admin/dashboard-component/dashboard-compon
     TeamComponent,
     ClientsComponent,
     BlogPreviewComponent,
+    BlogListComponent,
+    BlogDetailComponent,
+    ContactComponent,
+    HomeComponent,
     BlogCategoryComponent,
     ProductCategoryComponent,
     ProductComponent,

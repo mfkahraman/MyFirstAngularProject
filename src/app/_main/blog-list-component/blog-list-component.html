@@ -1,17 +1,24 @@
-<!-- Recent Posts Section -->
-<section id="recent-posts" class="recent-posts section">
+<!-- Page Title -->
+<div class="page-title dark-background">
+  <div class="container position-relative">
+    <h1>Blog</h1>
+    <p>Sektördeki son gelişmeler, uzman görüşleri ve güncel içerikler</p>
+    <nav class="breadcrumbs">
+      <ol>
+        <li><a routerLink="/">Ana Sayfa</a></li>
+        <li class="current">Blog</li>
+      </ol>
+    </nav>
+  </div>
+</div><!-- End Page Title -->
 
-  <!-- Section Title -->
-  <div class="container section-title" data-aos="fade-up">
-    <h2>Son Blog Yazıları</h2>
-    <p>Güncel içerikler ve sektördeki gelişmelerden haberdar olun</p>
-  </div><!-- End Section Title -->
+<!-- Blog Posts Section -->
+<section id="blog-posts" class="blog-posts section">
 
   <div class="container">
-
     <div class="row gy-4">
 
-      <div class="col-xl-4 col-md-6" data-aos="fade-up" data-aos-delay="100" *ngFor="let blog of blogList">
+      <div class="col-lg-4" *ngFor="let blog of blogList">
         <article>
 
           <div class="post-img">
@@ -37,8 +44,7 @@
         </article>
       </div><!-- End post list item -->
 
-    </div><!-- End recent posts list -->
-
+    </div>
   </div>
 
-</section><!-- /Recent Posts Section -->
+</section><!-- /Blog Posts Section -->
