@@ -27,6 +27,9 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "allowedCommonJsDependencies": [
+              "sweetalert2"
+            ],
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -42,6 +45,7 @@
             ],
             "styles": [
               "src/styles.css",
+              "assets/css/main.css",
               "assets/vendor/bootstrap/css/bootstrap.min.css",
               "assets/vendor/bootstrap-icons/bootstrap-icons.css",
               "assets/vendor/aos/aos.css",

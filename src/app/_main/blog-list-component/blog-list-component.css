@@ -1,1 +1,89 @@
-/* Blog list component specific styles */
+/* Blog list component styles */
+
+.blog-posts article {
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.blog-posts article:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.blog-posts .post-img {
+  overflow: hidden;
+  position: relative;
+  border-radius: 10px 10px 0 0;
+}
+
+.blog-posts .post-img img {
+  transition: 0.5s;
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.blog-posts article:hover .post-img img {
+  transform: scale(1.1);
+}
+
+.blog-posts .post-category {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: var(--accent-color);
+  color: var(--contrast-color);
+  padding: 5px 15px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 10;
+}
+
+.blog-posts .title {
+  font-size: 20px;
+  font-weight: 700;
+  padding: 20px 20px 0 20px;
+  margin: 0;
+}
+
+.blog-posts .title a {
+  color: var(--heading-color);
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+.blog-posts .title a:hover {
+  color: var(--accent-color);
+}
+
+.blog-posts .d-flex {
+  padding: 20px;
+}
+
+.blog-posts .post-author-img {
+  width: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.blog-posts .post-meta {
+  margin-bottom: 0;
+}
+
+.blog-posts .post-author {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--heading-color);
+}
+
+.blog-posts .post-date {
+  font-size: 14px;
+  color: rgba(var(--default-color-rgb), 0.6);
+  margin-bottom: 0;
+}

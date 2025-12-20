@@ -19,24 +19,24 @@
     <div class="row gy-4">
 
       <div class="col-lg-4" *ngFor="let blog of blogList">
-        <article>
+        <article class="position-relative h-100">
 
           <div class="post-img">
-            <img [src]="blog.coverImageUrl" alt="" class="img-fluid">
+            <img [src]="blog.coverImageUrl" [alt]="blog.title" class="img-fluid">
           </div>
 
-          <p class="post-category">{{blog.category?.name}}</p>
+          <p class="post-category">{{blog.category?.name || 'Uncategorized'}}</p>
 
           <h2 class="title">
             <a [routerLink]="['/blog', blog.id]">{{blog.title}}</a>
           </h2>
 
           <div class="d-flex align-items-center">
-            <img [src]="blog.writer?.imageUrl" alt="" class="img-fluid post-author-img flex-shrink-0">
+            <img [src]="blog.writer?.imageUrl" [alt]="blog.writer?.fullName" class="img-fluid post-author-img flex-shrink-0" *ngIf="blog.writer?.imageUrl">
             <div class="post-meta">
               <p class="post-author">{{blog.writer?.fullName}}</p>
               <p class="post-date">
-                <time>{{blog.createdAt}}</time>
+                <time [attr.datetime]="blog.createdAt">{{blog.createdAt | date:'MMM dd, yyyy'}}</time>
               </p>
             </div>
           </div>
@@ -44,7 +44,9 @@
         </article>
       </div><!-- End post list item -->
 
-    </div>
-  </div>
-
-</section><!-- /Blog Posts Section -->
+      <!-- Show message if no blogs -->
+      <div class="col-12" *ngIf="blogList.length === 0">
+        <div class="alert alert-info text-center">
+          <i class="bi bi-info-circle"></i> No blog posts available at the moment.
+        </div>
+      </div>
