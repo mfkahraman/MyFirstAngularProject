@@ -29,6 +29,7 @@ import { WriterComponent } from './admin/writer-component/writer-component';
 import { BlogComponent } from './admin/blog-component/blog-component';
 import { MessageComponent } from './admin/message-component/message-component';
 import { DashboardComponent } from './admin/dashboard-component/dashboard-component';
+import { TestimonialComponent } from './_main/testimonial-component/testimonial-component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { DashboardComponent } from './admin/dashboard-component/dashboard-compon
     WriterComponent,
     BlogComponent,
     MessageComponent,
-    DashboardComponent
+    DashboardComponent,
+    TestimonialComponent
   ],
   imports: [
     BrowserModule,
