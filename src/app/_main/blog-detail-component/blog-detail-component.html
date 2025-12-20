@@ -1,90 +1,183 @@
-<!-- Page Title -->
-<div class="page-title dark-background" *ngIf="blog">
-  <div class="container position-relative">
-    <h1>{{blog.title}}</h1>
-    <nav class="breadcrumbs">
-      <ol>
-        <li><a routerLink="/">Home</a></li>
-        <li><a routerLink="/blog">Blog</a></li>
-        <li class="current">{{blog.title}}</li>
-      </ol>
-    </nav>
-  </div>
-</div><!-- End Page Title -->
+<main class="main" *ngIf="blog">
 
-<!-- Blog Details Section -->
-<section id="blog-details" class="blog-details section" *ngIf="blog">
-  <div class="container">
-
-    <article class="article">
-
-      <div class="post-img">
-        <img [src]="blog.coverImageUrl" [alt]="blog.title" class="img-fluid">
+    <!-- Page Title -->
+    <div class="page-title accent-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Blog Details</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a routerLink="/">Home</a></li>
+            <li class="current">Blog Details</li>
+          </ol>
+        </nav>
       </div>
+    </div><!-- End Page Title -->
 
-      <h2 class="title">{{blog.title}}</h2>
+    <div class="container">
+      <div class="row">
 
-      <div class="meta-top">
-        <ul>
-          <li class="d-flex align-items-center">
-            <i class="bi bi-person"></i>
-            <a>{{blog.writer?.fullName}}</a>
-          </li>
-          <li class="d-flex align-items-center">
-            <i class="bi bi-clock"></i>
-            <time [attr.datetime]="blog.createdAt">{{blog.createdAt | date:'MMMM dd, yyyy'}}</time>
-          </li>
-          <li class="d-flex align-items-center">
-            <i class="bi bi-folder2"></i>
-            <a>{{blog.category?.name || 'Uncategorized'}}</a>
-          </li>
-        </ul>
-      </div><!-- End meta top -->
+        <div class="col-lg-8">
 
-      <div class="content">
-        <p [innerHTML]="blog.content"></p>
-      </div><!-- End post content -->
+          <!-- Blog Details Section -->
+          <section id="blog-details" class="blog-details section">
+            <div class="container">
 
-      <div class="meta-bottom" *ngIf="blog.blogTags && blog.blogTags.length > 0">
-        <i class="bi bi-tags"></i>
-        <ul class="tags">
-          <li *ngFor="let blogTag of blog.blogTags"><a>{{blogTag.tag?.name}}</a></li>
-        </ul>
-      </div><!-- End meta bottom -->
+              <article class="article">
 
-    </article>
+                <div class="post-img" *ngIf="blog.coverImageUrl">
+                  <img [src]="blog.coverImageUrl" [alt]="blog.title" class="img-fluid">
+                </div>
 
-  </div>
-</section><!-- /Blog Details Section -->
+                <h2 class="title">{{blog.title}}</h2>
 
-<!-- Comments Section -->
-<section class="comments section" *ngIf="blog && blog.comments && blog.comments.length > 0">
-  <div class="container">
-    <h4 class="comments-count">{{blog.comments.length}} Comment{{blog.comments.length > 1 ? 's' : ''}}</h4>
+                <div class="meta-top">
+                  <ul>
+                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a>{{blog.writer?.fullName || 'Anonymous'}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a><time
+                          [attr.datetime]="blog.createdAt">{{blog.createdAt | date:'MMM d, yyyy'}}</time></a></li>
+                    <li class="d-flex align-items-center" *ngIf="blog.comments && blog.comments.length > 0"><i class="bi bi-chat-dots"></i> <a>{{blog.comments.length}}
+                        Comment{{blog.comments.length !== 1 ? 's' : ''}}</a></li>
+                  </ul>
+                </div><!-- End meta top -->
 
-    <div class="comment" *ngFor="let comment of blog.comments">
-      <div class="d-flex">
-        <div class="comment-img">
-          <i class="bi bi-person-circle"></i>
+                <div class="content">
+                  <div [innerHTML]="blog.content"></div>
+                </div><!-- End post content -->
+
+                <div class="meta-bottom">
+                  <i class="bi bi-folder"></i>
+                  <ul class="cats">
+                    <li><a>{{blog.category?.name || 'Uncategorized'}}</a></li>
+                  </ul>
+
+                  <ng-container *ngIf="blog.blogTags && blog.blogTags.length > 0">
+                    <i class="bi bi-tags"></i>
+                    <ul class="tags">
+                      <li *ngFor="let blogTag of blog.blogTags">
+                        <a *ngIf="blogTag.tags && blogTag.tags.length > 0">{{blogTag.tags[0].name}}</a>
+                      </li>
+                    </ul>
+                  </ng-container>
+                </div><!-- End meta bottom -->
+
+              </article>
+
+            </div>
+          </section><!-- /Blog Details Section -->
+
+          <!-- Blog Comments Section -->
+          <section id="blog-comments" class="blog-comments section" *ngIf="blog.comments && blog.comments.length > 0">
+
+            <div class="container">
+
+              <h4 class="comments-count">{{blog.comments.length}} Comment{{blog.comments.length !== 1 ? 's' : ''}}</h4>
+
+              <div [id]="'comment-' + comment.id" class="comment" *ngFor="let comment of blog.comments">
+                <div class="d-flex">
+                  <div class="comment-img">
+                    <img [src]="comment.writer.imageUrl" [alt]="comment.writer.fullName">
+                  </div>
+                  <div>
+                    <h5><a>{{comment.writer.fullName}}</a></h5>
+                    <time [attr.datetime]="comment.createdAt">{{comment.createdAt | date:'dd MMM, yyyy'}}</time>
+                    <p>
+                      {{comment.content}}
+                    </p>
+                  </div>
+                </div>
+              </div><!-- End comment -->
+
+            </div>
+
+          </section><!-- /Blog Comments Section -->
+
+          <!-- Comment Form Section -->
+          <section id="comment-form" class="comment-form section">
+            <div class="container">
+
+              <form action="">
+
+                <h4>Post Comment</h4>
+                <p>Your email address will not be published. Required fields are marked * </p>
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <input name="name" type="text" class="form-control" placeholder="Your Name*">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input name="email" type="text" class="form-control" placeholder="Your Email*">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col form-group">
+                    <input name="website" type="text" class="form-control" placeholder="Your Website">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col form-group">
+                    <textarea name="comment" class="form-control" placeholder="Your Comment*"></textarea>
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Post Comment</button>
+                </div>
+
+              </form>
+
+            </div>
+          </section><!-- /Comment Form Section -->
+
         </div>
-        <div>
-          <h5 class="comment-author">{{comment.writer?.fullName}}</h5>
-          <time class="comment-date" [attr.datetime]="comment.createdAt">{{comment.createdAt | date:'MMM dd, yyyy'}}</time>
-          <p class="comment-content">{{comment.content}}</p>
+
+        <div class="col-lg-4 sidebar">
+
+          <div class="widgets-container">
+
+            <!-- Blog Author Widget -->
+            <div class="blog-author-widget widget-item" *ngIf="blog.writer">
+
+              <div class="d-flex flex-column align-items-center">
+                <img [src]="blog.writer.imageUrl || 'https://ui-avatars.com/api/?name=' + blog.writer.fullName + '&size=120&background=random'"
+                     class="rounded-circle flex-shrink-0"
+                     [alt]="blog.writer.fullName"
+                     onerror="this.src='https://ui-avatars.com/api/?name=Writer&size=120&background=random'">
+                <h4>{{blog.writer.fullName}}</h4>
+
+                <p>
+                  {{blog.writer.bio || 'Professional content writer and technology enthusiast.'}}
+                </p>
+
+              </div>
+            </div><!--/Blog Author Widget -->
+
+            <!-- Tags Widget -->
+            <div class="tags-widget widget-item" *ngIf="blog.blogTags && blog.blogTags.length > 0">
+
+              <h3 class="widget-title">Tags</h3>
+              <ul>
+                <li *ngFor="let blogTag of blog.blogTags">
+                  <a *ngIf="blogTag.tags && blogTag.tags.length > 0">{{blogTag.tags[0].name}}</a>
+                </li>
+              </ul>
+
+            </div><!--/Tags Widget -->
+
+          </div>
+
         </div>
+
       </div>
-    </div><!-- End comment -->
-
-  </div>
-</section><!-- /Comments Section -->
-
-<!-- No blog found message -->
-<section class="section" *ngIf="!blog && blogId">
-  <div class="container">
-    <div class="alert alert-warning text-center">
-      <i class="bi bi-exclamation-triangle"></i> Blog post not found.
-      <br>
-      <a routerLink="/blog" class="btn btn-primary mt-3">Back to Blog List</a>
     </div>
-  </div>
-</section>
+
+  </main>
+
+  <!-- No blog found message -->
+  <section class="section" *ngIf="!blog && blogId">
+    <div class="container">
+      <div class="alert alert-warning text-center">
+        <i class="bi bi-exclamation-triangle"></i> Blog post not found.
+        <br>
+        <a routerLink="/blog" class="btn btn-primary mt-3">Back to Blog List</a>
+      </div>
+    </div>
+  </section>

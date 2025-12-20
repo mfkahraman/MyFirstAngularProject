@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Blog } from '../../_models/blog-model';
 import { BlogService } from '../../_services/blog-service';
@@ -15,7 +15,8 @@ export class BlogDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private blogService: BlogService
+    private blogService: BlogService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -26,11 +27,14 @@ export class BlogDetailComponent implements OnInit {
   }
 
   loadBlog() {
-    this.blogService.getById(this.blogId).subscribe({
+    this.blogService.getWithDetailsById(this.blogId).subscribe({
       next: (blog) => {
         this.blog = blog;
+        this.cdr.detectChanges();
       },
-      error: (error) => console.error('Error loading blog:', error),
+      error: (error) => {
+        console.error('Error loading blog:', error);
+      },
     });
   }
 }

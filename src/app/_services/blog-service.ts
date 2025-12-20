@@ -18,7 +18,7 @@ export class BlogService {
   }
 
   getWithDetailsById(id: number) {
-    return this.httpClient.get<Blog[]>('https://localhost:7000/api/Blogs/get-blogs-with-details-by-id/' + id);
+    return this.httpClient.get<Blog>(`https://localhost:7000/api/Blogs/get-blogs-with-details-by-id/${id}`);
   }
 
   getById(id: number) {
