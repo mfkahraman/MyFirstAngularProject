@@ -1,0 +1,36 @@
+<!-- Team Section -->
+<section id="team" class="team section">
+
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Ekibimiz</h2>
+    <p>Deneyimli ve profesyonel kadromuzla hizmetinizdeyiz</p>
+  </div><!-- End Section Title -->
+
+  <div class="container">
+
+    <div class="row gy-4">
+
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100" *ngFor="let employee of employeeList">
+        <div class="team-member">
+          <div class="member-img">
+            <img [src]="employee.imageUrl" class="img-fluid" [alt]="employee.firstName + ' ' + employee.lastName">
+            <div class="social">
+              <a href="#"><i class="bi bi-twitter-x"></i></a>
+              <a href="#"><i class="bi bi-facebook"></i></a>
+              <a href="#"><i class="bi bi-instagram"></i></a>
+              <a href="#"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+          <div class="member-info">
+            <h4>{{employee.firstName}} {{employee.lastName}}</h4>
+            <span>{{employee.title}}</span>
+          </div>
+        </div>
+      </div><!-- End Team Member -->
+
+    </div>
+
+  </div>
+
+</section><!-- /Team Section -->

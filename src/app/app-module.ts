@@ -10,6 +10,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MainProductComponent } from './_main/main-product-component/main-product-component';
+import { HeroComponent } from './_main/hero-component/hero-component';
+import { ServicesComponent } from './_main/services-component/services-component';
+import { AboutComponent } from './_main/about-component/about-component';
+import { TeamComponent } from './_main/team-component/team-component';
+import { ClientsComponent } from './_main/clients-component/clients-component';
+import { BlogPreviewComponent } from './_main/blog-preview-component/blog-preview-component';
 import { BlogCategoryComponent } from './admin/blog-category-component/blog-category-component';
 import { ProductCategoryComponent } from './admin/product-category-component/product-category-component';
 import { ProductComponent } from './admin/product-component/product-component';
@@ -26,6 +32,12 @@ import { DashboardComponent } from './admin/dashboard-component/dashboard-compon
     MainLayout,
     AdminLayout,
     MainProductComponent,
+    HeroComponent,
+    ServicesComponent,
+    AboutComponent,
+    TeamComponent,
+    ClientsComponent,
+    BlogPreviewComponent,
     BlogCategoryComponent,
     ProductCategoryComponent,
     ProductComponent,
