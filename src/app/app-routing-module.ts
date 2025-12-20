@@ -21,6 +21,8 @@ import { PortfolioComponent } from './_main/portfolio-component/portfolio-compon
 import { PricingComponent } from './_main/pricing-component/pricing-component';
 import { OurTeamComponent } from './_main/our-team-component/our-team-component';
 import { OurServicesComponent } from './_main/our-services-component/our-services-component';
+import { ServiceDetailsComponent } from './_main/service-details-component/service-details-component';
+import { PortfolioDetailsComponent } from './_main/portfolio-details-component/portfolio-details-component';
 
 const routes: Routes = [
   //Main Routes
@@ -30,7 +32,9 @@ const routes: Routes = [
       { path: 'team', component: OurTeamComponent },
       { path: 'testimonial', component: TestimonialComponent },
       { path: 'service', component: OurServicesComponent },
+      { path: 'servicedetails', component: ServiceDetailsComponent },
       { path: 'portfolio', component: PortfolioComponent },
+      { path: 'portfoliodetails', component: PortfolioDetailsComponent },
       { path: 'pricing', component: PricingComponent },
       { path: 'blog', component: BlogListComponent },
       { path: 'blog/:id', component: BlogDetailComponent },
