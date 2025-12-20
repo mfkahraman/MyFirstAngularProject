@@ -12,7 +12,9 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 })
 export class MainProductComponent {
   productList: Product[] = [];
+  allProducts: Product[] = [];
   categoryList: ProductCategory[] = [];
+  selectedCategoryId: number | null = null;
 
   constructor(
     private ProductService: ProductService,
@@ -26,6 +28,7 @@ export class MainProductComponent {
   getAllProducts() {
     this.ProductService.getAll().subscribe({
       next: values => {
+        this.allProducts = values;
         this.productList = values;
         this.cdr.detectChanges();
       }
@@ -41,6 +44,13 @@ export class MainProductComponent {
     })
   }
 
-
-
+  filterByCategory(categoryId: number | null) {
+    this.selectedCategoryId = categoryId;
+    if (categoryId === null) {
+      this.productList = this.allProducts;
+    } else {
+      this.productList = this.allProducts.filter(p => p.categoryId === categoryId);
+    }
+    this.cdr.detectChanges();
+  }
 }
