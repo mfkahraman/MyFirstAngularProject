@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Employee } from '../../_models/employee-model';
 import { EmployeeService } from '../../_services/employee-service';
 
@@ -11,7 +11,10 @@ import { EmployeeService } from '../../_services/employee-service';
 export class TeamComponent implements OnInit {
   employeeList: Employee[] = [];
 
-  constructor(private employeeService: EmployeeService) {}
+  constructor(
+    private employeeService: EmployeeService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadTeamMembers();
@@ -19,7 +22,10 @@ export class TeamComponent implements OnInit {
 
   loadTeamMembers() {
     this.employeeService.getAll().subscribe({
-      next: (employees) => (this.employeeList = employees),
+      next: (employees) => {
+        this.employeeList = employees;
+        this.cdr.detectChanges();
+      },
       error: (error) => console.error('Error loading team members:', error),
     });
   }

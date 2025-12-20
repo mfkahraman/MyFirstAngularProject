@@ -952,7 +952,8 @@ section,
   color: var(--default-color);
 }
 
-.hero .carousel-indicators li {
+.hero .carousel-indicators li,
+.hero .carousel-indicators button {
   cursor: pointer;
   background: var(--default-color);
   overflow: hidden;
@@ -964,7 +965,8 @@ section,
   transition: 0.3s;
 }
 
-.hero .carousel-indicators li.active {
+.hero .carousel-indicators li.active,
+.hero .carousel-indicators button.active {
   opacity: 1;
   background: var(--accent-color);
 }
