@@ -10,6 +10,8 @@ import { BlogService } from '../../_services/blog-service';
 })
 export class BlogListComponent implements OnInit {
   blogList: Blog[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 3;
 
   constructor(
     private blogService: BlogService,
@@ -21,7 +23,7 @@ export class BlogListComponent implements OnInit {
   }
 
   loadBlogs() {
-    this.blogService.getAll().subscribe({
+    this.blogService.getWithDetails().subscribe({
       next: (blogs) => {
         this.blogList = blogs;
         this.cdr.detectChanges();

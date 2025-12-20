@@ -18,26 +18,43 @@
   <div class="container">
     <div class="row gy-4">
 
-      <div class="col-lg-4" *ngFor="let blog of blogList">
-        <article class="position-relative h-100">
+      <div class="col-xl-4 col-lg-6" *ngFor="let blog of blogList | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }; let i = index"
+           data-aos="fade-up"
+           [attr.data-aos-delay]="(i % 3) * 100">
+        <article class="blog-card h-100">
 
-          <div class="post-img">
+          <div class="post-img position-relative">
             <img [src]="blog.coverImageUrl" [alt]="blog.title" class="img-fluid">
+            <div class="post-overlay">
+              <a [routerLink]="['/blog', blog.id]" class="read-more-btn">
+                <i class="bi bi-arrow-right"></i> Read More
+              </a>
+            </div>
           </div>
 
-          <p class="post-category">{{blog.category?.name || 'Uncategorized'}}</p>
-
-          <h2 class="title">
-            <a [routerLink]="['/blog', blog.id]">{{blog.title}}</a>
-          </h2>
-
-          <div class="d-flex align-items-center">
-            <img [src]="blog.writer?.imageUrl" [alt]="blog.writer?.fullName" class="img-fluid post-author-img flex-shrink-0" *ngIf="blog.writer?.imageUrl">
-            <div class="post-meta">
-              <p class="post-author">{{blog.writer?.fullName}}</p>
-              <p class="post-date">
+          <div class="post-content">
+            <div class="post-header">
+              <span class="post-category">{{blog.category?.name || 'Uncategorized'}}</span>
+              <span class="post-date">
+                <i class="bi bi-calendar3"></i>
                 <time [attr.datetime]="blog.createdAt">{{blog.createdAt | date:'MMM dd, yyyy'}}</time>
-              </p>
+              </span>
+            </div>
+
+            <h2 class="title">
+              <a [routerLink]="['/blog', blog.id]">{{blog.title}}</a>
+            </h2>
+
+            <p class="post-excerpt" *ngIf="blog.content">
+              {{blog.content.substring(0, 120)}}...
+            </p>
+
+            <div class="post-author-info">
+              <img [src]="blog.writer?.imageUrl" [alt]="blog.writer?.fullName" class="post-author-img" *ngIf="blog.writer?.imageUrl">
+              <div class="author-details">
+                <p class="author-name">{{blog.writer?.fullName || 'Anonymous'}}</p>
+                <p class="author-role">Author</p>
+              </div>
             </div>
           </div>
 
@@ -50,3 +67,21 @@
           <i class="bi bi-info-circle"></i> No blog posts available at the moment.
         </div>
       </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="row" *ngIf="blogList.length > itemsPerPage">
+      <div class="col-12">
+        <div class="pagination-wrapper">
+          <pagination-controls
+            (pageChange)="currentPage = $event"
+            previousLabel="Previous"
+            nextLabel="Next">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</section><!-- End Blog Posts Section -->
