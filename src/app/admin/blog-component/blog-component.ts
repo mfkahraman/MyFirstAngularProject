@@ -192,7 +192,7 @@ export class BlogComponent implements OnInit {
       id: 0,
       blogId: 0,
       tagId: tagId,
-      isDeleted: false
+      tag: this.tagList.find(t => t.id === tagId)!
     }));
 
     this.blogService.create(this.blog).subscribe({
@@ -221,7 +221,7 @@ export class BlogComponent implements OnInit {
       id: 0,
       blogId: this.editBlog.id,
       tagId: tagId,
-      isDeleted: false
+      tag: this.tagList.find(t => t.id === tagId)!
     }));
 
     this.blogService.update(this.editBlog.id, this.editBlog).subscribe({
@@ -253,7 +253,6 @@ export class BlogComponent implements OnInit {
     // Load blog's current tags (only non-deleted ones)
     this.editSelectedTags = model.blogTags
       ? model.blogTags
-          .filter(bt => !bt.isDeleted)
           .map(bt => bt.tagId)
       : [];
   }

@@ -4,7 +4,7 @@
     <h1>{{blog.title}}</h1>
     <nav class="breadcrumbs">
       <ol>
-        <li><a routerLink="/">Ana Sayfa</a></li>
+        <li><a routerLink="/">Home</a></li>
         <li><a routerLink="/blog">Blog</a></li>
         <li class="current">{{blog.title}}</li>
       </ol>
@@ -50,7 +50,7 @@
 
 <section class="comments section" *ngIf="blog && blog.comments && blog.comments.length > 0">
   <div class="container">
-    <h3>{{blog.comments.length}} Yorum</h3>
+    <h3>{{blog.comments.length}} Comments</h3>
 
     <div id="comment-1" class="comment" *ngFor="let comment of blog.comments">
       <div class="d-flex">

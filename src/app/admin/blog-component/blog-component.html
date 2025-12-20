@@ -32,9 +32,7 @@
       <td>
         @if (item.blogTags && item.blogTags.length > 0) {
           @for (blogTag of item.blogTags; track blogTag.id) {
-            @if (!blogTag.isDeleted) {
               <span class="badge bg-secondary me-1">{{ getTagName(blogTag.tagId) }}</span>
-            }
           }
         } @else {
           <span class="text-muted">No tags</span>
