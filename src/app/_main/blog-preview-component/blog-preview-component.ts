@@ -21,7 +21,7 @@ export class BlogPreviewComponent implements OnInit {
   }
 
   loadRecentBlogs() {
-    this.blogService.getAll().subscribe({
+    this.blogService.getWithDetails().subscribe({
       next: (blogs) => {
         // Get only the 6 most recent blogs
         this.blogList = blogs.slice(0, 6);
