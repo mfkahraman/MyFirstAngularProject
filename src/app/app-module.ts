@@ -31,6 +31,7 @@ import { MessageComponent } from './admin/message-component/message-component';
 import { DashboardComponent } from './admin/dashboard-component/dashboard-component';
 import { TestimonialComponent } from './_main/testimonial-component/testimonial-component';
 import { PortfolioComponent } from './_main/portfolio-component/portfolio-component';
+import { PricingComponent } from './_main/pricing-component/pricing-component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { PortfolioComponent } from './_main/portfolio-component/portfolio-compon
     MessageComponent,
     DashboardComponent,
     TestimonialComponent,
-    PortfolioComponent
+    PortfolioComponent,
+    PricingComponent
   ],
   imports: [
     BrowserModule,

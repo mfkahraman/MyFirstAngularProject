@@ -18,17 +18,19 @@ import { MessageComponent } from './admin/message-component/message-component';
 import { DashboardComponent } from './admin/dashboard-component/dashboard-component';
 import { TestimonialComponent } from './_main/testimonial-component/testimonial-component';
 import { PortfolioComponent } from './_main/portfolio-component/portfolio-component';
+import { PricingComponent } from './_main/pricing-component/pricing-component';
 
 const routes: Routes = [
   //Main Routes
   {
     path: '', component: MainLayout, children: [
       { path: '', component: HomeComponent },
+      { path: 'testimonial', component: TestimonialComponent },
+      { path: 'portfolio', component: PortfolioComponent },
+      { path: 'pricing', component: PricingComponent },
       { path: 'blog', component: BlogListComponent },
       { path: 'blog/:id', component: BlogDetailComponent },
-      { path: 'contact', component: ContactComponent },
-      { path: 'testimonial', component: TestimonialComponent },
-      { path: 'portfolio', component: PortfolioComponent }
+      { path: 'contact', component: ContactComponent }
     ]
   },
 
