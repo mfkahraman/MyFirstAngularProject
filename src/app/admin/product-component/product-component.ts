@@ -115,9 +115,18 @@ export class ProductComponent implements OnInit, OnDestroy {
       );
     }
 
+    // Ensure selectedCategoryId is a number
+    const selectedCategoryIdNum = this.selectedCategoryId !== null && this.selectedCategoryId !== undefined ? Number(this.selectedCategoryId) : null;
+
+    // Debugging output
+    console.log('Selected Category ID:', selectedCategoryIdNum);
+    filtered.forEach(product => {
+      console.log('Product:', product.productName, 'categoryId:', product.categoryId, typeof product.categoryId);
+    });
+
     // Filter by category
-    if (this.selectedCategoryId) {
-      filtered = filtered.filter(product => product.categoryId === this.selectedCategoryId);
+    if (selectedCategoryIdNum) {
+      filtered = filtered.filter(product => Number(product.categoryId) === selectedCategoryIdNum);
     }
 
     this.filteredProductList = filtered;

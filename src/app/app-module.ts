@@ -27,6 +27,7 @@ import { TagComponent } from './admin/tag-component/tag-component';
 import { EmployeeComponent } from './admin/employee-component/employee-component';
 import { WriterComponent } from './admin/writer-component/writer-component';
 import { BlogComponent } from './admin/blog-component/blog-component';
+import { BlogSearchPipe } from './admin/blog-component/blog-search.pipe';
 import { MessageComponent } from './admin/message-component/message-component';
 import { DashboardComponent } from './admin/dashboard-component/dashboard-component';
 import { TestimonialComponent } from './admin/testimonial-component/testimonial-component';
@@ -76,7 +77,8 @@ import { PortfolioDetailsComponent } from './_main/portfolio-details-component/p
     CommonModule,
     AppRoutingModule,
     FormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    BlogSearchPipe
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

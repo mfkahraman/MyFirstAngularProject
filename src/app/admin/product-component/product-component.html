@@ -20,8 +20,8 @@
   <div class="filter-box">
     <i class="bi bi-funnel filter-icon"></i>
     <select class="form-select" [(ngModel)]="selectedCategoryId" (change)="filterProducts()">
-      <option [value]="null">All Categories</option>
-      <option *ngFor="let category of categoryList" [value]="category.id">
+      <option [ngValue]="null">All Categories</option>
+      <option *ngFor="let category of categoryList" [ngValue]="category.id">
         {{ category.categoryName }}
       </option>
     </select>

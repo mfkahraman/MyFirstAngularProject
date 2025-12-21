@@ -28,6 +28,12 @@ export class BlogComponent implements OnInit {
   editSelectedTags: number[] = [];
   errors: any = {};
 
+  // Search
+  searchTerm: string = '';
+  onSearchChange(term: string) {
+    this.searchTerm = term;
+  }
+
   // Image handling
   coverImagePreview: string | null = null;
   contentImagePreview: string | null = null;
