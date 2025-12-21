@@ -40,7 +40,7 @@
       </td>
       <td>{{ item.content.length > 100 ? (item.content.substring(0, 100) + '...') : item.content }}</td>
       <td>{{ item.createdAt | date:'short' }}</td>
-      <td><img [src]="item.coverImageUrl" [alt]="'Cover image for ' + item.title" class="blog-cover-thumbnail" />
+      <td><img [src]="getImageUrl(item.coverImageUrl)" [alt]="'Cover image for ' + item.title" class="blog-cover-thumbnail" (error)="onImageError($event)" />
       </td>
       <td>
         <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal"
@@ -242,7 +242,7 @@
             </div>
             } @else if (editBlog.coverImageUrl) {
             <div class="mt-3 text-center">
-              <img [src]="editBlog.coverImageUrl" alt="Current cover image" class="image-preview">
+              <img [src]="getImageUrl(editBlog.coverImageUrl)" alt="Current cover image" class="image-preview">
             </div>
             }
           </div>
@@ -257,7 +257,7 @@
             </div>
             } @else if (editBlog.contentImageUrl) {
             <div class="mt-3 text-center">
-              <img [src]="editBlog.contentImageUrl" alt="Current content image" class="image-preview">
+              <img [src]="getImageUrl(editBlog.contentImageUrl)" alt="Current content image" class="image-preview">
             </div>
             }
           </div>

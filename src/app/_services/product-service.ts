@@ -21,20 +21,16 @@ export class ProductService {
     return this.http.get<Product>(this.apiUrl + id);
   }
 
-  create(model: Product) {
-    return this.http.post<Product>(this.apiUrl, model);
+  create(formData: FormData) {
+    return this.http.post<Product>(this.apiUrl, formData);
   }
 
-  update(id: number, model: Product) {
-    return this.http.put(this.apiUrl + id, model, { responseType: 'text' });
+  update(id: number, formData: FormData) {
+    return this.http.put(this.apiUrl + id, formData, { responseType: 'text' });
   }
 
   delete(id: number) {
     return this.http.delete(this.apiUrl + id, { responseType: 'text' });
-  }
-
-  uploadImage(formData: FormData) {
-    return this.http.post<{ filePath: string }>('https://localhost:7000/api/Products/upload-image', formData);
   }
 
 }

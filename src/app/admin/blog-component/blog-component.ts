@@ -33,6 +33,10 @@ export class BlogComponent implements OnInit {
   contentImagePreview: string | null = null;
   editCoverImagePreview: string | null = null;
   editContentImagePreview: string | null = null;
+  coverImageFile: File | null = null;
+  contentImageFile: File | null = null;
+  editCoverImageFile: File | null = null;
+  editContentImageFile: File | null = null;
 
   // Pagination
   page: number = 1;
@@ -54,72 +58,156 @@ export class BlogComponent implements OnInit {
     this.getAllTags();
   }
 
-  onCoverFileSelected(event: any) {
-    const imageObservable = this.imageService.handleFileSelection(event, 2);
+  onCoverFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
 
-    if (imageObservable) {
-      imageObservable.subscribe({
-        next: (result) => {
-          this.coverImagePreview = result.preview;
-          this.blog.coverImageUrl = result.base64;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Cover image upload error:', err);
-        }
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select a valid image file.',
+        icon: 'error'
       });
+      return;
     }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Image file must be smaller than 5MB.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Store file for later upload
+    this.coverImageFile = file;
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.coverImagePreview = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
   }
 
-  onContentFileSelected(event: any) {
-    const imageObservable = this.imageService.handleFileSelection(event, 2);
+  onContentFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
 
-    if (imageObservable) {
-      imageObservable.subscribe({
-        next: (result) => {
-          this.contentImagePreview = result.preview;
-          this.blog.contentImageUrl = result.base64;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Content image upload error:', err);
-        }
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select a valid image file.',
+        icon: 'error'
       });
+      return;
     }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Image file must be smaller than 5MB.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Store file for later upload
+    this.contentImageFile = file;
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.contentImagePreview = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
   }
 
-  onEditCoverFileSelected(event: any) {
-    const imageObservable = this.imageService.handleFileSelection(event, 2);
+  onEditCoverFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
 
-    if (imageObservable) {
-      imageObservable.subscribe({
-        next: (result) => {
-          this.editCoverImagePreview = result.preview;
-          this.editBlog.coverImageUrl = result.base64;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Cover image upload error:', err);
-        }
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select a valid image file.',
+        icon: 'error'
       });
+      return;
     }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Image file must be smaller than 5MB.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Store file for later upload
+    this.editCoverImageFile = file;
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.editCoverImagePreview = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
   }
 
-  onEditContentFileSelected(event: any) {
-    const imageObservable = this.imageService.handleFileSelection(event, 2);
+  onEditContentFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
 
-    if (imageObservable) {
-      imageObservable.subscribe({
-        next: (result) => {
-          this.editContentImagePreview = result.preview;
-          this.editBlog.contentImageUrl = result.base64;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Content image upload error:', err);
-        }
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select a valid image file.',
+        icon: 'error'
       });
+      return;
     }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Image file must be smaller than 5MB.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Store file for later upload
+    this.editContentImageFile = file;
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.editContentImagePreview = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
   }
 
   getAllBlogs() {
@@ -187,15 +275,27 @@ export class BlogComponent implements OnInit {
   createBlog() {
     this.errors = {};
 
-    // Convert selectedTags to blogTags format
-    this.blog.blogTags = this.selectedTags.map(tagId => ({
-      id: 0,
-      blogId: 0,
-      tagId: tagId,
-      tag: this.tagList.find(t => t.id === tagId)!
-    }));
+    // Build FormData with all blog properties and files
+    const formData = new FormData();
+    formData.append('Title', this.blog.title || '');
+    formData.append('Content', this.blog.content || '');
+    formData.append('CategoryId', this.blog.categoryId?.toString() || '');
+    formData.append('WriterId', this.blog.writerId?.toString() || '');
 
-    this.blogService.create(this.blog).subscribe({
+    // Append tag IDs
+    this.selectedTags.forEach((tagId, index) => {
+      formData.append(`TagIds[${index}]`, tagId.toString());
+    });
+
+    // Append image files if selected
+    if (this.coverImageFile) {
+      formData.append('CoverImageFile', this.coverImageFile);
+    }
+    if (this.contentImageFile) {
+      formData.append('ContentImageFile', this.contentImageFile);
+    }
+
+    this.blogService.create(formData).subscribe({
       next: () => {
         Swal.fire({
           title: "Success!",
@@ -207,6 +307,8 @@ export class BlogComponent implements OnInit {
         this.selectedTags = [];
         this.coverImagePreview = null;
         this.contentImagePreview = null;
+        this.coverImageFile = null;
+        this.contentImageFile = null;
       },
       error: err => {
         this.errors = err.error.errors;
@@ -216,20 +318,34 @@ export class BlogComponent implements OnInit {
   }
 
   updateBlog() {
-    // Convert editSelectedTags to blogTags format
-    this.editBlog.blogTags = this.editSelectedTags.map(tagId => ({
-      id: 0,
-      blogId: this.editBlog.id,
-      tagId: tagId,
-      tag: this.tagList.find(t => t.id === tagId)!
-    }));
+    // Build FormData with all blog properties and files
+    const formData = new FormData();
+    formData.append('Title', this.editBlog.title || '');
+    formData.append('Content', this.editBlog.content || '');
+    formData.append('CategoryId', this.editBlog.categoryId?.toString() || '');
+    formData.append('WriterId', this.editBlog.writerId?.toString() || '');
 
-    this.blogService.update(this.editBlog.id, this.editBlog).subscribe({
+    // Append tag IDs
+    this.editSelectedTags.forEach((tagId, index) => {
+      formData.append(`TagIds[${index}]`, tagId.toString());
+    });
+
+    // Append image files only if new ones are selected
+    if (this.editCoverImageFile) {
+      formData.append('CoverImageFile', this.editCoverImageFile);
+    }
+    if (this.editContentImageFile) {
+      formData.append('ContentImageFile', this.editContentImageFile);
+    }
+
+    this.blogService.update(this.editBlog.id, formData).subscribe({
       next: () => {
         this.getAllBlogs();
         this.editCoverImagePreview = null;
         this.editContentImagePreview = null;
         this.editSelectedTags = [];
+        this.editCoverImageFile = null;
+        this.editContentImageFile = null;
 
         Swal.fire({
           title: "Updated!",
@@ -249,6 +365,8 @@ export class BlogComponent implements OnInit {
     this.editBlog = { ...model };
     this.editCoverImagePreview = null;
     this.editContentImagePreview = null;
+    this.editCoverImageFile = null;
+    this.editContentImageFile = null;
 
     // Load blog's current tags (only non-deleted ones)
     this.editSelectedTags = model.blogTags
@@ -304,6 +422,27 @@ export class BlogComponent implements OnInit {
     });
   }
 
+  /**
+   * Get full image URL by prepending server address
+   */
+  getImageUrl(path: string | null | undefined): string {
+    if (!path) return 'assets/img/blog/blog-1.jpg';
 
+    // If path already starts with http or is a data URL, return as is
+    if (path.startsWith('http') || path.startsWith('data:')) {
+      return path;
+    }
+
+    // Prepend server URL to relative path
+    return `https://localhost:7000${path}`;
+  }
+
+  /**
+   * Handle image load errors
+   */
+  onImageError(event: any): void {
+    console.error('Image failed to load:', event.target.src);
+    event.target.src = 'assets/img/blog/blog-1.jpg';
+  }
 
 }

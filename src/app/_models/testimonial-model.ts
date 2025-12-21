@@ -1,6 +1,6 @@
 export class Testimonial{
   id: number;
-  clientsName: string;
+  clientName: string;
   title: string;
   comment: string;
   imageUrl : string;

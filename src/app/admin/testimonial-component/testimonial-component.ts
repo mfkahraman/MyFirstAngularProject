@@ -1,19 +1,19 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Employee } from '../../_models/employee-model';
-import { EmployeeService } from '../../_services/employee-service';
-import { ImageService } from '../../_services/image-service';
+import { Testimonial } from '../../_models/testimonial-model';
+import { TestimonialService } from '../../_services/testimonial-service';
 import Swal from 'sweetalert2';
+import { ImageService } from '../../_services/image-service';
 
 @Component({
-  selector: 'app-employee-component',
+  selector: 'app-testimonial-component',
   standalone: false,
-  templateUrl: './employee-component.html',
-  styleUrl: './employee-component.css',
+  templateUrl: './testimonial-component.html',
+  //styleUrl: './testimonial-component.css',
 })
-export class EmployeeComponent implements OnInit {
-  employeeList: Employee[] = [];
-  employee: Employee = new Employee();
-  editEmployee: Employee = new Employee();
+export class TestimonialComponent implements OnInit {
+  testimonialList: Testimonial[] = [];
+  testimonial: Testimonial = new Testimonial();
+  editTestimonial: Testimonial = new Testimonial();
   errors: any = {};
 
   // Image handling
@@ -26,7 +26,7 @@ export class EmployeeComponent implements OnInit {
   page: number = 1;
 
   constructor(
-    private service: EmployeeService,
+    private testimonialService: TestimonialService,
     private imageService: ImageService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -36,9 +36,9 @@ export class EmployeeComponent implements OnInit {
   }
 
   getAll() {
-    this.service.getAll().subscribe({
+    this.testimonialService.getAll().subscribe({
       next: (values) => {
-        this.employeeList = values;
+        this.testimonialList = values;
         this.cdr.detectChanges();
       },
       error: err => console.error('Error loading data:', err)
@@ -124,26 +124,26 @@ export class EmployeeComponent implements OnInit {
   create() {
     this.errors = {};
 
-    // Build FormData with all employee properties and file
+    // Build FormData with all writer properties and file
     const formData = new FormData();
-    formData.append('FirstName', this.employee.firstName || '');
-    formData.append('LastName', this.employee.lastName || '');
-    formData.append('Title', this.employee.title || '');
+    formData.append('ClientName', this.testimonial.clientName || '');
+    formData.append('Title', this.testimonial.title || '');
+    formData.append('Comment', this.testimonial.comment || '');
 
     // Append image file if selected
     if (this.imageFile) {
       formData.append('ImageFile', this.imageFile);
     }
 
-    this.service.create(formData).subscribe({
+    this.testimonialService.create(formData).subscribe({
       next: () => {
         Swal.fire({
-          title: "Eklendi!",
-          text: "Personel başarıyla eklendi.",
+          title: "Succesfully Added!",
+          text: "Testimonial has been added successfully.",
           icon: "success"
         });
         this.getAll();
-        this.employee = new Employee();
+        this.testimonial = new Testimonial();
         this.imagePreview = null;
         this.imageFile = null;
       },
@@ -156,26 +156,26 @@ export class EmployeeComponent implements OnInit {
   }
 
   update() {
-    // Build FormData with all employee properties and file
+    // Build FormData with all writer properties and file
     const formData = new FormData();
-    formData.append('FirstName', this.editEmployee.firstName || '');
-    formData.append('LastName', this.editEmployee.lastName || '');
-    formData.append('Title', this.editEmployee.title || '');
+    formData.append('ClientName', this.editTestimonial.clientName || '');
+    formData.append('Title', this.editTestimonial.title || '');
+    formData.append('Comment', this.editTestimonial.comment || '');
 
     // Append image file only if new one is selected
     if (this.editImageFile) {
       formData.append('ImageFile', this.editImageFile);
     }
 
-    this.service.update(this.editEmployee.id, formData).subscribe({
+    this.testimonialService.update(this.editTestimonial.id, formData).subscribe({
       next: () => {
         this.getAll();
         this.editImagePreview = null;
         this.editImageFile = null;
 
         Swal.fire({
-          title: "Güncellendi!",
-          text: "Personel başarıyla güncellendi.",
+          title: "Successfully Updated!",
+          text: "Testimonial has been updated successfully.",
           icon: "success"
         });
       },
@@ -189,12 +189,12 @@ export class EmployeeComponent implements OnInit {
 
   delete(id: number) {
     Swal.fire({
-      title: "Emin misiniz?",
-      text: "Bu işlemi geri alamayacaksınız!",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Evet, sil!",
-      cancelButtonText: "Hayır, iptal et!",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
       confirmButtonColor: "#28a745",
       cancelButtonColor: "#dc3545",
       reverseButtons: true,
@@ -205,23 +205,23 @@ export class EmployeeComponent implements OnInit {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        this.service.delete(id).subscribe({
+        this.testimonialService.delete(id).subscribe({
           next: () => {
             // Listeyi yenile
             this.getAll();
 
             Swal.fire({
-              title: "Silindi!",
-              text: "Dosyanız silindi.",
+              title: "Deleted!",
+              text: "Your testimonial has been deleted.",
               icon: "success",
               confirmButtonColor: "#28a745"
             });
           },
           error: err => {
-            console.error('Silme hatası:', err);
+            console.error('Delete error:', err);
             Swal.fire({
-              title: "Hata!",
-              text: "Silme sırasında bir hata oluştu.",
+              title: "Error!",
+              text: "An error occurred during deletion.",
               icon: "error"
             });
           }
@@ -230,8 +230,8 @@ export class EmployeeComponent implements OnInit {
     });
   }
 
-  onSelected(model: Employee) {
-    this.editEmployee = { ...model };
+  onSelected(model: Testimonial) {
+    this.editTestimonial = { ...model };
     this.editImagePreview = null;
     this.editImageFile = null;
   }
@@ -259,4 +259,3 @@ export class EmployeeComponent implements OnInit {
     event.target.src = 'assets/img/team/team-1.jpg';
   }
 }
-

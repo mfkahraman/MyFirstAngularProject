@@ -32,6 +32,10 @@ export class ProductComponent implements OnInit, OnDestroy {
   thumbnailPreview: string | null = null;
   editImagePreview: string | null = null;
   editThumbnailPreview: string | null = null;
+  heroImageFile: File | null = null;
+  thumbnailImageFile: File | null = null;
+  editHeroImageFile: File | null = null;
+  editThumbnailImageFile: File | null = null;
 
   // Pagination
   page: number = 1;
@@ -121,7 +125,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handle file selection for product image upload
+   * Handle file selection for product hero image
    */
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -149,6 +153,9 @@ export class ProductComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Store file for later upload
+    this.heroImageFile = file;
+
     // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -156,28 +163,6 @@ export class ProductComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     };
     reader.readAsDataURL(file);
-
-    // Upload to server
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('folder', 'product');
-
-    this.productService.uploadImage(formData)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: any) => {
-          this.product.imagePath = response.filePath;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          this.handleError('Image upload error', err);
-          Swal.fire({
-            title: 'Error!',
-            text: 'Failed to upload image to server.',
-            icon: 'error'
-          });
-        }
-      });
   }
 
   /**
@@ -209,6 +194,9 @@ export class ProductComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Store file for later upload
+    this.thumbnailImageFile = file;
+
     // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -216,32 +204,10 @@ export class ProductComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     };
     reader.readAsDataURL(file);
-
-    // Upload to server
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('folder', 'product');
-
-    this.productService.uploadImage(formData)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: any) => {
-          this.product.thumbnailImagePath = response.filePath;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          this.handleError('Thumbnail upload error', err);
-          Swal.fire({
-            title: 'Error!',
-            text: 'Failed to upload thumbnail to server.',
-            icon: 'error'
-          });
-        }
-      });
   }
 
   /**
-   * Handle file selection for editing product image
+   * Handle file selection for editing product hero image
    */
   onEditFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -269,6 +235,9 @@ export class ProductComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Store file for later upload
+    this.editHeroImageFile = file;
+
     // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -276,28 +245,6 @@ export class ProductComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     };
     reader.readAsDataURL(file);
-
-    // Upload to server
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('folder', 'product');
-
-    this.productService.uploadImage(formData)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: any) => {
-          this.editProduct.imagePath = response.filePath;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          this.handleError('Image upload error', err);
-          Swal.fire({
-            title: 'Error!',
-            text: 'Failed to upload image to server.',
-            icon: 'error'
-          });
-        }
-      });
   }
 
   /**
@@ -329,6 +276,9 @@ export class ProductComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Store file for later upload
+    this.editThumbnailImageFile = file;
+
     // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -336,28 +286,6 @@ export class ProductComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     };
     reader.readAsDataURL(file);
-
-    // Upload to server
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('folder', 'product');
-
-    this.productService.uploadImage(formData)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: any) => {
-          this.editProduct.thumbnailImagePath = response.filePath;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          this.handleError('Thumbnail upload error', err);
-          Swal.fire({
-            title: 'Error!',
-            text: 'Failed to upload thumbnail to server.',
-            icon: 'error'
-          });
-        }
-      });
   }
 
   /**
@@ -366,7 +294,28 @@ export class ProductComponent implements OnInit, OnDestroy {
   createProduct(): void {
     this.errors = {};
 
-    this.productService.create(this.product)
+    // Build FormData with all product properties and files
+    const formData = new FormData();
+    formData.append('ProductName', this.product.productName || '');
+    formData.append('ShortDescription', this.product.shortDescription || '');
+    formData.append('Description', this.product.description || '');
+    formData.append('CategoryId', this.product.categoryId?.toString() || '');
+    formData.append('ClientName', this.product.clientName || '');
+    formData.append('ProjectUrl', this.product.projectUrl || '');
+
+    if (this.product.projectDate) {
+      formData.append('ProjectDate', this.product.projectDate.toString());
+    }
+
+    // Append image files if selected
+    if (this.heroImageFile) {
+      formData.append('HeroImageFile', this.heroImageFile);
+    }
+    if (this.thumbnailImageFile) {
+      formData.append('ThumbnailImageFile', this.thumbnailImageFile);
+    }
+
+    this.productService.create(formData)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -388,7 +337,28 @@ export class ProductComponent implements OnInit, OnDestroy {
   updateProduct(): void {
     this.errors = {};
 
-    this.productService.update(this.editProduct.id, this.editProduct)
+    // Build FormData with all product properties and files
+    const formData = new FormData();
+    formData.append('ProductName', this.editProduct.productName || '');
+    formData.append('ShortDescription', this.editProduct.shortDescription || '');
+    formData.append('Description', this.editProduct.description || '');
+    formData.append('CategoryId', this.editProduct.categoryId?.toString() || '');
+    formData.append('ClientName', this.editProduct.clientName || '');
+    formData.append('ProjectUrl', this.editProduct.projectUrl || '');
+
+    if (this.editProduct.projectDate) {
+      formData.append('ProjectDate', this.editProduct.projectDate.toString());
+    }
+
+    // Append image files only if new ones are selected
+    if (this.editHeroImageFile) {
+      formData.append('HeroImageFile', this.editHeroImageFile);
+    }
+    if (this.editThumbnailImageFile) {
+      formData.append('ThumbnailImageFile', this.editThumbnailImageFile);
+    }
+
+    this.productService.update(this.editProduct.id, formData)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -470,6 +440,8 @@ export class ProductComponent implements OnInit, OnDestroy {
 
     this.editImagePreview = null;
     this.editThumbnailPreview = null;
+    this.editHeroImageFile = null;
+    this.editThumbnailImageFile = null;
   }
 
   /**
@@ -479,6 +451,8 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.product = new Product();
     this.imagePreview = null;
     this.thumbnailPreview = null;
+    this.heroImageFile = null;
+    this.thumbnailImageFile = null;
   }
 
   /**
@@ -487,6 +461,8 @@ export class ProductComponent implements OnInit, OnDestroy {
   private resetEditProductForm(): void {
     this.editImagePreview = null;
     this.editThumbnailPreview = null;
+    this.editHeroImageFile = null;
+    this.editThumbnailImageFile = null;
   }
 
   /**
@@ -526,5 +502,20 @@ export class ProductComponent implements OnInit, OnDestroy {
   onImageError(event: any): void {
     console.error('Image failed to load:', event.target.src);
     event.target.src = 'assets/img/portfolio/companyservices.png'; // Set fallback image on error
+  }
+
+  /**
+   * Get full image URL by prepending server address
+   */
+  getImageUrl(path: string | null | undefined): string {
+    if (!path) return 'assets/img/portfolio/companyservices.png';
+
+    // If path already starts with http or is a data URL, return as is
+    if (path.startsWith('http') || path.startsWith('data:')) {
+      return path;
+    }
+
+    // Prepend server URL to relative path
+    return `https://localhost:7000${path}`;
   }
 }

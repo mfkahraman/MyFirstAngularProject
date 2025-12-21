@@ -18,12 +18,12 @@ export class EmployeeService {
     return this.httpClient.get<Employee>(this.apiUrl + id)
   }
 
-  create(employee: Employee) {
-    return this.httpClient.post<Employee>(this.apiUrl, employee)
+  create(formData: FormData) {
+    return this.httpClient.post<Employee>(this.apiUrl, formData)
   }
 
-  update(id: number, employee: Employee) {
-    return this.httpClient.put(this.apiUrl + id, employee, { responseType: 'text' })
+  update(id: number, formData: FormData) {
+    return this.httpClient.put(this.apiUrl + id, formData, { responseType: 'text' })
   }
 
   delete(id: number) {

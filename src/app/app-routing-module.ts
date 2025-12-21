@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { App } from './app';
 import { MainLayout } from './layouts/main-layout/main-layout';
 import { AdminLayout } from './layouts/admin-layout/admin-layout';
 import { HomeComponent } from './_main/home-component/home-component';
@@ -16,13 +15,14 @@ import { WriterComponent } from './admin/writer-component/writer-component';
 import { BlogComponent } from './admin/blog-component/blog-component';
 import { MessageComponent } from './admin/message-component/message-component';
 import { DashboardComponent } from './admin/dashboard-component/dashboard-component';
-import { TestimonialComponent } from './_main/testimonial-component/testimonial-component';
+import { MainTestimonialComponent } from './_main/main-testimonial-component/main-testimonial-component';
 import { PortfolioComponent } from './_main/portfolio-component/portfolio-component';
 import { PricingComponent } from './_main/pricing-component/pricing-component';
 import { OurTeamComponent } from './_main/our-team-component/our-team-component';
 import { OurServicesComponent } from './_main/our-services-component/our-services-component';
 import { ServiceDetailsComponent } from './_main/service-details-component/service-details-component';
 import { PortfolioDetailsComponent } from './_main/portfolio-details-component/portfolio-details-component';
+import { TestimonialComponent } from './admin/testimonial-component/testimonial-component';
 
 const routes: Routes = [
   //Main Routes
@@ -30,7 +30,7 @@ const routes: Routes = [
     path: '', component: MainLayout, children: [
       { path: '', component: HomeComponent },
       { path: 'team', component: OurTeamComponent },
-      { path: 'testimonial', component: TestimonialComponent },
+      { path: 'testimonial', component: MainTestimonialComponent },
       { path: 'service', component: OurServicesComponent },
       { path: 'servicedetails', component: ServiceDetailsComponent },
       { path: 'portfolio', component: PortfolioComponent },
@@ -51,9 +51,10 @@ const routes: Routes = [
       { path: 'product', component: ProductComponent },
       { path: 'blogcategory', component: BlogCategoryComponent },
       { path: 'tag', component: TagComponent },
+      { path: 'blog', component: BlogComponent },
       { path: 'employee', component: EmployeeComponent },
       { path: 'writer', component: WriterComponent },
-      { path: 'blog', component: BlogComponent },
+      { path: 'testimonial', component: TestimonialComponent },
       { path: 'message', component: MessageComponent }
     ]
   }

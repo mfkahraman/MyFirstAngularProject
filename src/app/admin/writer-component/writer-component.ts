@@ -19,6 +19,8 @@ export class WriterComponent implements OnInit {
   // Image handling
   imagePreview: string | null = null;
   editImagePreview: string | null = null;
+  imageFile: File | null = null;
+  editImageFile: File | null = null;
 
   // Pagination
   page: number = 1;
@@ -43,44 +45,96 @@ export class WriterComponent implements OnInit {
     })
   }
 
-  onFileSelected(event: any) {
-    const imageObservable = this.imageService.handleFileSelection(event, 2);
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
 
-    if (imageObservable) {
-      imageObservable.subscribe({
-        next: (result) => {
-          this.imagePreview = result.preview;
-          this.writer.imageUrl = result.base64;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Görsel yükleme hatası:', err);
-        }
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select a valid image file.',
+        icon: 'error'
       });
+      return;
     }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Image file must be smaller than 5MB.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Store file for later upload
+    this.imageFile = file;
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.imagePreview = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
   }
 
-  onEditFileSelected(event: any) {
-    const imageObservable = this.imageService.handleFileSelection(event, 2);
+  onEditFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
 
-    if (imageObservable) {
-      imageObservable.subscribe({
-        next: (result) => {
-          this.editImagePreview = result.preview;
-          this.editWriter.imageUrl = result.base64;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Görsel yükleme hatası:', err);
-        }
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select a valid image file.',
+        icon: 'error'
       });
+      return;
     }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Image file must be smaller than 5MB.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Store file for later upload
+    this.editImageFile = file;
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.editImagePreview = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
   }
 
   create() {
     this.errors = {};
 
-    this.writerService.create(this.writer).subscribe({
+    // Build FormData with all writer properties and file
+    const formData = new FormData();
+    formData.append('FullName', this.writer.fullName || '');
+    formData.append('Bio', this.writer.bio || '');
+
+    // Append image file if selected
+    if (this.imageFile) {
+      formData.append('ImageFile', this.imageFile);
+    }
+
+    this.writerService.create(formData).subscribe({
       next: () => {
         Swal.fire({
           title: "Eklendi!",
@@ -89,6 +143,8 @@ export class WriterComponent implements OnInit {
         });
         this.getAll();
         this.writer = new Writer();
+        this.imagePreview = null;
+        this.imageFile = null;
       },
       error: err => {
         this.errors = err.error.errors;
@@ -99,9 +155,21 @@ export class WriterComponent implements OnInit {
   }
 
   update() {
-    this.writerService.update(this.editWriter.id, this.editWriter).subscribe({
+    // Build FormData with all writer properties and file
+    const formData = new FormData();
+    formData.append('FullName', this.editWriter.fullName || '');
+    formData.append('Bio', this.editWriter.bio || '');
+
+    // Append image file only if new one is selected
+    if (this.editImageFile) {
+      formData.append('ImageFile', this.editImageFile);
+    }
+
+    this.writerService.update(this.editWriter.id, formData).subscribe({
       next: () => {
         this.getAll();
+        this.editImagePreview = null;
+        this.editImageFile = null;
 
         Swal.fire({
           title: "Güncellendi!",
@@ -162,5 +230,30 @@ export class WriterComponent implements OnInit {
 
   onSelected(model: Writer) {
     this.editWriter = { ...model };
+    this.editImagePreview = null;
+    this.editImageFile = null;
+  }
+
+  /**
+   * Get full image URL by prepending server address
+   */
+  getImageUrl(path: string | null | undefined): string {
+    if (!path) return 'assets/img/team/team-1.jpg';
+
+    // If path already starts with http or is a data URL, return as is
+    if (path.startsWith('http') || path.startsWith('data:')) {
+      return path;
+    }
+
+    // Prepend server URL to relative path
+    return `https://localhost:7000${path}`;
+  }
+
+  /**
+   * Handle image load errors
+   */
+  onImageError(event: any): void {
+    console.error('Image failed to load:', event.target.src);
+    event.target.src = 'assets/img/team/team-1.jpg';
   }
 }

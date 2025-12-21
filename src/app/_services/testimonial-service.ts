@@ -18,12 +18,12 @@ export class TestimonialService {
     return this.httpClient.get<Testimonial>(this.apiUrl + id)
   }
 
-  create(model: Testimonial) {
-    return this.httpClient.post<Testimonial>(this.apiUrl, model)
+  create(formData: FormData) {
+    return this.httpClient.post<Testimonial>(this.apiUrl, formData)
   }
 
-  update(id: number, model: Testimonial) {
-    return this.httpClient.put(this.apiUrl + id, model, { responseType: 'text' })
+  update(id: number, formData: FormData) {
+    return this.httpClient.put(this.apiUrl + id, formData, { responseType: 'text' })
   }
 
   delete (id: number) {

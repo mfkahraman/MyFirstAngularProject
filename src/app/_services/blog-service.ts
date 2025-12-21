@@ -25,12 +25,12 @@ export class BlogService {
     return this.httpClient.get<Blog>(this.apiUrl + id);
   }
 
-  create(model: Blog) {
-    return this.httpClient.post<Blog>(this.apiUrl, model);
+  create(formData: FormData) {
+    return this.httpClient.post<Blog>(this.apiUrl, formData);
   }
 
-  update(id: number, model: Blog) {
-    return this.httpClient.put(this.apiUrl + id, model, { responseType: 'text' });
+  update(id: number, formData: FormData) {
+    return this.httpClient.put(this.apiUrl + id, formData, { responseType: 'text' });
   }
 
   delete(id: number) {

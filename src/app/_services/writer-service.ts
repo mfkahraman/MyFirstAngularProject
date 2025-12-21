@@ -18,12 +18,12 @@ export class WriterService {
     return this.httpClient.get<Writer>(this.apiUrl + id)
   }
 
-  create(model: Writer) {
-    return this.httpClient.post<Writer>(this.apiUrl, model)
+  create(formData: FormData) {
+    return this.httpClient.post<Writer>(this.apiUrl, formData)
   }
 
-  update(id: number, model: Writer) {
-    return this.httpClient.put(this.apiUrl + id, model, { responseType: 'text' })
+  update(id: number, formData: FormData) {
+    return this.httpClient.put(this.apiUrl + id, formData, { responseType: 'text' })
   }
 
   delete(id: number) {

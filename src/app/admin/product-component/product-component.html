@@ -32,7 +32,7 @@
   @for (item of filteredProductList | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; track item.id; let i = $index) {
   <div class="product-card">
     <div class="product-image-container">
-      <img [src]="(item.thumbnailImagePath || item.imagePath)" [alt]="item.productName" class="product-image" (error)="onImageError($event)">
+      <img [src]="getImageUrl(item.thumbnailImagePath || item.imagePath)" [alt]="item.productName" class="product-image" (error)="onImageError($event)">
       <div class="product-overlay">
         <button class="btn btn-light btn-sm" (click)="onSelected(item)" data-bs-toggle="modal"
           data-bs-target="#editModal" title="Edit">
@@ -407,7 +407,7 @@
             </div>
             } @else if (editProduct.imagePath) {
             <div class="image-preview-container">
-              <img [src]="editProduct.imagePath" alt="Current Hero Image" class="image-preview">
+              <img [src]="getImageUrl(editProduct.imagePath)" alt="Current Hero Image" class="image-preview">
             </div>
             }
           </div>
@@ -425,7 +425,7 @@
             </div>
             } @else if (editProduct.thumbnailImagePath) {
             <div class="image-preview-container">
-              <img [src]="editProduct.thumbnailImagePath" alt="Current Thumbnail" class="image-preview">
+              <img [src]="getImageUrl(editProduct.thumbnailImagePath)" alt="Current Thumbnail" class="image-preview">
             </div>
             }
           </div>
