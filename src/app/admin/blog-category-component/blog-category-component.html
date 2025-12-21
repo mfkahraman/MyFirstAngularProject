@@ -17,37 +17,43 @@
   <input type="text" class="form-control" placeholder="Search categories..." [(ngModel)]="searchText" (input)="filterCategories()">
 </div>
 
+
 <div class="categories-grid">
-  @for (item of filteredBlogCategoryList; track item.id; let i = $index) {
-  <div class="category-card">
-    <div class="card-header-custom">
-      <div class="category-icon">
-        <i class="bi bi-bookmark-fill"></i>
+  @for (item of filteredBlogCategoryList | paginate: { itemsPerPage: 8, currentPage: page }; track item.id; let i = $index) {
+    <div class="category-card">
+      <div class="card-header-custom">
+        <div class="category-icon">
+          <i class="bi bi-bookmark-fill"></i>
+        </div>
+        <span class="category-number">#{{ (page - 1) * 8 + i + 1 }}</span>
       </div>
-      <span class="category-number">#{{ i + 1 }}</span>
+      <div class="card-body-custom">
+        <h5 class="category-name">{{ item.name }}</h5>
+      </div>
+      <div class="card-footer-custom">
+        <button class="btn btn-outline-primary btn-sm" (click)="onSelected(item)" data-bs-toggle="modal"
+          data-bs-target="#editModal" title="Edit">
+          <i class="bi bi-pencil-square"></i>
+          Edit
+        </button>
+        <button class="btn btn-outline-danger btn-sm" (click)="delete(item.id)" title="Delete">
+          <i class="bi bi-trash3"></i>
+          Delete
+        </button>
+      </div>
     </div>
-    <div class="card-body-custom">
-      <h5 class="category-name">{{ item.name }}</h5>
-    </div>
-    <div class="card-footer-custom">
-      <button class="btn btn-outline-primary btn-sm" (click)="onSelected(item)" data-bs-toggle="modal"
-        data-bs-target="#editModal" title="Edit">
-        <i class="bi bi-pencil-square"></i>
-        Edit
-      </button>
-      <button class="btn btn-outline-danger btn-sm" (click)="delete(item.id)" title="Delete">
-        <i class="bi bi-trash3"></i>
-        Delete
-      </button>
-    </div>
-  </div>
   }
   @empty {
-  <div class="no-data">
-    <i class="bi bi-inbox"></i>
-    <p>No categories found</p>
-  </div>
+    <div class="no-data">
+      <i class="bi bi-inbox"></i>
+      <p>No categories found</p>
+    </div>
   }
+</div>
+
+<!-- Pagination Controls -->
+<div class="d-flex justify-content-center mt-3">
+  <pagination-controls (pageChange)="page = $event" previousLabel="Previous" nextLabel="Next"></pagination-controls>
 </div>
 
 

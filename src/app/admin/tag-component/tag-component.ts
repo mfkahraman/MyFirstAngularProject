@@ -18,6 +18,12 @@ export class TagComponent implements OnInit {
   // Pagination
   page: number = 1;
 
+  // Search
+  searchTerm: string = '';
+  onSearchChange(term: string) {
+    this.searchTerm = term;
+  }
+
   constructor(
     private tagService: TagService,
     private cdr: ChangeDetectorRef

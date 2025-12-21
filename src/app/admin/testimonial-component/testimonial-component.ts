@@ -25,6 +25,12 @@ export class TestimonialComponent implements OnInit {
   // Pagination
   page: number = 1;
 
+  // Search
+  searchTerm: string = '';
+  onSearchChange(term: string) {
+    this.searchTerm = term;
+  }
+
   constructor(
     private testimonialService: TestimonialService,
     private imageService: ImageService,

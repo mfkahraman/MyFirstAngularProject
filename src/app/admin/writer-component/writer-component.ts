@@ -25,6 +25,12 @@ export class WriterComponent implements OnInit {
   // Pagination
   page: number = 1;
 
+  // Search
+  searchTerm: string = '';
+  onSearchChange(term: string) {
+    this.searchTerm = term;
+  }
+
   constructor(
     private writerService: WriterService,
     private imageService: ImageService,

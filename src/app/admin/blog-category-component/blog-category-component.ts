@@ -17,6 +17,9 @@ export class BlogCategoryComponent implements OnInit {
   searchText: string = '';
   errors: any = {}; // Holds validation errors
 
+  // Pagination
+  page: number = 1;
+
   constructor(
     private blogCategoryService: BlogCategoryService,
     private cdr: ChangeDetectorRef

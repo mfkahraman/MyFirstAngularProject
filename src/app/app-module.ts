@@ -28,6 +28,10 @@ import { EmployeeComponent } from './admin/employee-component/employee-component
 import { WriterComponent } from './admin/writer-component/writer-component';
 import { BlogComponent } from './admin/blog-component/blog-component';
 import { BlogSearchPipe } from './admin/blog-component/blog-search.pipe';
+import { TagSearchPipe } from './admin/tag-component/tag-search.pipe';
+import { EmployeeSearchPipe } from './admin/employee-component/employee-search.pipe';
+import { WriterSearchPipe } from './admin/writer-component/writer-search.pipe';
+import { TestimonialSearchPipe } from './admin/testimonial-component/testimonial-search.pipe';
 import { MessageComponent } from './admin/message-component/message-component';
 import { DashboardComponent } from './admin/dashboard-component/dashboard-component';
 import { TestimonialComponent } from './admin/testimonial-component/testimonial-component';
@@ -78,7 +82,11 @@ import { PortfolioDetailsComponent } from './_main/portfolio-details-component/p
     AppRoutingModule,
     FormsModule,
     NgxPaginationModule,
-    BlogSearchPipe
+    BlogSearchPipe,
+    TagSearchPipe,
+    EmployeeSearchPipe,
+    WriterSearchPipe,
+    TestimonialSearchPipe
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

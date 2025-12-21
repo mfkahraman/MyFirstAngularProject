@@ -1,0 +1,66 @@
+/* Card and table enhancements */
+.card {
+	border-radius: 1rem;
+	box-shadow: 0 2px 16px 0 rgba(60,72,100,.08);
+	border: none;
+}
+.card-body {
+	padding: 1.5rem;
+}
+.table {
+	background: #fff;
+	border-radius: 0.75rem;
+	overflow: hidden;
+}
+.table thead {
+	border-top: none;
+}
+.table th, .table td {
+	vertical-align: middle;
+}
+.table-hover tbody tr:hover {
+	background-color: #f6f8fa;
+}
+
+/* Modern button styles */
+.btn {
+	border-radius: 0.5rem;
+	transition: box-shadow 0.2s, background 0.2s;
+}
+.btn-outline-primary:hover, .btn-outline-danger:hover, .btn-success:hover {
+	box-shadow: 0 2px 8px 0 rgba(60,72,100,.12);
+}
+
+/* Modal enhancements */
+.modal-content {
+	border-radius: 1.25rem;
+}
+.modal-header {
+	border-radius: 1.25rem 1.25rem 0 0;
+}
+.modal-footer {
+	border-radius: 0 0 1.25rem 1.25rem;
+}
+
+/* Search bar styling */
+.input-group .form-control {
+	border-radius: 0.5rem 0 0 0.5rem;
+}
+.input-group-text {
+	border-radius: 0 0.5rem 0.5rem 0;
+	background: #f8f9fa;
+}
+
+/* Employee image styling */
+.employee-img {
+	width: 50px;
+	height: 50px;
+	object-fit: cover;
+	border-radius: 50%;
+	border: 2px solid #e9ecef;
+}
+
+/* Icon alignment */
+.bi {
+	vertical-align: -.125em;
+}

@@ -25,6 +25,12 @@ export class EmployeeComponent implements OnInit {
   // Pagination
   page: number = 1;
 
+  // Search
+  searchTerm: string = '';
+  onSearchChange(term: string) {
+    this.searchTerm = term;
+  }
+
   constructor(
     private service: EmployeeService,
     private imageService: ImageService,
