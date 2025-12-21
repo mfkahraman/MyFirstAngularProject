@@ -33,4 +33,8 @@ export class ProductService {
     return this.http.delete(this.apiUrl + id, { responseType: 'text' });
   }
 
+  uploadImage(formData: FormData) {
+    return this.http.post<{ filePath: string }>('https://localhost:7000/api/Products/upload-image', formData);
+  }
+
 }

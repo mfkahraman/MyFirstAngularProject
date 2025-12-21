@@ -29,7 +29,9 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   // Image handling
   imagePreview: string | null = null;
+  thumbnailPreview: string | null = null;
   editImagePreview: string | null = null;
+  editThumbnailPreview: string | null = null;
 
   // Pagination
   page: number = 1;
@@ -122,40 +124,240 @@ export class ProductComponent implements OnInit, OnDestroy {
    * Handle file selection for product image upload
    */
   onFileSelected(event: Event): void {
-    const imageObservable = this.imageService.handleFileSelection(event, 2);
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
 
-    if (imageObservable) {
-      imageObservable
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (result) => {
-            this.imagePreview = result.preview;
-            this.product.imagePath = result.base64;
-            this.cdr.detectChanges();
-          },
-          error: (err) => this.handleError('Image upload error', err)
-        });
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select a valid image file.',
+        icon: 'error'
+      });
+      return;
     }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Image file must be smaller than 5MB.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.imagePreview = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to server
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', 'product');
+
+    this.productService.uploadImage(formData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          this.product.imagePath = response.filePath;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.handleError('Image upload error', err);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to upload image to server.',
+            icon: 'error'
+          });
+        }
+      });
+  }
+
+  /**
+   * Handle file selection for product thumbnail upload
+   */
+  onThumbnailSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select a valid image file.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Image file must be smaller than 5MB.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.thumbnailPreview = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to server
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', 'product');
+
+    this.productService.uploadImage(formData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          this.product.thumbnailImagePath = response.filePath;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.handleError('Thumbnail upload error', err);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to upload thumbnail to server.',
+            icon: 'error'
+          });
+        }
+      });
   }
 
   /**
    * Handle file selection for editing product image
    */
   onEditFileSelected(event: Event): void {
-    const imageObservable = this.imageService.handleFileSelection(event, 2);
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
 
-    if (imageObservable) {
-      imageObservable
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (result) => {
-            this.editImagePreview = result.preview;
-            this.editProduct.imagePath = result.base64;
-            this.cdr.detectChanges();
-          },
-          error: (err) => this.handleError('Image upload error', err)
-        });
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select a valid image file.',
+        icon: 'error'
+      });
+      return;
     }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Image file must be smaller than 5MB.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.editImagePreview = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to server
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', 'product');
+
+    this.productService.uploadImage(formData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          this.editProduct.imagePath = response.filePath;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.handleError('Image upload error', err);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to upload image to server.',
+            icon: 'error'
+          });
+        }
+      });
+  }
+
+  /**
+   * Handle file selection for editing product thumbnail
+   */
+  onEditThumbnailSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select a valid image file.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Image file must be smaller than 5MB.',
+        icon: 'error'
+      });
+      return;
+    }
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.editThumbnailPreview = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to server
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', 'product');
+
+    this.productService.uploadImage(formData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          this.editProduct.thumbnailImagePath = response.filePath;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.handleError('Thumbnail upload error', err);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to upload thumbnail to server.',
+            icon: 'error'
+          });
+        }
+      });
   }
 
   /**
@@ -259,7 +461,15 @@ export class ProductComponent implements OnInit, OnDestroy {
   onSelected(product: Product): void {
     // Create a deep copy to avoid reference issues
     this.editProduct = { ...product };
+
+    // Convert date to YYYY-MM-DD format for HTML date input
+    if (this.editProduct.projectDate) {
+      const date = new Date(this.editProduct.projectDate);
+      (this.editProduct.projectDate as any) = date.toISOString().split('T')[0];
+    }
+
     this.editImagePreview = null;
+    this.editThumbnailPreview = null;
   }
 
   /**
@@ -268,6 +478,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   private resetProductForm(): void {
     this.product = new Product();
     this.imagePreview = null;
+    this.thumbnailPreview = null;
   }
 
   /**
@@ -275,6 +486,7 @@ export class ProductComponent implements OnInit, OnDestroy {
    */
   private resetEditProductForm(): void {
     this.editImagePreview = null;
+    this.editThumbnailPreview = null;
   }
 
   /**
@@ -306,5 +518,13 @@ export class ProductComponent implements OnInit, OnDestroy {
    */
   private handleError(message: string, error: any): void {
     console.error(message, error);
+  }
+
+  /**
+   * Handle image load errors
+   */
+  onImageError(event: any): void {
+    console.error('Image failed to load:', event.target.src);
+    event.target.src = 'assets/img/portfolio/companyservices.png'; // Set fallback image on error
   }
 }

@@ -32,7 +32,7 @@
   @for (item of filteredProductList | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; track item.id; let i = $index) {
   <div class="product-card">
     <div class="product-image-container">
-      <img [src]="item.imagePath" [alt]="item.productName" class="product-image">
+      <img [src]="(item.thumbnailImagePath || item.imagePath)" [alt]="item.productName" class="product-image" (error)="onImageError($event)">
       <div class="product-overlay">
         <button class="btn btn-light btn-sm" (click)="onSelected(item)" data-bs-toggle="modal"
           data-bs-target="#editModal" title="Edit">
@@ -49,7 +49,13 @@
         {{ item.category?.categoryName }}
       </span>
       <h5 class="product-name">{{ item.productName }}</h5>
-      <p class="product-description">{{ item.description }}</p>
+      <p class="product-description">{{ item.shortDescription || item.description }}</p>
+      @if (item.clientName) {
+      <p class="product-client">
+        <i class="bi bi-person-badge"></i>
+        <strong>Client:</strong> {{ item.clientName }}
+      </p>
+      }
     </div>
   </div>
   }
@@ -128,12 +134,27 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="form-label" for="shortDescription">
+              <i class="bi bi-card-text"></i>
+              Short Description
+            </label>
+            <input type="text" class="form-control" id="shortDescription" [(ngModel)]="product.shortDescription"
+              name="shortDescription" placeholder="Enter short description" />
+            @if (errors && (errors.ShortDescription || errors.shortDescription)) {
+            <div class="invalid-feedback d-block">
+              @for (error of (errors.ShortDescription || errors.shortDescription); track $index) {
+              <span>{{ error }}</span>
+              }
+            </div>
+            }
+          </div>
+          <div class="form-group">
             <label class="form-label" for="description">
               <i class="bi bi-text-paragraph"></i>
-              Description
+              Full Description
             </label>
             <textarea class="form-control" id="description" rows="3" [(ngModel)]="product.description"
-              name="description" placeholder="Enter product description" required></textarea>
+              name="description" placeholder="Enter detailed product description" required></textarea>
             @if (errors && (errors.Description || errors.description)) {
             <div class="invalid-feedback d-block">
               @for (error of (errors.Description || errors.description); track $index) {
@@ -142,17 +163,82 @@
             </div>
             }
           </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label" for="clientName">
+                  <i class="bi bi-person-badge"></i>
+                  Client Name
+                </label>
+                <input type="text" class="form-control" id="clientName" [(ngModel)]="product.clientName"
+                  name="clientName" placeholder="Enter client name" />
+                @if (errors && (errors.ClientName || errors.clientName)) {
+                <div class="invalid-feedback d-block">
+                  @for (error of (errors.ClientName || errors.clientName); track $index) {
+                  <span>{{ error }}</span>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label" for="projectDate">
+                  <i class="bi bi-calendar-event"></i>
+                  Project Date
+                </label>
+                <input type="date" class="form-control" id="projectDate" [(ngModel)]="product.projectDate"
+                  name="projectDate" />
+                @if (errors && (errors.ProjectDate || errors.projectDate)) {
+                <div class="invalid-feedback d-block">
+                  @for (error of (errors.ProjectDate || errors.projectDate); track $index) {
+                  <span>{{ error }}</span>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="projectUrl">
+              <i class="bi bi-link-45deg"></i>
+              Project URL
+            </label>
+            <input type="url" class="form-control" id="projectUrl" [(ngModel)]="product.projectUrl"
+              name="projectUrl" placeholder="https://example.com" />
+            @if (errors && (errors.ProjectUrl || errors.projectUrl)) {
+            <div class="invalid-feedback d-block">
+              @for (error of (errors.ProjectUrl || errors.projectUrl); track $index) {
+              <span>{{ error }}</span>
+              }
+            </div>
+            }
+          </div>
           <div class="form-group">
             <label class="form-label" for="imageFile">
               <i class="bi bi-image"></i>
-              Product Image
+              Hero Image (Main)
             </label>
             <input type="file" class="form-control" id="imageFile" (change)="onFileSelected($event)" accept="image/*"
               name="imageFile" required />
-            <small class="form-text text-muted">Supported formats: JPG, PNG, GIF (Max 2MB)</small>
+            <small class="form-text text-muted">Large image for product detail page (Max 5MB)</small>
             @if (imagePreview) {
             <div class="image-preview-container">
               <img [src]="imagePreview" alt="Preview" class="image-preview">
+            </div>
+            }
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="thumbnailFile">
+              <i class="bi bi-image-fill"></i>
+              Thumbnail Image
+            </label>
+            <input type="file" class="form-control" id="thumbnailFile" (change)="onThumbnailSelected($event)" accept="image/*"
+              name="thumbnailFile" />
+            <small class="form-text text-muted">Small preview image for product cards (Max 5MB)</small>
+            @if (thumbnailPreview) {
+            <div class="image-preview-container">
+              <img [src]="thumbnailPreview" alt="Thumbnail Preview" class="image-preview">
             </div>
             }
           </div>
@@ -227,12 +313,27 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="form-label" for="editShortDescription">
+              <i class="bi bi-card-text"></i>
+              Short Description
+            </label>
+            <input type="text" class="form-control" id="editShortDescription" [(ngModel)]="editProduct.shortDescription"
+              name="shortDescription" placeholder="Enter short description" />
+            @if (errors && (errors.ShortDescription || errors.shortDescription)) {
+            <div class="invalid-feedback d-block">
+              @for (error of (errors.ShortDescription || errors.shortDescription); track $index) {
+              <span>{{ error }}</span>
+              }
+            </div>
+            }
+          </div>
+          <div class="form-group">
             <label class="form-label" for="editDescription">
               <i class="bi bi-text-paragraph"></i>
-              Description
+              Full Description
             </label>
             <textarea class="form-control" id="editDescription" rows="3" [(ngModel)]="editProduct.description"
-              name="description" placeholder="Enter product description" required></textarea>
+              name="description" placeholder="Enter detailed product description" required></textarea>
             @if (errors && (errors.Description || errors.description)) {
             <div class="invalid-feedback d-block">
               @for (error of (errors.Description || errors.description); track $index) {
@@ -241,21 +342,90 @@
             </div>
             }
           </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label" for="editClientName">
+                  <i class="bi bi-person-badge"></i>
+                  Client Name
+                </label>
+                <input type="text" class="form-control" id="editClientName" [(ngModel)]="editProduct.clientName"
+                  name="clientName" placeholder="Enter client name" />
+                @if (errors && (errors.ClientName || errors.clientName)) {
+                <div class="invalid-feedback d-block">
+                  @for (error of (errors.ClientName || errors.clientName); track $index) {
+                  <span>{{ error }}</span>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label" for="editProjectDate">
+                  <i class="bi bi-calendar-event"></i>
+                  Project Date
+                </label>
+                <input type="date" class="form-control" id="editProjectDate" [(ngModel)]="editProduct.projectDate"
+                  name="projectDate" />
+                @if (errors && (errors.ProjectDate || errors.projectDate)) {
+                <div class="invalid-feedback d-block">
+                  @for (error of (errors.ProjectDate || errors.projectDate); track $index) {
+                  <span>{{ error }}</span>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editProjectUrl">
+              <i class="bi bi-link-45deg"></i>
+              Project URL
+            </label>
+            <input type="url" class="form-control" id="editProjectUrl" [(ngModel)]="editProduct.projectUrl"
+              name="projectUrl" placeholder="https://example.com" />
+            @if (errors && (errors.ProjectUrl || errors.projectUrl)) {
+            <div class="invalid-feedback d-block">
+              @for (error of (errors.ProjectUrl || errors.projectUrl); track $index) {
+              <span>{{ error }}</span>
+              }
+            </div>
+            }
+          </div>
           <div class="form-group">
             <label class="form-label" for="editImageFile">
               <i class="bi bi-image"></i>
-              Product Image
+              Hero Image (Main)
             </label>
             <input type="file" class="form-control" id="editImageFile" (change)="onEditFileSelected($event)"
               accept="image/*" name="editImageFile" />
-            <small class="form-text text-muted">Leave empty to keep current image</small>
+            <small class="form-text text-muted">Leave empty to keep current hero image</small>
             @if (editImagePreview) {
             <div class="image-preview-container">
               <img [src]="editImagePreview" alt="Preview" class="image-preview">
             </div>
             } @else if (editProduct.imagePath) {
             <div class="image-preview-container">
-              <img [src]="editProduct.imagePath" alt="Current Image" class="image-preview">
+              <img [src]="editProduct.imagePath" alt="Current Hero Image" class="image-preview">
+            </div>
+            }
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editThumbnailFile">
+              <i class="bi bi-image-fill"></i>
+              Thumbnail Image
+            </label>
+            <input type="file" class="form-control" id="editThumbnailFile" (change)="onEditThumbnailSelected($event)"
+              accept="image/*" name="editThumbnailFile" />
+            <small class="form-text text-muted">Leave empty to keep current thumbnail</small>
+            @if (editThumbnailPreview) {
+            <div class="image-preview-container">
+              <img [src]="editThumbnailPreview" alt="Thumbnail Preview" class="image-preview">
+            </div>
+            } @else if (editProduct.thumbnailImagePath) {
+            <div class="image-preview-container">
+              <img [src]="editProduct.thumbnailImagePath" alt="Current Thumbnail" class="image-preview">
             </div>
             }
           </div>

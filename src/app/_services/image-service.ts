@@ -13,7 +13,7 @@ export interface ImageResult {
   providedIn: 'root'
 })
 export class ImageService {
-  private readonly MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+  private readonly MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
   private readonly ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 
   constructor() { }
@@ -21,16 +21,16 @@ export class ImageService {
   /**
    * Dosya seçimi ve Base64'e dönüştürme
    * @param file Seçilen dosya
-   * @param maxSizeMB Maksimum dosya boyutu (MB), varsayılan 2MB
+   * @param maxSizeMB Maksimum dosya boyutu (MB), varsayılan 5MB
    * @returns Observable<ImageResult>
    */
-  processImage(file: File, maxSizeMB: number = 2): Observable<ImageResult> {
+  processImage(file: File, maxSizeMB: number = 5): Observable<ImageResult> {
     return new Observable(observer => {
       // Dosya tipi kontrolü
       if (!this.isValidImageType(file.type)) {
         Swal.fire({
-          title: "Hata!",
-          text: "Lütfen geçerli bir görsel dosyası seçin (JPG, PNG, GIF, WebP).",
+          title: "Error!",
+          text: "Please select a valid image file (JPG, PNG, GIF, WebP).",
           icon: "error"
         });
         observer.error('Invalid file type');
@@ -41,8 +41,8 @@ export class ImageService {
       const maxSize = maxSizeMB * 1024 * 1024;
       if (file.size > maxSize) {
         Swal.fire({
-          title: "Hata!",
-          text: `Görsel dosyası ${maxSizeMB}MB'dan küçük olmalıdır (Veritabanı için).`,
+          title: "Error!",
+          text: `Image file must be smaller than ${maxSizeMB}MB (for database storage).`,
           icon: "error"
         });
         observer.error('File too large');
@@ -65,8 +65,8 @@ export class ImageService {
 
       reader.onerror = () => {
         Swal.fire({
-          title: "Hata!",
-          text: "Dosya okunurken bir hata oluştu.",
+          title: "Error!",
+          text: "An error occurred while reading the file.",
           icon: "error"
         });
         observer.error('File read error');
@@ -82,7 +82,7 @@ export class ImageService {
    * @param maxSizeMB Maksimum dosya boyutu (MB)
    * @returns Observable<ImageResult> veya null
    */
-  handleFileSelection(event: any, maxSizeMB: number = 2): Observable<ImageResult> | null {
+  handleFileSelection(event: any, maxSizeMB: number = 5): Observable<ImageResult> | null {
     const file = event.target.files?.[0];
 
     if (!file) {

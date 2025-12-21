@@ -142,7 +142,7 @@
 .product-image-container {
   position: relative;
   width: 100%;
-  height: 250px;
+  height: 320px;
   overflow: hidden;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
@@ -151,6 +151,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.3s ease;
 }
 
