@@ -1,150 +1,106 @@
-<body class="portfolio-details-page">
-  <main class="main">
+<!-- portfolio-details-page -->
 
-    <!-- Page Title -->
-    <div class="page-title accent-background">
-      <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Portfolio Details</h1>
-        <nav class="breadcrumbs">
-          <ol>
-            <li><a href="index.html">Home</a></li>
-            <li class="current">Portfolio Details</li>
-          </ol>
-        </nav>
-      </div>
-    </div><!-- End Page Title -->
+<main class="main" style="background: linear-gradient(135deg, #f7fafd 60%, #e3f0ff 100%); min-height: 100vh; font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;">
+
+  <!-- Page Title -->
+
+  <div class="page-title accent-background py-4 shadow-lg" style="border-radius: 0 0 24px 24px; background: linear-gradient(90deg, #22c55e 60%, #2563eb 100%); color: #fff;">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0 fw-bold" style="letter-spacing: 1px; font-size: 2.3rem; text-shadow: 0 2px 8px rgba(0,0,0,0.08);">Portfolio Details</h1>
+      <nav class="breadcrumbs">
+        <ol class="mb-0" style="background: rgba(255,255,255,0.08); border-radius: 8px; padding: 4px 16px;">
+          <li><a href="index.html" style="color: #fff; text-decoration: underline;">Home</a></li>
+          <li class="current" style="color: #e0e0e0;">Portfolio Details</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
 
     <!-- Portfolio Details Section -->
-    <section id="portfolio-details" class="portfolio-details section">
 
+    <section id="portfolio-details" class="portfolio-details section py-5">
       <div class="container" data-aos="fade-up">
 
-        <div class="portfolio-details-slider swiper init-swiper">
-          <script type="application/json" class="swiper-config">
-            {
-              "loop": true,
-              "speed": 600,
-              "autoplay": {
-                "delay": 5000
-              },
-              "slidesPerView": "auto",
-              "navigation": {
-                "nextEl": ".swiper-button-next",
-                "prevEl": ".swiper-button-prev"
-              },
-              "pagination": {
-                "el": ".swiper-pagination",
-                "type": "bullets",
-                "clickable": true
-              }
-            }
-          </script>
-          <div class="swiper-wrapper align-items-center">
-
-            <div class="swiper-slide">
-              <img src="/assets/img/portfolio/app-1.jpg" alt="">
-            </div>
-
-            <div class="swiper-slide">
-              <img src="/assets/img/portfolio/product-1.jpg" alt="">
-            </div>
-
-            <div class="swiper-slide">
-              <img src="/assets/img/portfolio/branding-1.jpg" alt="">
-            </div>
-
-            <div class="swiper-slide">
-              <img src="/assets/img/portfolio/books-1.jpg" alt="">
-            </div>
-
+        <div *ngIf="loading" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-pagination"></div>
         </div>
-
-        <div class="row justify-content-between gy-4 mt-4">
-
-          <div class="col-lg-8" data-aos="fade-up">
-            <div class="portfolio-description">
-              <h2>This is an example of portfolio details</h2>
-              <p>
-                Autem ipsum nam porro corporis rerum. Quis eos dolorem eos itaque inventore commodi labore quia quia.
-                Exercitationem repudiandae officiis neque suscipit non officia eaque itaque enim. Voluptatem officia
-                accusantium nesciunt est omnis tempora consectetur dignissimos. Sequi nulla at esse enim cum deserunt
-                eius.
-              </p>
-              <p>
-                Amet consequatur qui dolore veniam voluptatem voluptatem sit. Non aspernatur atque natus ut cum nam et.
-                Praesentium error dolores rerum minus sequi quia veritatis eum. Eos et doloribus doloremque nesciunt
-                molestiae laboriosam.
-              </p>
-
-              <div class="testimonial-item">
-                <p>
-                  <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram
-                    malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.</span>
-                  <i class="bi bi-quote quote-icon-right"></i>
-                </p>
-                <div>
-                  <img src="/assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
-                  <h3>Sara Wilsson</h3>
-                  <h4>Designer</h4>
+        <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+        <ng-container *ngIf="!loading && !error && product">
+          <div class="row gx-4 gy-4 align-items-stretch">
+            <!-- Image and description section (left, wide) -->
+            <div class="col-lg-8 col-xl-9 d-flex flex-column align-items-center">
+              <div class="portfolio-details-slider swiper init-swiper mb-3 shadow-lg flex-grow-0 w-100" style="border-radius: 18px; overflow: hidden; background: #fff; max-width: 900px; min-width: 400px;">
+                <div class="swiper-wrapper align-items-center">
+                  <div class="swiper-slide" *ngIf="product.imagePath">
+                    <img [src]="getImageUrl(product.imagePath)" [alt]="product.productName" style="max-height: 260px; object-fit: cover; width: 100%; border-radius: 14px; box-shadow: 0 4px 24px rgba(0,0,0,0.10); transition: transform 0.2s;">
+                  </div>
+                  <div class="swiper-slide" *ngIf="product.thumbnailImagePath && product.thumbnailImagePath !== product.imagePath">
+                    <img [src]="getImageUrl(product.thumbnailImagePath)" [alt]="product.productName + ' thumbnail'" style="max-height: 260px; object-fit: cover; width: 100%; border-radius: 14px; box-shadow: 0 4px 24px rgba(0,0,0,0.10); transition: transform 0.2s;">
+                  </div>
+                </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-pagination"></div>
+              </div>
+              <!-- Description (bottom left) -->
+              <div class="portfolio-description p-4 shadow-lg bg-white rounded-5 mt-auto position-relative w-100" style="min-height: 340px; border: 1px solid #e3e8f0; border-left: 6px solid #22c55e; max-width: 900px; min-width: 400px;">
+                <h2 class="fw-bold mb-2" style="font-size: 1.5rem; color: #1e293b; letter-spacing: 0.5px;">
+                  <i class="bi bi-journal-richtext me-2" style="color: #22c55e;"></i>{{ product.productName }}
+                </h2>
+                <div class="mb-2" style="font-size: 1.05rem; color: #2563eb; font-weight: 500;">
+                  {{ product.shortDescription }}
+                </div>
+                <hr style="border-top: 1.5px solid #e3e8f0; margin: 1rem 0;">
+                <div class="mb-0" style="color: #374151; font-size: 0.98rem; line-height: 1.7;">
+                  <i class="bi bi-info-circle me-2" style="color: #2563eb;"></i>{{ product.description }}
                 </div>
               </div>
-
-              <p>
-                Impedit ipsum quae et aliquid doloribus et voluptatem quasi. Perspiciatis occaecati earum et magnam
-                animi. Quibusdam non qui ea vitae suscipit vitae sunt. Repudiandae incidunt cumque minus deserunt
-                assumenda tempore. Delectus voluptas necessitatibus est.
-              </p>
-
-              <p>
-                Sunt voluptatum sapiente facilis quo odio aut ipsum repellat debitis. Molestiae et autem libero.
-                Explicabo et quod necessitatibus similique quis dolor eum. Numquam eaque praesentium rem et qui
-                nesciunt.
-              </p>
-
+            </div>
+            <!-- Info section (right, tall and narrow) -->
+            <div class="col-lg-4 col-xl-3 d-flex align-items-start">
+              <div class="portfolio-info p-5 shadow-lg bg-white rounded-5 position-relative w-100" style="border: 1px solid #e3e8f0; min-width: 220px; max-width: 320px; min-height: 480px; margin-left: 0;">
+                <h3 class="fw-semibold mb-4 d-flex align-items-center" style="color: #2563eb; font-size: 1.3rem;">
+                  <i class="bi bi-clipboard-data me-2" style="color: #22c55e;"></i>Project Information
+                </h3>
+                <ul class="list-unstyled mb-0">
+                  <li class="mb-3 d-flex align-items-center">
+                    <i class="bi bi-tags me-2" style="color: #22c55e; font-size: 1.1rem;"></i>
+                    <span style="font-size: 0.97rem; color: #888;">Category:</span>
+                    <span class="ms-1 text-secondary fw-semibold">{{ product.category?.categoryName || 'N/A' }}</span>
+                  </li>
+                  <li class="mb-3 d-flex align-items-center">
+                    <i class="bi bi-person-badge me-2" style="color: #22c55e; font-size: 1.1rem;"></i>
+                    <span style="font-size: 0.97rem; color: #888;">Client:</span>
+                    <span class="ms-1 text-secondary fw-semibold">{{ product.clientName || 'N/A' }}</span>
+                  </li>
+                  <li class="mb-3 d-flex align-items-center">
+                    <i class="bi bi-calendar-event me-2" style="color: #22c55e; font-size: 1.1rem;"></i>
+                    <span style="font-size: 0.97rem; color: #888;">Project Date:</span>
+                    <span class="ms-1 text-secondary fw-semibold">{{ product.projectDate ? (product.projectDate | date:'dd MMMM, yyyy') : 'N/A' }}</span>
+                  </li>
+                  <li *ngIf="product.projectUrl" class="mb-3 d-flex align-items-center">
+                    <i class="bi bi-link-45deg me-2" style="color: #22c55e; font-size: 1.1rem;"></i>
+                    <span style="font-size: 0.97rem; color: #888;">Project URL:</span>
+                    <a [href]="product.projectUrl" target="_blank" rel="noopener" class="ms-1 text-primary text-break fw-semibold" style="word-break: break-all;">{{ product.projectUrl }}</a>
+                  </li>
+                  <li *ngIf="product.projectUrl">
+                    <a [href]="product.projectUrl" target="_blank" rel="noopener" class="btn btn-gradient btn-lg w-100 mt-2 px-3 py-2 rounded-pill fw-semibold d-flex align-items-center justify-content-center gap-2" style="background: linear-gradient(90deg, #22c55e 60%, #2563eb 100%); color: #fff; border: none; box-shadow: 0 2px 12px rgba(34,197,94,0.10); transition: background 0.2s, box-shadow 0.2s;">
+                      <i class="bi bi-box-arrow-up-right"></i> Visit Website
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-
-          <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
-            <div class="portfolio-info">
-              <h3>Project information</h3>
-              <ul>
-                <li><strong>Category</strong> Web design</li>
-                <li><strong>Client</strong> ASU Company</li>
-                <li><strong>Project date</strong> 01 March, 2020</li>
-                <li><strong>Project URL</strong> <a href="#">www.example.com</a></li>
-                <li><a href="#" class="btn-visit align-self-start">Visit Website</a></li>
-              </ul>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
+        </ng-container>
+      </div> <!-- end container -->
     </section><!-- /Portfolio Details Section -->
 
-  </main>
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
-      class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Vendor JS Files -->
-  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/assets/vendor/php-email-form/validate.js"></script>
-  <script src="/assets/vendor/aos/aos.js"></script>
-  <script src="/assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-  <script src="/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="/assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
-
-  <!-- Main JS File -->
-  <script src="/assets/js/main.js"></script>
-
-</body>
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center shadow-lg" style="background: linear-gradient(135deg, #22c55e 60%, #2563eb 100%); border-radius: 50%; border: none; color: #fff; width: 48px; height: 48px; box-shadow: 0 4px 16px rgba(34,99,235,0.10); transition: background 0.2s;">
+      <i class="bi bi-arrow-up-short" style="font-size: 2rem;"></i>
+    </a>

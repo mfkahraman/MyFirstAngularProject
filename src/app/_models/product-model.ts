@@ -1,4 +1,6 @@
+
 import { ProductCategory } from "./product-category-model";
+import { Tag } from "./tag-model";
 
 export class Product
 {
@@ -14,4 +16,5 @@ export class Product
   projectDate: Date;
   //In order to get the category details along with product
   category: ProductCategory;
+  tags?: Tag[];
 }
