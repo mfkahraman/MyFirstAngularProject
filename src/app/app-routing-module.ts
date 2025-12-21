@@ -34,7 +34,7 @@ const routes: Routes = [
       { path: 'service', component: OurServicesComponent },
       { path: 'servicedetails', component: ServiceDetailsComponent },
       { path: 'portfolio', component: PortfolioComponent },
-      { path: 'portfoliodetails', component: PortfolioDetailsComponent },
+      { path: 'portfoliodetails/:id', component: PortfolioDetailsComponent },
       { path: 'pricing', component: PricingComponent },
       { path: 'blog', component: BlogListComponent },
       { path: 'blog/:id', component: BlogDetailComponent },

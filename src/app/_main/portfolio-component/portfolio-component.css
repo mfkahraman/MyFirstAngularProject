@@ -1,0 +1,117 @@
+/* Modern portfolio card styles */
+/* Modern, soft card look */
+.modern-portfolio-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px 0 rgba(60, 72, 100, 0.10), 0 1.5px 6px 0 rgba(60, 72, 100, 0.08);
+  padding: 1.2rem 1.2rem 1.5rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  transition: box-shadow 0.2s, transform 0.2s;
+  height: 100%;
+  margin-bottom: 18px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+.modern-portfolio-card:hover {
+  box-shadow: 0 12px 48px 0 rgba(60, 72, 100, 0.18), 0 3px 12px 0 rgba(60, 72, 100, 0.12);
+  transform: translateY(-6px) scale(1.025);
+}
+/* Make the image container square and large for 1024x1024px images */
+/* Softer, rounded image container */
+.modern-portfolio-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 260px;
+  max-height: 260px;
+  margin: 0 auto 1.2rem auto;
+  background: #f5f7fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 1.2rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px 0 rgba(60, 72, 100, 0.06);
+}
+.modern-portfolio-image img {
+  width: 90%;
+  height: 90%;
+  max-width: 220px;
+  max-height: 220px;
+  object-fit: contain;
+  object-position: center;
+  transition: transform 0.3s cubic-bezier(.4,2,.6,1);
+  background: #f5f7fa;
+  display: block;
+  margin: 0 auto;
+}
+.modern-portfolio-card:hover .modern-portfolio-image img {
+  transform: scale(1.07);
+}
+/* More modern info section */
+.modern-portfolio-info {
+  padding: 1.2rem 0.5rem 0.5rem 0.5rem;
+  text-align: center;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: transparent;
+}
+/* Larger, bolder title */
+.modern-portfolio-info h4 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 0.6rem;
+  color: #1a202c;
+  letter-spacing: 0.01em;
+}
+/* Softer description */
+.modern-portfolio-info p {
+  font-size: 1.05rem;
+  color: #475569;
+  margin-bottom: 1.1rem;
+  min-height: 40px;
+  line-height: 1.6;
+}
+/* Modern action icons */
+.portfolio-actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 0.5rem;
+}
+.portfolio-actions a {
+  color: #2563eb;
+  font-size: 1.35rem;
+  background: #e0e7ef;
+  border-radius: 50%;
+  width: 2.3rem;
+  height: 2.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px 0 rgba(60, 72, 100, 0.07);
+}
+.portfolio-actions a:hover {
+  color: #fff;
+  background: #2563eb;
+  box-shadow: 0 2px 8px 0 rgba(37, 99, 235, 0.15);
+}
+@media (max-width: 991px) {
+  .modern-portfolio-image {
+    aspect-ratio: 1 / 1;
+    max-width: 140px;
+    max-height: 140px;
+  }
+  .modern-portfolio-image img {
+    max-width: 120px;
+    max-height: 120px;
+  }
+  .modern-portfolio-info {
+    padding: 0.7rem 0.3rem 0.3rem 0.3rem;
+  }
+}
