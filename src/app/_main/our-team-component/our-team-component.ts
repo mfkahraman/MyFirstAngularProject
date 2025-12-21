@@ -11,6 +11,7 @@ import { EmployeeService } from '../../_services/employee-service';
 export class OurTeamComponent implements OnInit {
   employeeList: Employee[] = [];
   isLoading: boolean = true;
+  readonly serverUrl = 'https://localhost:7000';
 
   constructor(
     private employeeService: EmployeeService,
@@ -25,7 +26,10 @@ export class OurTeamComponent implements OnInit {
     this.isLoading = true;
     this.employeeService.getAll().subscribe({
       next: (employees) => {
-        this.employeeList = employees;
+        this.employeeList = employees.map(emp => ({
+          ...emp,
+          imageUrl: this.getImageUrl(emp.imageUrl)
+        }));
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -35,5 +39,16 @@ export class OurTeamComponent implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  getImageUrl(path: string | null | undefined): string {
+    if (!path) return 'https://ui-avatars.com/api/?name=Team+Member&size=400&background=random';
+    if (path.startsWith('http') || path.startsWith('data:')) {
+      return path;
+    }
+    return `${this.serverUrl}${path}`;
+  }
+  onImageError(employee: any) {
+    employee.imageUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent((employee.firstName || '') + ' ' + (employee.lastName || '')) + '&size=400&background=random';
   }
 }

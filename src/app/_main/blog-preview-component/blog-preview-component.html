@@ -17,7 +17,7 @@
         <article class="blog-card">
 
           <div class="post-img">
-            <img [src]="blog.coverImageUrl" [alt]="blog.title">
+            <img [src]="blog.coverImageUrl" [alt]="blog.title" (error)="blog.coverImageUrl = 'assets/img/portfolio/companyservices.png'">
             <div class="post-overlay">
               <a [routerLink]="['/blog', blog.id]" class="read-more">
                 <i class="bi bi-arrow-right"></i>
@@ -34,7 +34,7 @@
 
             <div class="post-meta">
               <div class="author-info">
-                <img [src]="blog.writer?.imageUrl" [alt]="blog.writer?.fullName" class="author-img">
+                <img [src]="blog.writer?.imageUrl" [alt]="blog.writer?.fullName" class="author-img" (error)="blog.writer.imageUrl = 'assets/img/portfolio/companyservices.png'">
                 <div class="author-details">
                   <p class="author-name">{{blog.writer?.fullName}}</p>
                   <p class="post-date">

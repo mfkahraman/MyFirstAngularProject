@@ -43,9 +43,12 @@
              [attr.data-aos-delay]="100 + (i * 100)">
           <div class="team-member-card">
             <div class="member-img">
-              <img [src]="employee.imageUrl"
-                   [alt]="employee.firstName + ' ' + employee.lastName"
-                   onerror="this.src='https://ui-avatars.com/api/?name=' + this.alt + '&size=400&background=random'">
+                  <img [src]="employee.imageUrl"
+                    [alt]="employee.firstName + ' ' + employee.lastName"
+                    (error)="onImageError(employee)"
+                    loading="lazy"
+                    width="400" height="400"
+                    class="rounded-circle shadow-sm border border-2 border-light">
               <div class="social">
                 <a href="#" title="Twitter" (click)="$event.preventDefault()"><i class="bi bi-twitter-x"></i></a>
                 <a href="#" title="Facebook" (click)="$event.preventDefault()"><i class="bi bi-facebook"></i></a>

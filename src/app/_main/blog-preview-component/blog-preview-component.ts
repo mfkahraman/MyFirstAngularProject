@@ -10,6 +10,7 @@ import { BlogService } from '../../_services/blog-service';
 })
 export class BlogPreviewComponent implements OnInit {
   blogList: Blog[] = [];
+  readonly serverUrl = 'https://localhost:7000';
 
   constructor(
     private blogService: BlogService,
@@ -23,11 +24,26 @@ export class BlogPreviewComponent implements OnInit {
   loadRecentBlogs() {
     this.blogService.getWithDetails().subscribe({
       next: (blogs) => {
-        // Get only the 6 most recent blogs
-        this.blogList = blogs.slice(0, 6);
+        // Prepend server address to blog and writer images
+        this.blogList = blogs.slice(0, 6).map(blog => ({
+          ...blog,
+          coverImageUrl: this.getImageUrl(blog.coverImageUrl),
+          writer: blog.writer ? {
+            ...blog.writer,
+            imageUrl: this.getImageUrl(blog.writer.imageUrl)
+          } : null
+        }));
         this.cdr.detectChanges();
       },
       error: (error) => console.error('Error loading blogs:', error),
     });
+  }
+
+  getImageUrl(path: string | null | undefined): string {
+    if (!path) return 'assets/img/portfolio/companyservices.png';
+    if (path.startsWith('http') || path.startsWith('data:')) {
+      return path;
+    }
+    return `${this.serverUrl}${path}`;
   }
 }

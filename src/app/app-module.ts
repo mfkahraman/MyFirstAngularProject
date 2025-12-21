@@ -36,6 +36,7 @@ import { MessageComponent } from './admin/message-component/message-component';
 import { DashboardComponent } from './admin/dashboard-component/dashboard-component';
 import { TestimonialComponent } from './admin/testimonial-component/testimonial-component';
 import { PortfolioComponent } from './_main/portfolio-component/portfolio-component';
+import { MainTestimonialComponent } from './_main/main-testimonial-component/main-testimonial-component';
 import { PricingComponent } from './_main/pricing-component/pricing-component';
 import { OurTeamComponent } from './_main/our-team-component/our-team-component';
 import { OurServicesComponent } from './_main/our-services-component/our-services-component';
@@ -68,6 +69,7 @@ import { PortfolioDetailsComponent } from './_main/portfolio-details-component/p
     MessageComponent,
     DashboardComponent,
     TestimonialComponent,
+    MainTestimonialComponent,
     PortfolioComponent,
     PricingComponent,
     OurTeamComponent,

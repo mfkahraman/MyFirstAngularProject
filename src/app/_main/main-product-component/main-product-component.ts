@@ -13,6 +13,7 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 export class MainProductComponent {
   productList: Product[] = [];
   allProducts: Product[] = [];
+  readonly serverUrl = 'https://localhost:7000';
   categoryList: ProductCategory[] = [];
   selectedCategoryId: number | null = null;
 
@@ -28,17 +29,33 @@ export class MainProductComponent {
   getAllProducts() {
     this.ProductService.getAll().subscribe({
       next: values => {
-        this.allProducts = values;
-        this.productList = values;
+        // Prepend server address to thumbnailImagePath if needed
+        this.allProducts = values.map(product => ({
+          ...product,
+          thumbnailImagePath: this.getImageUrl(product.thumbnailImagePath)
+        }));
+        // Show only first 6 products
+        this.productList = this.allProducts.slice(0, 6);
         this.cdr.detectChanges();
       }
     })
+  }
+  /**
+   * Get full image URL by prepending server address
+   */
+  getImageUrl(path: string | null | undefined): string {
+    if (!path) return 'assets/img/portfolio/companyservices.png';
+    if (path.startsWith('http') || path.startsWith('data:')) {
+      return path;
+    }
+    return `${this.serverUrl}${path}`;
   }
 
   getCategories() {
     this.CategoryService.getAll().subscribe({
       next: values => {
-        this.categoryList = values;
+        // Only take first 4 categories
+        this.categoryList = values.slice(0, 4);
         this.cdr.detectChanges();
       }
     })

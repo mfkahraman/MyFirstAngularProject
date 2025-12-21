@@ -16,7 +16,7 @@
            [attr.data-aos-delay]="100 + (i * 100)">
         <div class="team-member">
           <div class="member-img">
-            <img [src]="employee.imageUrl" [alt]="employee.firstName + ' ' + employee.lastName">
+            <img [src]="employee.imageUrl" [alt]="employee.firstName + ' ' + employee.lastName" (error)="employee.imageUrl = 'assets/img/portfolio/companyservices.png'">
             <div class="social">
               <a href="#" title="Twitter"><i class="bi bi-twitter-x"></i></a>
               <a href="#" title="Facebook"><i class="bi bi-facebook"></i></a>
