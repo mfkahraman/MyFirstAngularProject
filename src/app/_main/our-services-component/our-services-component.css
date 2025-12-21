@@ -1,0 +1,55 @@
+/* Consistent service card styles with homepage */
+.service-item {
+	background: #fff;
+	border-radius: 1.2rem;
+	box-shadow: 0 6px 32px 0 rgba(60, 72, 100, 0.10), 0 1.5px 6px 0 rgba(60, 72, 100, 0.08);
+	padding: 2.2rem 1.7rem 1.7rem 1.7rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	transition: box-shadow 0.2s, transform 0.2s;
+	height: 100%;
+	margin-bottom: 10px;
+	position: relative;
+}
+.service-item:hover {
+	box-shadow: 0 12px 48px 0 rgba(60, 72, 100, 0.16), 0 3px 12px 0 rgba(60, 72, 100, 0.10);
+	transform: translateY(-4px) scale(1.02);
+}
+.service-item .icon {
+	font-size: 2.8rem;
+	margin-bottom: 1.2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 80px;
+	height: 80px;
+	background: #f5f8ff;
+	border-radius: 50%;
+	box-shadow: 0 2px 8px 0 rgba(60, 72, 100, 0.07);
+}
+.service-item h3 {
+	font-size: 1.25rem;
+	font-weight: 700;
+	margin-bottom: 0.5rem;
+	color: #2d3a4a;
+	text-align: center;
+}
+.service-item p {
+	font-size: 1.05rem;
+	color: #444;
+	text-align: center;
+	margin-bottom: 0;
+}
+/* Color accents for each card (match homepage) */
+.item-cyan .icon { background: #e6f7fa; color: #00bcd4; }
+.item-orange .icon { background: #fff4e6; color: #ff9800; }
+.item-teal .icon { background: #e6f9f5; color: #009688; }
+.item-red .icon { background: #ffeaea; color: #e53935; }
+.item-indigo .icon { background: #eaeaff; color: #3f51b5; }
+.item-pink .icon { background: #ffe6f7; color: #e91e63; }
+@media (max-width: 991px) {
+	.service-item {
+		padding: 1.5rem 1rem 1rem 1rem;
+	}
+}
