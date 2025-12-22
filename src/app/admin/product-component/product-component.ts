@@ -39,7 +39,7 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   // Pagination
   page: number = 1;
-  itemsPerPage: number = 4;
+  itemsPerPage: number = 5;
 
   // Validation errors
   errors: any = {};

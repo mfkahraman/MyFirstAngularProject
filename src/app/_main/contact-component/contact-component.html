@@ -1,93 +1,99 @@
-<!-- Page Title -->
-<div class="page-title dark-background">
-  <div class="container position-relative">
-    <h1>Contact</h1>
-    <p>Get in touch with us, let us answer your questions</p>
-    <nav class="breadcrumbs">
-      <ol>
-        <li><a routerLink="/">Home</a></li>
-        <li class="current">Contact</li>
-      </ol>
-    </nav>
-  </div>
-</div><!-- End Page Title -->
+<body class="contact-page">
 
-<!-- Contact Section -->
-<section id="contact" class="contact section">
+  <main class="main">
 
-  <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-    <div class="row gy-4">
-
-      <div class="col-lg-4">
-        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
-          <i class="bi bi-geo-alt flex-shrink-0"></i>
-          <div>
-            <h3>Address</h3>
-            <p>Central District, Business Boulevard No:123, Istanbul, Turkey</p>
-          </div>
-        </div><!-- End Info Item -->
-
-        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
-          <i class="bi bi-telephone flex-shrink-0"></i>
-          <div>
-            <h3>Phone</h3>
-            <p>+90 212 555 55 55</p>
-          </div>
-        </div><!-- End Info Item -->
-
-        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="500">
-          <i class="bi bi-envelope flex-shrink-0"></i>
-          <div>
-            <h3>Email</h3>
-            <p>info@company.com</p>
-          </div>
-        </div><!-- End Info Item -->
-
+    <!-- Page Title -->
+    <div class="page-title accent-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Contact</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Contact</li>
+          </ol>
+        </nav>
       </div>
+    </div><!-- End Page Title -->
 
-      <div class="col-lg-8">
-        <form (ngSubmit)="onSubmit()" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
-          <div class="row gy-4">
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+      <div class="container" data-aos="fade">
+        <div class="row gy-5 gx-lg-5">
+          <div class="col-lg-4">
+            <div class="info">
+              <h3>Contact Our Istanbul Office</h3>
+              <p>We are here to help you with your business needs. Reach out to us for any inquiries, partnership opportunities, or support.</p>
 
-            <div class="col-md-6">
-              <input type="text" name="name" class="form-control" placeholder="Your Name" required
-                     [(ngModel)]="message.senderName">
-            </div>
+              <div class="info-item d-flex">
+                <i class="bi bi-geo-alt flex-shrink-0"></i>
+                <div>
+                  <h4>Location:</h4>
+                  <p>Levent Mah. Büyükdere Cad. No:201, 34394 Şişli/İstanbul, Turkey</p>
+                </div>
+              </div><!-- End Info Item -->
 
-            <div class="col-md-6">
-              <input type="email" class="form-control" name="email" placeholder="Your Email" required
-                     [(ngModel)]="message.senderEmail">
-            </div>
+              <div class="info-item d-flex">
+                <i class="bi bi-envelope flex-shrink-0"></i>
+                <div>
+                  <h4>Email:</h4>
+                  <p>contact@yourcompany.com</p>
+                </div>
+              </div><!-- End Info Item -->
 
-            <div class="col-md-12">
-              <input type="text" class="form-control" name="subject" placeholder="Subject" required
-                     [(ngModel)]="message.subject">
-            </div>
+              <div class="info-item d-flex">
+                <i class="bi bi-phone flex-shrink-0"></i>
+                <div>
+                  <h4>Call:</h4>
+                  <p>+90 212 123 45 67</p>
+                </div>
+              </div><!-- End Info Item -->
 
-            <div class="col-md-12">
-              <textarea class="form-control" name="message" rows="6" placeholder="Your Message" required
-                        [(ngModel)]="message.content"></textarea>
-            </div>
-
-            <div class="col-md-12 text-center">
-              <div class="loading" *ngIf="isSubmitting">Sending...</div>
-              <div class="error-message" *ngIf="showError">
-                Your message could not be sent. Please try again.
-              </div>
-              <div class="sent-message" *ngIf="showSuccess">
-                Your message has been sent successfully. Thank you!
-              </div>
-
-              <button type="submit" [disabled]="isSubmitting">Send Message</button>
             </div>
 
           </div>
-        </form>
-      </div><!-- End Contact Form -->
 
-    </div>
+          <div class="col-lg-8">
+            <form #contactForm="ngForm" (ngSubmit)="submitContactForm(contactForm)" novalidate>
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <input type="text" name="senderName" class="form-control" id="name" placeholder="Your Name" required [(ngModel)]="message.senderName" #senderName="ngModel">
+                </div>
+                <div class="col-md-6 form-group mt-3 mt-md-0">
+                  <input type="email" class="form-control" name="senderEmail" id="email" placeholder="Your Email" required [(ngModel)]="message.senderEmail" #senderEmail="ngModel">
+                </div>
+              </div>
+              <div class="form-group mt-3">
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required [(ngModel)]="message.subject" #subject="ngModel">
+              </div>
+              <div class="form-group mt-3">
+                <textarea class="form-control" name="content" placeholder="Message" required [(ngModel)]="message.content" #content="ngModel"></textarea>
+              </div>
+              <div class="my-3">
+                <div *ngIf="loading" class="loading">Loading...</div>
+                <div *ngIf="error" class="error-message">{{ error }}</div>
+                <div *ngIf="sent" class="sent-message">Your message has been sent. Thank you!</div>
+              </div>
+              <div class="text-center"><button type="submit" [disabled]="loading || contactForm.invalid">Send Message</button></div>
+            </form>
+          </div><!-- End Contact Form -->
 
-  </div>
+        </div>
+      </div>
+    </section><!-- /Contact Section -->
 
-</section><!-- /Contact Section -->
+    <!-- Google Maps at Bottom, narrow -->
+    <div class="mb-5 mt-4 d-flex justify-content-center">
+      <div class="col-lg-6 col-md-8 col-12">
+        <iframe style="width: 100%; height: 300px; border-radius: 1.2rem; box-shadow: 0 2px 12px 0 rgba(31,38,135,0.08);"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12041.96404952013!2d29.004982!3d41.085042!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab76e2e2e2e2b%3A0x7e2e2e2e2e2e2e2e!2sLevent%20Mah.%20B%C3%BCy%C3%BCkdere%20Cd.%20No%3A201%2C%2034394%20%C5%9Ei%C5%9Fli%2F%C4%B0stanbul%2C%20Turkey!5e0!3m2!1str!2str!4v1700000000000"
+          frameborder="0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div><!-- End Google Maps -->
+
+  </main>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+</body>

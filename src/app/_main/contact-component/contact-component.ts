@@ -9,29 +9,41 @@ import { MessageService } from '../../_services/message-service';
   styleUrl: './contact-component.css',
 })
 export class ContactComponent {
-  message: Message = new Message();
-  isSubmitting = false;
-  showSuccess = false;
-  showError = false;
+  message = {
+    id: 0,
+    senderName: '',
+    senderEmail: '',
+    subject: '',
+    content: '',
+    sentAt: new Date(),
+    isRead: false
+  };
+  loading = false;
+  sent = false;
+  error: string | null = null;
 
   constructor(private messageService: MessageService) {}
 
-  onSubmit() {
-    this.isSubmitting = true;
-    this.showSuccess = false;
-    this.showError = false;
-
-    this.messageService.create(this.message).subscribe({
+  submitContactForm(form: any) {
+    if (form.invalid) return;
+    this.loading = true;
+    this.sent = false;
+    this.error = null;
+    const msg = {
+      ...this.message,
+      sentAt: new Date(),
+      isRead: false
+    };
+    this.messageService.create(msg).subscribe({
       next: () => {
-        this.showSuccess = true;
-        this.isSubmitting = false;
-        this.message = new Message(); // Reset form
+        this.sent = true;
+        this.loading = false;
+        form.resetForm();
       },
-      error: (error) => {
-        console.error('Error sending message:', error);
-        this.showError = true;
-        this.isSubmitting = false;
-      },
+      error: (err) => {
+        this.error = 'Failed to send message. Please try again.';
+        this.loading = false;
+      }
     });
   }
 }
