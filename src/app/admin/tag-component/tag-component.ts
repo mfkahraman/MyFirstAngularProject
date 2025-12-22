@@ -49,8 +49,8 @@ export class TagComponent implements OnInit {
     this.tagService.create(this.tag).subscribe({
       next: () => {
         Swal.fire({
-          title: "Eklendi!",
-          text: "Kategori başarıyla eklendi.",
+          title: "Added!",
+          text: "Category was successfully added.",
           icon: "success"
         });
         this.getAll();
@@ -70,8 +70,8 @@ export class TagComponent implements OnInit {
         this.getAll();
 
         Swal.fire({
-          title: "Güncellendi!",
-          text: "Kategori başarıyla güncellendi.",
+          title: "Updated!",
+          text: "Category was successfully updated.",
           icon: "success"
         });
       },
@@ -85,12 +85,12 @@ export class TagComponent implements OnInit {
 
   delete (id: number) {
     Swal.fire({
-      title: "Emin misiniz?",
-      text: "Bu işlemi geri alamayacaksınız!",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Evet, sil!",
-      cancelButtonText: "Hayır, iptal et!",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
       confirmButtonColor: "#28a745",
       cancelButtonColor: "#dc3545",
       reverseButtons: true,
@@ -107,17 +107,17 @@ export class TagComponent implements OnInit {
             this.getAll();
 
             Swal.fire({
-              title: "Silindi!",
-              text: "Dosyanız silindi.",
+              title: "Deleted!",
+              text: "Your file has been deleted.",
               icon: "success",
               confirmButtonColor: "#28a745"
             });
           },
           error: err => {
-            console.error('Silme hatası:', err);
+            console.error('Delete error:', err);
             Swal.fire({
-              title: "Hata!",
-              text: "Silme sırasında bir hata oluştu.",
+              title: "Error!",
+              text: "An error occurred during deletion.",
               icon: "error"
             });
           }
