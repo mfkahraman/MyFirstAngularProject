@@ -1,4 +1,5 @@
-<main class="main" *ngIf="blog">
+<body class="blog-details-page">
+  <main class="main">
 
     <!-- Page Title -->
     <div class="page-title accent-background">
@@ -6,7 +7,7 @@
         <h1 class="mb-2 mb-lg-0">Blog Details</h1>
         <nav class="breadcrumbs">
           <ol>
-            <li><a routerLink="/">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li class="current">Blog Details</li>
           </ol>
         </nav>
@@ -24,37 +25,35 @@
 
               <article class="article">
 
-                <div class="post-img" *ngIf="blog.coverImageUrl">
-                  <img [src]="blog.coverImageUrl" [alt]="blog.title" class="img-fluid">
+                <div class="post-img" *ngIf="blog?.coverImageUrl">
+                  <img [src]="getImageUrl(blog.coverImageUrl)" [alt]="blog.title" class="img-fluid rounded-4 shadow">
                 </div>
 
-                <h2 class="title">{{blog.title}}</h2>
+                <h2 class="title">{{ blog?.title }}</h2>
 
                 <div class="meta-top">
                   <ul>
-                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a>{{blog.writer?.fullName || 'Anonymous'}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a><time
-                          [attr.datetime]="blog.createdAt">{{blog.createdAt | date:'MMM d, yyyy'}}</time></a></li>
-                    <li class="d-flex align-items-center" *ngIf="blog.comments && blog.comments.length > 0"><i class="bi bi-chat-dots"></i> <a>{{blog.comments.length}}
-                        Comment{{blog.comments.length !== 1 ? 's' : ''}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a>{{ blog?.writer?.fullName || 'Anonymous' }}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a><time [attr.datetime]="blog?.createdAt">{{ blog?.createdAt | date:'MMM d, yyyy' }}</time></a></li>
+                    <li class="d-flex align-items-center" *ngIf="blog?.comments?.length > 0"><i class="bi bi-chat-dots"></i> <a>{{ blog?.comments.length }} Comment{{ blog?.comments.length !== 1 ? 's' : '' }}</a></li>
                   </ul>
                 </div><!-- End meta top -->
 
                 <div class="content">
-                  <div [innerHTML]="blog.content"></div>
+                  <div [innerHTML]="blog?.content"></div>
                 </div><!-- End post content -->
 
                 <div class="meta-bottom">
                   <i class="bi bi-folder"></i>
                   <ul class="cats">
-                    <li><a>{{blog.category?.name || 'Uncategorized'}}</a></li>
+                    <li><a>{{ blog?.category?.name || 'Uncategorized' }}</a></li>
                   </ul>
 
-                  <ng-container *ngIf="blog.blogTags && blog.blogTags.length > 0">
+                  <ng-container *ngIf="blog?.blogTags?.length > 0">
                     <i class="bi bi-tags"></i>
                     <ul class="tags">
                       <li *ngFor="let blogTag of blog.blogTags">
-                        <a *ngIf="blogTag.tags && blogTag.tags.length > 0">{{blogTag.tags[0].name}}</a>
+                        <a *ngIf="blogTag.tags && blogTag.tags.length > 0">{{ blogTag.tags[0].name }}</a>
                       </li>
                     </ul>
                   </ng-container>
@@ -66,29 +65,30 @@
           </section><!-- /Blog Details Section -->
 
           <!-- Blog Comments Section -->
-          <section id="blog-comments" class="blog-comments section" *ngIf="blog.comments && blog.comments.length > 0">
-
+          <section id="blog-comments" class="blog-comments section">
             <div class="container">
-
-              <h4 class="comments-count">{{blog.comments.length}} Comment{{blog.comments.length !== 1 ? 's' : ''}}</h4>
-
-              <div [id]="'comment-' + comment.id" class="comment" *ngFor="let comment of blog.comments">
-                <div class="d-flex">
-                  <div class="comment-img">
-                    <img [src]="comment.writer.imageUrl" [alt]="comment.writer.fullName">
+              <ng-container *ngIf="blog?.comments?.length > 0; else noComments">
+                <h4 class="comments-count">{{ blog.comments.length }} Comment{{ blog.comments.length !== 1 ? 's' : '' }}</h4>
+                <div *ngFor="let comment of blog.comments" class="comment">
+                  <div class="d-flex">
+                    <div class="comment-img">
+                      <img [src]="getImageUrl(comment.writer?.imageUrl)"
+                           [alt]="comment.writer?.fullName"
+                           class="rounded-circle"
+                           onerror="this.src='https://ui-avatars.com/api/?name=' + (comment.writer?.fullName || 'User') + '&size=60&background=random'">
+                    </div>
+                    <div>
+                      <h5><a>{{ comment.writer?.fullName || 'Anonymous' }}</a></h5>
+                      <time [attr.datetime]="comment.createdAt">{{ comment.createdAt | date:'dd MMM, yyyy' }}</time>
+                      <p>{{ comment.content }}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h5><a>{{comment.writer.fullName}}</a></h5>
-                    <time [attr.datetime]="comment.createdAt">{{comment.createdAt | date:'dd MMM, yyyy'}}</time>
-                    <p>
-                      {{comment.content}}
-                    </p>
-                  </div>
-                </div>
-              </div><!-- End comment -->
-
+                </div><!-- End comment -->
+              </ng-container>
+              <ng-template #noComments>
+                <div class="alert alert-info text-center mt-3">No comments yet. Be the first to comment!</div>
+              </ng-template>
             </div>
-
           </section><!-- /Blog Comments Section -->
 
           <!-- Comment Form Section -->
@@ -134,32 +134,54 @@
           <div class="widgets-container">
 
             <!-- Blog Author Widget -->
-            <div class="blog-author-widget widget-item" *ngIf="blog.writer">
-
+            <div class="blog-author-widget widget-item" *ngIf="blog?.writer">
               <div class="d-flex flex-column align-items-center">
-                <img [src]="blog.writer.imageUrl || 'https://ui-avatars.com/api/?name=' + blog.writer.fullName + '&size=120&background=random'"
-                     class="rounded-circle flex-shrink-0"
+                <img [src]="getImageUrl(blog.writer.imageUrl)"
+                     class="rounded-circle flex-shrink-0 shadow"
                      [alt]="blog.writer.fullName"
-                     onerror="this.src='https://ui-avatars.com/api/?name=Writer&size=120&background=random'">
-                <h4>{{blog.writer.fullName}}</h4>
-
+                     onerror="this.src='https://ui-avatars.com/api/?name=' + (blog.writer.fullName || 'Writer') + '&size=120&background=random'">
+                <h4>{{ blog.writer.fullName }}</h4>
                 <p>
-                  {{blog.writer.bio || 'Professional content writer and technology enthusiast.'}}
+                  {{ blog.writer.bio || 'Professional content writer and technology enthusiast.' }}
                 </p>
-
               </div>
             </div><!--/Blog Author Widget -->
 
-            <!-- Tags Widget -->
-            <div class="tags-widget widget-item" *ngIf="blog.blogTags && blog.blogTags.length > 0">
+            <!-- Search Widget -->
+            <div class="search-widget widget-item">
 
+              <h3 class="widget-title">Search</h3>
+              <form action="">
+                <input type="text">
+                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+              </form>
+
+            </div><!--/Search Widget -->
+
+            <!-- Recent Posts Widget -->
+            <div class="recent-posts-widget widget-item">
+              <h3 class="widget-title">Recent Posts</h3>
+              <ng-container *ngIf="recentBlogs.length > 0; else noRecent">
+                <div class="post-item" *ngFor="let recent of recentBlogs">
+                  <h4><a [routerLink]="['/blog', recent.id]">{{ recent.title }}</a></h4>
+                  <time [attr.datetime]="recent.createdAt">{{ recent.createdAt | date:'MMM d, yyyy' }}</time>
+                </div>
+              </ng-container>
+              <ng-template #noRecent>
+                <div class="text-muted">No recent posts found.</div>
+              </ng-template>
+            </div><!--/Recent Posts Widget -->
+
+            <!-- Tags Widget -->
+            <div class="tags-widget widget-item" *ngIf="blog?.blogTags?.length > 0">
               <h3 class="widget-title">Tags</h3>
               <ul>
-                <li *ngFor="let blogTag of blog.blogTags">
-                  <a *ngIf="blogTag.tags && blogTag.tags.length > 0">{{blogTag.tags[0].name}}</a>
-                </li>
+                <ng-container *ngFor="let blogTag of blog.blogTags">
+                  <li *ngIf="blogTag.tags && blogTag.tags.length > 0">
+                    <a>{{ blogTag.tags[0].name }}</a>
+                  </li>
+                </ng-container>
               </ul>
-
             </div><!--/Tags Widget -->
 
           </div>
@@ -171,13 +193,8 @@
 
   </main>
 
-  <!-- No blog found message -->
-  <section class="section" *ngIf="!blog && blogId">
-    <div class="container">
-      <div class="alert alert-warning text-center">
-        <i class="bi bi-exclamation-triangle"></i> Blog post not found.
-        <br>
-        <a routerLink="/blog" class="btn btn-primary mt-3">Back to Blog List</a>
-      </div>
-    </div>
-  </section>
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+</body>
